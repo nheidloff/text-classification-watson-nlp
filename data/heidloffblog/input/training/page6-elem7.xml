@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 20 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=20" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Fri, 25 Nov 2022 07:22:15 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>Hyperparameter Optimization with IBM Watson Studio</title><link>http://heidloff.net/article/hyperparameter-optimization-ibm-watson-studio</link><comments>http://heidloff.net/article/hyperparameter-optimization-ibm-watson-studio#respond</comments><pubDate>Tue, 26 Jun 2018 08:43:08 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=3014</guid><description><![CDATA[<p>In March IBM announced Deep Learning as a Service (DLaaS) which is part of IBM Watson Studio. Below I describe how to use this service to train models and how to optimize hyperparameters to easily find the best quality model. I&#8217;m not a data scientist, but have been told that finding the right hyperparameters is [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/hyperparameter-optimization-ibm-watson-studio">Hyperparameter Optimization with IBM Watson Studio</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p>In March IBM announced <a href="https://www.ibm.com/blogs/watson/2018/03/deep-learning-service-ibm-makes-advanced-ai-accessible-users-everywhere/" rel="noopener" target="_blank">Deep Learning as a Service</a> (DLaaS) which is part of IBM Watson Studio. Below I describe how to use this service to train models and how to optimize hyperparameters to easily find the best quality model.<span id="more-3014"></span></p>
+<p>I&#8217;m not a data scientist, but have been told that finding the right hyperparameters is often a tedious task with a lot of trial and error. Here is the intro of the service from the <a href="https://dataplatform.ibm.com/docs/content/analyze-data/ml_dlaas.html?audience=wdp&#038;context=analytics" rel="noopener" target="_blank">documentation</a>:</p>
+<blockquote style="font-size:medium"><p>As a data scientist, you need to train numerous models to identify the right combination of data in conjunction with hyperparameters to optimize the performance of your neural networks. You want to perform more experiments faster. You want to train deeper networks and explore broader hyperparameters spaces. IBM Watson Machine Learning accelerates this iterative cycle by simplifying the process to train models in parallel with an on-demand GPU compute cluster.</p></blockquote>
+<p>To learn the ability to optimize hyperparameters (HPO), I&#8217;ve used <a href="https://codelabs.developers.google.com/codelabs/tensorflow-for-poets/#6" rel="noopener" target="_blank">TensorFlow For Poets</a> to classify images of flowers via transfer learning. Via HPO the number of training steps is optimized.</p>
+<p>This is a screenshot of IBM Watson Studio with a training definition and one hyperparamter &#8216;how_many_training_steps&#8217; with values between 100 and 2000.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/06/trainingdef.png"><img src="http://heidloff.net/wp-content/uploads/2018/06/trainingdef.png" alt="trainingdef" width="2396" height="1822" class="alignnone size-full wp-image-3012" srcset="http://heidloff.net/wp-content/uploads/2018/06/trainingdef.png 2396w, http://heidloff.net/wp-content/uploads/2018/06/trainingdef-300x228.png 300w, http://heidloff.net/wp-content/uploads/2018/06/trainingdef-1024x779.png 1024w" sizes="(max-width: 2396px) 100vw, 2396px" /></a></p>
+<p>This is the <a href="https://github.com/nheidloff/hyperparameter-optimization-ibm-watson-studio/blob/master/screenshots/result.png" rel="noopener" target="_blank">result</a> of the experiment. It shows that you should use at least 700 training runs.</p>
+<p>I&#8217;ve <a href="https://github.com/nheidloff/hyperparameter-optimization-ibm-watson-studio" rel="noopener" target="_blank">open sourced the sample</a> on GitHub.</p>
+<p>Most of the code can be re-used from the original sample. There are only two things that need to be changed in the code:</p>
+<ul>
+<li>Obtaining Hyperparameter Values from Watson</li>
+<li>Storing Results</li>
+</ul>
+<p><strong>Obtaining Hyperparameter Values from Watson</strong></p>
+<p>The values of the hyperparameters are stored in a JSON file:</p>
+<pre class="brush: python; title: ; notranslate">
+from random import randint
+import json
+
+test_metrics = []
+how_many_training_steps = 4000
+instance_id = randint(0,9999)
+
+try:
+    with open(&quot;config.json&quot;, 'r') as f:
+        json_obj = json.load(f)
+
+    how_many_training_steps = int(json_obj[&quot;how_many_training_steps&quot;])
+except:
+    pass
+
+print('how_many_training_steps: ' + str(how_many_training_steps))
+</pre>
+<p><strong>Storing Results</strong></p>
+<p>At the end of the training run another JSON file needs to be created which contains the test metrics. For every epoch the <a href="https://github.com/nheidloff/hyperparameter-optimization-ibm-watson-studio/blob/master/model/retrain.py#L1260" rel="noopener" target="_blank">metrics</a> are added:</p>
+<pre class="brush: python; title: ; notranslate">
+test_metrics.append((i, {&quot;accuracy&quot;: float(validation_accuracy)}))
+</pre>
+<p>This is the code to save the JSON file:</p>
+<pre class="brush: python; title: ; notranslate">
+training_out =[]
+for test_metric in test_metrics:
+  out = {'steps':test_metric[0]}
+  for (metric,value) in test_metric[1].items():
+    out[metric] = value
+    training_out.append(out)
+
+  with open('{}/val_dict_list.json'.format(os.environ['RESULT_DIR']), 'w') as f:
+    json.dump(training_out, f)
+</pre>
+<p>If you want to run this example yourself, get the code from <a href="https://github.com/nheidloff/hyperparameter-optimization-ibm-watson-studio" rel="noopener" target="_blank">GitHub</a> and get a free <a href="https://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud account</a>. To learn more about HPO in Watson Studio, check out the <a href="https://dataplatform.ibm.com/docs/content/analyze-data/ml_dlaas_hpo.html?audience=wdp&#038;context=analytics" rel="noopener" target="_blank">documentation</a>. </p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/hyperparameter-optimization-ibm-watson-studio">Hyperparameter Optimization with IBM Watson Studio</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><wfw:commentRss>http://heidloff.net/article/hyperparameter-optimization-ibm-watson-studio/feed/</wfw:commentRss><slash:comments>0</slash:comments><post-id xmlns="com-wordpress:feed-additions:1">3014</post-id></item></channel></rss>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 2 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=2" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Thu, 24 Nov 2022 10:47:53 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>Deploying TechZone Toolkit Modules on existing Clusters</title><link>http://heidloff.net/article/deploying-techzone-toolkit-modules-on-existing-clusters/</link><pubDate>Fri, 04 Nov 2022 07:28:12 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=5243</guid><description><![CDATA[<p>With the TechZone Accelerator Toolkit IBM software, open source projects and custom applications can easily be deployed to various clouds. This article explains how to deploy resources on existing OpenShift clusters. Check out my earlier blog that introduces the toolkit: Introducing IBM’s Toolkit to handle Everything as Code. The toolkit leverages Terrafrom and GitOps and [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/deploying-techzone-toolkit-modules-on-existing-clusters/">Deploying TechZone Toolkit Modules on existing Clusters</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p><em>With the TechZone Accelerator Toolkit IBM software, open source projects and custom applications can easily be deployed to various clouds. This article explains how to deploy resources on existing OpenShift clusters.</em><span id="more-5243"></span></p>
+<p>Check out my earlier blog that introduces the toolkit: <a href="http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/" rel="noopener noreferrer" target="_blank">Introducing IBM’s Toolkit to handle Everything as Code</a>. The toolkit leverages Terrafrom and GitOps and is based on best practices from IBM projects with partners and clients.</p>
+<p>With the toolkit both infrastructure like Kubernetes clusters as well as resources within Kubernetes clusters can be deployed. Infrastructure resources are deployed via Terraform, resources within clusters via Argo CD. </p>
+<p>In some cases you might already have clusters and only want to set up resources within these clusters. Additionally when developing your own modules for the toolkit, you often want to skip creations of clusters, since it takes too much time.</p>
+<p>To automate the <a href="https://github.com/IBM/watson-automation" rel="noopener noreferrer" target="_blank">deployments of Watson containers</a> to embed AI in custom applications, we&#8217;ve created a repo. The repo contains documentation how to set up an OpenShift cluster with Watson containers and also documentation how to deploy the Watson containers to existing clusters.</p>
+<p>The following <a href="https://github.com/IBM/watson-automation/blob/main/roks-new-nlp/bom.yaml" rel="noopener noreferrer" target="_blank">sample</a> shows how an OpenShift cluster is created in the IBM Cloud which comes with Argo CD, a GitOps repo, Watson NLP and a sample application based on ubi.</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: cloudnativetoolkit.dev/v1alpha1
+kind: BillOfMaterial
+metadata:
+  name: cluster-with-watson-nlp
+spec:
+  modules:
+    - name: ibm-ocp-vpc
+    - name: argocd-bootstrap
+    - name: gitops-repo
+    - name: terraform-gitops-ubi
+    - name: terraform-gitops-watson-nlp
+</pre>
+<p>To deploy Watson containers to existing OpenShift cluster, another module called &#8216;<a href="https://github.com/cloud-native-toolkit/terraform-ocp-login" rel="noopener noreferrer" target="_blank">ocp-login</a>&#8216; can be used.</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: cloudnativetoolkit.dev/v1alpha1
+kind: BillOfMaterial
+metadata:
+  name: cluster-with-watson-nlp
+spec:
+  modules:
+    - name: ocp-login
+    - name: argocd-bootstrap
+    - name: gitops-repo
+    - name: terraform-gitops-ubi
+    - name: terraform-gitops-watson-nlp
+</pre>
+<p>There is <a href="https://github.com/IBM/watson-automation/blob/main/documentation/Usage.md#usage-of-existing-clusters" rel="noopener noreferrer" target="_blank">documentation</a> that describes how to use the ocp-login module. You need two pieces of information that are defined in credentials.properties.</p>
+<ul>
+<li>OpenShift server URL, for example &#8216;https://cXXX-e.yy-zz.containers.cloud.ibm.com:30364&#8217;</li>
+<li>OpenShift login token, for example &#8216;sha256~xxx&#8217;</li>
+</ul>
+<p>This is the complete <a href="https://github.com/IBM/watson-automation/blob/main/roks-existing-nlp/output/credentials-template.properties" rel="noopener noreferrer" target="_blank">credentials.properties</a> file which also includes credentials to access the GitOps repo and the Watson container registry:</p>
+<pre class="brush: plain; title: ; notranslate">
+export TF_VAR_gitops_repo_token=___your-github-token____
+export TF_VAR_terraform_gitops_watson_nlp_registry_credentials=___your-registry-credentials___
+export TF_VAR_server_url=https://cXXX-e.yy-zz.containers.cloud.ibm.com:30364
+export TF_VAR_cluster_login_token=sha256~xxx
+</pre>
+<p>To obtain &#8216;TF_VAR_server_url&#8217; and &#8216;TF_VAR_cluster_login_token&#8217; open the OpenShift console, click on your user name in the upper right corner and choose &#8216;copy login command&#8217;.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-04-at-08.19.06.png" alt="" width="2438" height="908" class="alignnone size-full wp-image-5244" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-04-at-08.19.06.png 2438w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-04-at-08.19.06-300x112.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-04-at-08.19.06-768x286.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-04-at-08.19.06-1024x381.png 1024w" sizes="(max-width: 2438px) 100vw, 2438px" /></p>
+<p>To find out more about these capabilities, check out the following resources:</p>
+<ul>
+<li><a href="https://github.com/IBM/watson-automation" rel="noopener noreferrer" target="_blank">Watson Automation Repo</a></li>
+<li><a href="https://operate.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">TechZone Accelerator Toolkit</a></li>
+<li><a href="https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home" rel="noopener noreferrer" target="_blank">Watson NLP</a></li>
+</ul>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/deploying-techzone-toolkit-modules-on-existing-clusters/">Deploying TechZone Toolkit Modules on existing Clusters</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><post-id xmlns="com-wordpress:feed-additions:1">5243</post-id></item></channel></rss>

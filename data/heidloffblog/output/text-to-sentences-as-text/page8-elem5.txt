@@ -1,0 +1,5 @@
+Accessing Machine Learning Models via REST APIs.
+Watson Machine Learning can be used by data scientists to create models which can be managed and deployed on the IBM Cloud.
+Developers can access these models from applications, for example to run predictions.
+I blogged about a sample scenario to predict whether people would have survived the Titanic accident based on their age, ticket […]
+The post Accessing Machine Learning Models via REST APIs [http://heidloff.net/article/machine-learning-models-rest-apis] appeared first on Niklas Heidloff [http://heidloff.net].

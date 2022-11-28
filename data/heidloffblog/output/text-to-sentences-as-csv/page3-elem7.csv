@@ -1,0 +1,22 @@
+page3-elem7,Deploying Kubernetes Resources via GitOps.
+page3-elem7,Infrastructure as Code is an important concept of DevOps.
+page3-elem7,With GitOps tools like Argo CD [https://argo-cd.readthedocs.io/en/stable/] not only infrastructure can be handled as code but also custom applications and other Kubernetes resources.
+page3-elem7,Here is the definition of GitOps [https://www.redhat.com/en/topics/devops/what-is-gitops] from Red Hat.
+page3-elem7,> GitOps uses Git repositories as a single source of truth to deliver infrastructure as code.
+page3-elem7,Submitted code checks the CI process while the CD process checks and applies requirements for things like security infrastructure as code or any other boundaries set for the application framework.
+page3-elem7,All changes to code are tracked making updates easy while also providing version control should a rollback be needed.
+page3-elem7,Software development is much more than writing source code.
+page3-elem7,Modern software development also requires automation and CI/CD.
+page3-elem7,One way to implement CI/CD is to use pipelines that build images and other resources and deploy them via scripts whenever the pipelines run.
+page3-elem7,While pipelines are still required to build the artefacts the actual deployment of resources is done more and more via declarative and event based GitOps mechanisms.
+page3-elem7,GitOps uses Git repos to define the desired state of a system.
+page3-elem7,GitOps tools like Argo CD compare the current state with the desired state.
+page3-elem7,If these states don’t match synchronisation is triggered automatically to apply update or delete resources.
+page3-elem7,Here are some videos I’ve used to learn GitOps:
+page3-elem7,* What is GitOps How GitOps works and Why it’s so useful [https://www.youtube.com/watch?v=f5EpcWp0THw]
+page3-elem7,* ArgoCD Tutorial for Beginners | GitOps CD for Kubernetes [https://youtu.be/MeU5_k9ssrs]
+page3-elem7,* What Is GitOps And Why Do We Want It?
+page3-elem7,* GitOps Without Pipelines With ArgoCD Image Updater [https://youtu.be/avPUQin9kzU]
+page3-elem7,* Argo CD – Applying GitOps Principles To Manage A Production Environment In Kubernetes [https://youtu.be/vpWQeoaiRM4]
+page3-elem7,Over the next days I’d like to blog more about GitOps and Terraform and how my team has used these tools to set up Red Hat OpenShift in the IBM Cloud [https://github.com/IBM/watson-automation] including Watson NLP and a custom application.
+page3-elem7,The post Deploying Kubernetes Resources via GitOps [http://heidloff.net/article/deploying-kubernetes-resources-via-gitops/] appeared first on Niklas Heidloff [http://heidloff.net].

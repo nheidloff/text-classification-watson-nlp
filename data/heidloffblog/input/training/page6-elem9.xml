@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 20 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=20" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Fri, 25 Nov 2022 07:22:15 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>Building VR Applications with Unity and IBM Watson</title><link>http://heidloff.net/article/vr-virtual-reality-unity-ibm-watson</link><comments>http://heidloff.net/article/vr-virtual-reality-unity-ibm-watson#respond</comments><pubDate>Wed, 06 Jun 2018 09:20:39 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=2985</guid><description><![CDATA[<p>I&#8217;ve continued to play with Unity and the IBM Watson SDK, which allows using cognitive services like speech recognition in Unity projects. With this technology you can not only build games, but also other exciting scenarios. I&#8217;ve changed my Augmented Reality sample slightly to run it as a Virtual Reality app that can be experienced [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/vr-virtual-reality-unity-ibm-watson">Building VR Applications with Unity and IBM Watson</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p>I&#8217;ve continued to play with <a href="https://unity3d.com/unity" rel="noopener" target="_blank">Unity</a> and the <a href="https://github.com/watson-developer-cloud/unity-sdk" rel="noopener" target="_blank">IBM Watson SDK</a>, which allows using cognitive services like speech recognition in Unity projects. With this technology you can not only build games, but also other exciting scenarios. I&#8217;ve changed my <a href="http://heidloff.net/article/ar-applications-unity-ibm-watson" rel="noopener" target="_blank">Augmented Reality sample</a> slightly to run it as a Virtual Reality app that can be experienced via <a href="https://vr.google.com/cardboard/" rel="noopener" target="_blank">Google Cardboard</a> and an iPhone.<span id="more-2985"></span></p>
+<p>The picture shows the two screens showing the 3D character. Users can move the player (themselves) via voice commands and can have conversations with the character, for example:</p>
+<ul>
+<li><strong>User</strong>: Start to walk</li>
+<li><strong>User</strong>: Stop</li>
+<li><strong>User</strong>: How is the weather?</li>
+<li><strong>Virtual character</strong>: In which location?</li>
+<li><strong>User</strong>: Munich</li>
+<li><strong>Virtual character</strong>: The temperature in Munich is currently 24 degrees.</li>
+<li><strong>User</strong>: How is the weather in Berlin?</li>
+<li><strong>Virtual character</strong>: The temperature in Berlin is currently 28 degrees.</li>
+</ul>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/06/demo.png"><img src="http://heidloff.net/wp-content/uploads/2018/06/demo.png" alt="demo" width="2300" height="1380" class="alignnone size-full wp-image-2987" srcset="http://heidloff.net/wp-content/uploads/2018/06/demo.png 2300w, http://heidloff.net/wp-content/uploads/2018/06/demo-300x180.png 300w, http://heidloff.net/wp-content/uploads/2018/06/demo-1024x614.png 1024w" sizes="(max-width: 2300px) 100vw, 2300px" /></a></p>
+<p>Check out the <a href="https://www.youtube.com/watch?v=dAgqvRs0ZaQ" rel="noopener" target="_blank">video</a> for a short demo. In order to see both screens, open the link on a smartphone and choose &#8216;3D&#8217; as viewing option. To experience the video in 3D, you need a VR device like the Google Cardboard.</p>
+<p><a href="https://github.com/nheidloff/unity-watson-vr-sample" rel="noopener" target="_blank">Get the code from GitHub.</a> The setup should be pretty straight forward. All you need to do, is to open the project in Unity (it comes with the Watson SDK and Cardboard SDK) and enter your Watson credentials. To run it on an iPhone, check out the README.</p>
+<p>Technically the following services and tools are used:</p>
+<ul>
+<li><a href="https://unity3d.com/unity" rel="noopener" target="_blank">Unity</a></li>
+<li><a href="https://github.com/watson-developer-cloud/unity-sdk" rel="noopener" target="_blank">IBM Watson SDK for Unity</a></li>
+<li><a href="https://www.ibm.com/watson/services/speech-to-text/" rel="noopener" target="_blank">IBM Watson Speech To Text</a></li>
+<li><a href="https://www.ibm.com/watson/services/conversation/" rel="noopener" target="_blank">IBM Watson Assistant</a></li>
+<li><a href="https://www.ibm.com/watson/services/text-to-speech/" rel="noopener" target="_blank">IBM Watson Text To Speech</a></li>
+<li><a href="https://console.bluemix.net/catalog/services/weather-company-data" rel="noopener" target="_blank">Weather Company Data</a></li>
+<li><a href="https://developers.google.com/vr/develop/unity/get-started-ios" rel="noopener" target="_blank">Google Cardboard</a></li>
+</ul>
+<p>Most of the functionality is identical to my previous Augmented Reality sample. For example here are some snippets how to use Watson Speech To Text. First you need to initialize the service with credentials you can get from the <a href="https://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a>. The lite account offers access to the Watson services, doesn&#8217;t cost anything and you don&#8217;t even have to provide a credit card.</p>
+<pre class="brush: cpp; title: ; notranslate">
+SpeechToText _speechToText;
+Credentials credentials = new Credentials(WATSON_SPEECH_TO_TEXT_USER, WATSON_SPEECH_TO_TEXT_PASSWORD, &quot;https://stream.watsonplatform.net/speech-to-text/api&quot;);
+_speechToText = new SpeechToText(credentials);
+</pre>
+<p>Next you start listening by invoking StartListening and defining some options:</p>
+<pre class="brush: cpp; title: ; notranslate">
+_speechToText.DetectSilence = true;
+_speechToText.EnableWordConfidence = false;
+_speechToText.EnableTimestamps = false;
+_speechToText.SilenceThreshold = 0.03f;
+_speechToText.MaxAlternatives = 1;
+...
+_speechToText.StartListening(OnSpeechToTextResultReceived, OnRecognizeSpeaker);
+</pre>
+<p>The callback OnSpeechToTextResultReceived gets the spoken text as input:</p>
+<pre class="brush: cpp; title: ; notranslate">
+private void OnSpeechToTextResultReceived(SpeechRecognitionEvent result, Dictionary&lt;string, object&gt; customData) {
+  if (result != null &amp;&amp; result.results.Length &gt; 0) {
+    foreach (var res in result.results) {
+      foreach (var alt in res.alternatives) { 
+        SendMessageToConversation(alt.transcript);                    
+      }
+    }
+  }
+}
+</pre>
+<p>The biggest change from my previous AR sample is the ability to move the player/user with voice commands. In order to do this, I could have added intents like &#8216;walk&#8217; and &#8216;stop&#8217; to Watson Assistant. To save the additional roundtrip to Watson Assistant however, I simply check for a hardcoded list of words. For example if the user input contains the word &#8216;walk&#8217;, the player/user starts to walk until the user says &#8216;stop&#8217;. While walking, the direction can simply be changed by looking in another direction. </p>
+<pre class="brush: cpp; title: ; notranslate">
+Camera camera = Camera.main;
+GameObject player = GameObject.Find(&quot;Player&quot;);
+NavMeshAgent navMeshAgent = player.GetComponent&lt;NavMeshAgent&gt;();
+navMeshAgent.SetDestination(player.transform.position + camera.transform.forward);
+</pre>
+<p>Want to run this sample yourself? Try it out on the <a href="https://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/vr-virtual-reality-unity-ibm-watson">Building VR Applications with Unity and IBM Watson</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><wfw:commentRss>http://heidloff.net/article/vr-virtual-reality-unity-ibm-watson/feed/</wfw:commentRss><slash:comments>0</slash:comments><post-id xmlns="com-wordpress:feed-additions:1">2985</post-id></item></channel></rss>

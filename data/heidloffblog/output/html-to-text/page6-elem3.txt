@@ -1,0 +1,5 @@
+Reusing Open Source Models in AI Applications.
+
+Building machine and deep learning models from scratch is often not trivial, not for developers and sometimes not even for data scientists. Fortunately over the last years several models have been developed and shared that can be reused and sometimes extended. This allows developers adding AI to applications without having to be data scientists. This […]
+
+The post Reusing Open Source Models in AI Applications [http://heidloff.net/article/open-source-ai-models-zoo-exchange-onnx] appeared first on Niklas Heidloff [http://heidloff.net].

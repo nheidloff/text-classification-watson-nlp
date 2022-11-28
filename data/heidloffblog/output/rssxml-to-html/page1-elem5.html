@@ -1,0 +1,84 @@
+Training IBM Watson NLP Models. <p><em>IBM Watson NLP (Natural Language Understanding) and Watson Speech containers can be run locally, on-premises or Kubernetes and OpenShift clusters. Via REST and gRCP APIs AI can easily be embedded in applications. This post describes how to train a simple model for text classfication.</em><span id="more-5362"></span></p>
+<p>To set some context, check out the landing page <a href="https://www.ibm.com/products/ibm-watson-natural-language-processing" rel="noopener noreferrer" target="_blank">IBM Watson NLP Library for Embed</a>. The Watson NLP containers can be run on different container platforms, they provide REST and gRCP interfaces, they can be extended with custom models and they can easily be embedded in solutions. While this offering is new, the underlaying functionality has been used and optimized for a long time in IBM offerings like the IBM Watson Assistant and NLU (Natural Language Understanding) SaaS services and IBM Cloud Pak for Data.</p>
+<p>To try it, a <a href="https://www.ibm.com/account/reg/us-en/signup?formid=urx-51726" rel="noopener noreferrer" target="_blank">trial</a> is available. The container images are stored in an IBM container registry that is accessed via an <a href="https://www.ibm.com/account/reg/signup?formid=urx-51726" rel="noopener noreferrer" target="_blank">IBM Entitlement Key</a>.</p>
+<p><strong>Training Watson NLP Models</strong></p>
+<p>Watson NLP comes with many <a href="https://www.ibm.com/docs/en/watson-libraries?topic=models-catalog" rel="noopener noreferrer" target="_blank">predefined models</a> that can either be re-used without any modifications or that can be customized and extended. One way to deploy Watson NLP is to deploy the Watson runtime container plus one init container per model. The init containers store their models in the same volume, so that the runtime container can access them. The runtime container provides REST and gRPC interfaces which can be invoked by applications to run predictions.</p>
+<p>To train custom models, Watson Studio needs to be used at this point. Let&#8217;s take a look at a simple example. IBM provides a <a href="https://github.com/ibm-build-lab/Watson-NLP/blob/b0ba0652b11cee336a401b66f5d46629f4f71e02/ML/Text-Classification/Consumer%20complaints%20Classification.ipynb" rel="noopener noreferrer" target="_blank">sample notebook</a> to classify consumer complaints about financial products and services. This could be used, for example to route a complaint to the appropriate staff member. The data that is used in this notebook is taken from the <a href="https://www.consumerfinance.gov/complaint/data-use/" rel="noopener noreferrer" target="_blank">Consumer Complaint Database</a> that is published by the Consumer Financial Protection Bureau, a U.S. government agency.</p>
+<p><em>Step 1: Import Libraries</em></p>
+<p>First the Watson NLP library needs to be imported which is part of Watson Studio.</p>
+<pre class="brush: plain; title: ; notranslate">
+!pip install ibm-watson
+import watson_nlp
+...
+from watson_core.data_model.streams.resolver import DataStreamResolver
+from watson_core.toolkit import fileio
+from watson_nlp.blocks.classification.svm import SVM
+from watson_nlp.workflows.classification import Ensemble
+from watson_core.toolkit.quality_evaluation import QualityEvaluator, EvalTypes
+</pre>
+<p><em>Step 2: Load Data</em></p>
+<p>For convenience reasons, the data can be downloaded from Box. This is the original structure of the data.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-17-at-09.08.12.png" alt="" width="2410" height="456" class="alignnone size-full wp-image-5367" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-17-at-09.08.12.png 2410w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-17-at-09.08.12-300x57.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-17-at-09.08.12-768x145.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-17-at-09.08.12-1024x194.png 1024w" sizes="(max-width: 2410px) 100vw, 2410px" /></p>
+<p><em>Step 3: Clean up Data and prepare Training</em></p>
+<p>The dataset is divided in training and test data.</p>
+<pre class="brush: plain; title: ; notranslate">
+# 80% training data
+train_orig_df = train_test_df.groupby('Product').sample(frac=0.8, random_state=6)
+# 20% test data
+test_orig_df = train_test_df.drop(train_orig_df.index)
+</pre>
+<p>Unnecessary columns are dropped and columns are renamed.</p>
+<pre class="brush: plain; title: ; notranslate">
+def prepare_data(df):
+    # only the text column and the target label *Product* are needed
+    df_out = df[['Consumer complaint narrative', 'Product']].reset_index(drop=True)
+    # rename to the identifiers expected by Watson NLP
+    df_out = df_out.rename(columns={&quot;Consumer complaint narrative&quot;: &quot;text&quot;, 'Product': 'labels'})
+    # the label column should be an array (although we have only one label per complaint)
+    df_out['labels'] = df_out['labels'].map(lambda label: [label,])
+    return df_out  
+train_df = prepare_data(train_orig_df)
+train_file = './train_data.json'
+train_df.to_json(train_file, orient='records')
+test_df = prepare_data(test_orig_df)
+test_file = './test_data.json'
+test_df.to_json(test_file, orient='records')
+test_df.explode('labels')
+</pre>
+<p>This is the resulting structure which can be used for the training. </p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-17-at-09.10.51.png" alt="" width="2404" height="226" class="alignnone size-full wp-image-5368" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-17-at-09.10.51.png 2404w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-17-at-09.10.51-300x28.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-17-at-09.10.51-768x72.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-17-at-09.10.51-1024x96.png 1024w" sizes="(max-width: 2404px) 100vw, 2404px" /></p>
+<p><em>Step 4: Train Model</em></p>
+<p>In this example <a href="https://en.wikipedia.org/wiki/Ensemble_learning" rel="noopener noreferrer" target="_blank">ensemble methods</a> are applied which &#8220;use multiple learning algorithms to obtain better predictive performance than could be obtained from any of the constituent learning algorithms alone&#8221;. The following models are downloaded:</p>
+<pre class="brush: plain; title: ; notranslate">
+syntax_model = watson_nlp.load(watson_nlp.download('syntax_izumo_en_stock'))
+use_model = watson_nlp.load(watson_nlp.download('embedding_use_en_stock'))
+stopwords = watson_nlp.download_and_load('text_stopwords_classification_ensemble_en_stock')
+</pre>
+<p>The ensemble model depends on the syntax model and the GloVe and USE embeddings. They are passed with the file containing the training data. &#8216;Ensemble.train&#8217; runs the actual training which takes roughly one hour, if you run the training in Watson Studio using the <a href="https://techzone.ibm.com/collection/watson-nlp-text-classification#tab-1" rel="noopener noreferrer" target="_blank">TechZone demo environment</a>.</p>
+<pre class="brush: plain; title: ; notranslate">
+from watson_nlp.workflows.classification import Ensemble
+ensemble_model = Ensemble.train(train_file, 'syntax_izumo_en_stock', 'embedding_glove_en_stock', 'embedding_use_en_stock', stopwords=stopwords, cnn_epochs=5)
+</pre>
+<p><em>Step 5: Evaluate Model</em></p>
+<p>In the last step the trained model is evaluated by using the test dataset which was not part of the training. </p>
+<p>To understand the results, you need to know what precision, recall and f1-score mean. Read the article <a href="https://abeyon.com/ai-performance-measurement-f1score" rel="noopener noreferrer" target="_blank">How to measure an AI models performance</a> or watch the video <a href="https://www.youtube.com/watch?v=wYevg3gLhnI" rel="noopener noreferrer" target="_blank">What is Precision, Recall, and F1-Score</a>?.</p>
+<p>Summary from the article:</p>
+<ul>
+<li>Precision can be thought of as a measure of exactness</li>
+<li>Recall can be thought of as a measure of completeness</li>
+<li>F1-score is a combination of Precision and Recall. A good F1 score means that you have low false positives and low false negatives</li>
+</ul>
+<p>Accuracy is used when the True Positives and True negatives are more important while F1-score is used when the False Negatives and False Positives are crucial.</p>
+<p>Here are the results:</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-17-at-10.15.38.png" alt="" width="2432" height="1220" class="alignnone size-full wp-image-5372" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-17-at-10.15.38.png 2432w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-17-at-10.15.38-300x150.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-17-at-10.15.38-768x385.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-17-at-10.15.38-1024x514.png 1024w" sizes="(max-width: 2432px) 100vw, 2432px" /></p>
+<p>To find out more about Watson NLP and Watson for Embed in general, check out these resources:</p>
+<ul>
+<li><a href="https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home" rel="noopener noreferrer" target="_blank">IBM Watson NLP Documentation</a></li>
+<li><a href="https://www.ibm.com/docs/en/watson-libraries?topic=models-catalog" rel="noopener noreferrer" target="_blank">IBM Watson NLP Model catalog</a></li>
+<li><a href="https://www.ibm.com/account/reg/us-en/signup?formid=urx-51726" rel="noopener noreferrer" target="_blank">IBM Watson NLP Trial</a></li>
+<li><a href="https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726" rel="noopener noreferrer" target="_blank">IBM Watson NLP Entitlement Key</a></li>
+<li><a href="https://github.com/IBM/watson-automation" rel="noopener noreferrer" target="_blank">Automation for Watson NLP Deployments</a></li>
+<li><a href="http://heidloff.net/article/running-ibm-watson-nlp-locally-in-containers/" rel="noopener noreferrer" target="_blank">Running IBM Watson NLP locally in Containers</a></li>
+<li><a href="http://heidloff.net/article/running-ibm-watson-nlp-in-minikube/" rel="noopener noreferrer" target="_blank">Running IBM Watson NLP in Minikube</a></li>
+</ul>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/training-ibm-watson-nlp-models/">Training IBM Watson NLP Models</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>

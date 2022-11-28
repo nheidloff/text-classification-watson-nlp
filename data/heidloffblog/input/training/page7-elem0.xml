@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 21 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=21" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Fri, 25 Nov 2022 07:22:15 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>Building AR Applications with Unity and IBM Watson</title><link>http://heidloff.net/article/ar-applications-unity-ibm-watson</link><comments>http://heidloff.net/article/ar-applications-unity-ibm-watson#comments</comments><pubDate>Tue, 29 May 2018 12:28:11 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=2978</guid><description><![CDATA[<p>Over the last days I&#8217;ve enjoyed playing with Unity and the IBM Watson SDK, which allows using cognitive services like speech recognition in Unity projects. With this technology you can not only build games, but also other exciting scenarios. I&#8217;ve extended an Augmented Reality application from my colleague Amara Keller which allows iOS users to [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/ar-applications-unity-ibm-watson">Building AR Applications with Unity and IBM Watson</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p>Over the last days I&#8217;ve enjoyed playing with <a href="https://unity3d.com/unity" rel="noopener" target="_blank">Unity</a> and the <a href="https://github.com/watson-developer-cloud/unity-sdk" rel="noopener" target="_blank">IBM Watson SDK</a>, which allows using cognitive services like speech recognition in Unity projects. With this technology you can not only build games, but also other exciting scenarios. I&#8217;ve extended an Augmented Reality application from my colleague <a href="https://medium.com/@MissAmaraKay/build-your-first-ai-ar-app-on-unity-8c12895687fa" rel="noopener" target="_blank">Amara Keller</a> which allows iOS users to have conversations with a virtual character.<span id="more-2978"></span></p>
+<p>The <a href="https://raw.githubusercontent.com/nheidloff/unity-watson-ar-sample/master/photo1.png" rel="noopener" target="_blank">picture</a> shows a printed piece of paper with a pattern. When using the app, the 3D character shows up on the paper. Users can have conversations with the character, for example:</p>
+<ul>
+<li><strong>User</strong>: How is the weather?</li>
+<li><strong>Virtual character</strong>: In which location?</li>
+<li><strong>User</strong>: Munich</li>
+<li><strong>Virtual character</strong>: The temperature in Munich is currently 24 degrees.</li>
+<li><strong>User</strong>: How is the weather in Berlin?</li>
+<li><strong>Virtual character</strong>: The temperature in Berlin is currently 28 degrees.</li>
+</ul>
+<p>Check out the <a href="https://www.youtube.com/watch?v=u8c0fPQOqMU" rel="noopener" target="_blank">video</a> for a short demo.</p>
+<p><iframe width="853" height="480" src="//www.youtube.com/embed/u8c0fPQOqMU" frameborder="0" allowfullscreen></iframe> </p>
+<p><a href="https://github.com/nheidloff/unity-watson-ar-sample" rel="noopener" target="_blank">Get the code from GitHub.</a></p>
+<p>Technically the following services and tools are used:</p>
+<ul>
+<li><a href="https://unity3d.com/unity" rel="noopener" target="_blank">Unity</a></li>
+<li><a href="https://developer.vuforia.com/" rel="noopener" target="_blank">Vuforia</a></li>
+<li><a href="https://github.com/watson-developer-cloud/unity-sdk" rel="noopener" target="_blank">IBM Watson SDK for Unity</a></li>
+<li><a href="https://www.ibm.com/watson/services/speech-to-text/" rel="noopener" target="_blank">IBM Watson Speech To Text</a></li>
+<li><a href="https://www.ibm.com/watson/services/conversation/" rel="noopener" target="_blank">IBM Watson Assistant</a></li>
+<li><a href="https://www.ibm.com/watson/services/text-to-speech/" rel="noopener" target="_blank">IBM Watson Text To Speech</a></li>
+<li><a href="https://console.bluemix.net/catalog/services/weather-company-data" rel="noopener" target="_blank">Weather Company Data</a></li>
+</ul>
+<p>The main logic is in this <a href="https://github.com/nheidloff/unity-watson-ar-sample/blob/master/SoldierConvo.cs" rel="noopener" target="_blank">file</a>. Let&#8217;s take a look how to use the Speech To Text service as an example. First you need to initialize the service with credentials you can get from the <a href="https://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a>. The lite account offers access to the Watson services, doesn&#8217;t cost anything and you don&#8217;t even have to provide a credit card.</p>
+<pre class="brush: cpp; title: ; notranslate">
+SpeechToText _speechToText;
+Credentials credentials = new Credentials(WATSON_SPEECH_TO_TEXT_USER, WATSON_SPEECH_TO_TEXT_PASSWORD, &quot;https://stream.watsonplatform.net/speech-to-text/api&quot;);
+_speechToText = new SpeechToText(credentials);
+</pre>
+<p>Next you start listening by invoking StartListening and defining some options:</p>
+<pre class="brush: cpp; title: ; notranslate">
+_speechToText.DetectSilence = true;
+_speechToText.EnableWordConfidence = false;
+_speechToText.EnableTimestamps = false;
+_speechToText.SilenceThreshold = 0.03f;
+_speechToText.MaxAlternatives = 1;
+...
+_speechToText.StartListening(OnSpeechToTextResultReceived, OnRecognizeSpeaker);
+</pre>
+<p>The callback OnSpeechToTextResultReceived gets the spoken text as input:</p>
+<pre class="brush: cpp; title: ; notranslate">
+private void OnSpeechToTextResultReceived(SpeechRecognitionEvent result, Dictionary&lt;string, object&gt; customData) {
+  if (result != null &amp;&amp; result.results.Length &gt; 0) {
+    foreach (var res in result.results) {
+      foreach (var alt in res.alternatives) { 
+        SendMessageToConversation(alt.transcript);                    
+      }
+    }
+  }
+}
+</pre>
+<p>The application also showcases how to use Watson Assistant and Watson Text To Speech in addition to Watson Speech To Text. Check out the <a href="https://github.com/nheidloff/unity-watson-ar-sample" rel="noopener" target="_blank">open source project</a> for details.</p>
+<p>One important thing to keep in mind when using the three Watson services together is the timing. For example you should stop recording before playing an audio clip received from Watson Text To Speech so that Watson doesn&#8217;t listen to itself. Also you need to make sure to only play one clip at a time.</p>
+<p>I&#8217;m neither a Unity, nor a C# expert. So I&#8217;m sure there are better ways to do this. Below is how I&#8217;ve solved this. I start the recording again only after the duration of the audio clip.</p>
+<pre class="brush: cpp; title: ; notranslate">
+private void OnSynthesize(AudioClip clip, Dictionary&lt;string, object&gt; customData) {      
+  GameObject audioObject = new GameObject(&quot;AudioObject&quot;);
+  AudioSource source = audioObject.AddComponent&lt;AudioSource&gt;();
+  source.loop = false;
+  source.clip = clip;
+  source.Play();
+  Invoke(&quot;RecordAgain&quot;, source.clip.length);
+  Destroy(audioObject, clip.length);
+}
+</pre>
+<p>Want to run this sample yourself? Try it out on the <a href="https://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/ar-applications-unity-ibm-watson">Building AR Applications with Unity and IBM Watson</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><wfw:commentRss>http://heidloff.net/article/ar-applications-unity-ibm-watson/feed/</wfw:commentRss><slash:comments>3</slash:comments><post-id xmlns="com-wordpress:feed-additions:1">2978</post-id></item></channel></rss>

@@ -1,0 +1,86 @@
+page1-elem5,Training IBM Watson NLP Models.
+page1-elem5,IBM Watson NLP (Natural Language Understanding) and Watson Speech containers can be run locally on-premises or Kubernetes and OpenShift clusters.
+page1-elem5,Via REST and gRCP APIs AI can easily be embedded in applications.
+page1-elem5,This post describes how to train a simple model for text classfication.
+page1-elem5,To set some context check out the landing page IBM Watson NLP Library for Embed [https://www.ibm.com/products/ibm-watson-natural-language-processing].
+page1-elem5,The Watson NLP containers can be run on different container platforms they provide REST and gRCP interfaces they can be extended with custom models and they can easily be embedded in solutions.
+page1-elem5,While this offering is new the underlaying functionality has been used and optimized for a long time in IBM offerings like the IBM Watson Assistant and NLU (Natural Language Understanding) SaaS services and IBM Cloud Pak for Data.
+page1-elem5,To try it a trial [https://www.ibm.com/account/reg/us-en/signup?formid=urx-51726] is available.
+page1-elem5,The container images are stored in an IBM container registry that is accessed via an IBM Entitlement Key [https://www.ibm.com/account/reg/signup?formid=urx-51726].
+page1-elem5,Training Watson NLP Models
+page1-elem5,Watson NLP comes with many predefined models [https://www.ibm.com/docs/en/watson-libraries?topic=models-catalog] that can either be re-used without any modifications or that can be customized and extended.
+page1-elem5,One way to deploy Watson NLP is to deploy the Watson runtime container plus one init container per model.
+page1-elem5,The init containers store their models in the same volume so that the runtime container can access them.
+page1-elem5,The runtime container provides REST and gRPC interfaces which can be invoked by applications to run predictions.
+page1-elem5,To train custom models Watson Studio needs to be used at this point.
+page1-elem5,Let’s take a look at a simple example.
+page1-elem5,IBM provides a sample notebook [https://github.com/ibm-build-lab/Watson-NLP/blob/b0ba0652b11cee336a401b66f5d46629f4f71e02/ML/Text-Classification/Consumer%20complaints%20Classification.ipynb] to classify consumer complaints about financial products and services.
+page1-elem5,This could be used for example to route a complaint to the appropriate staff member.
+page1-elem5,The data that is used in this notebook is taken from the Consumer Complaint Database [https://www.consumerfinance.gov/complaint/data-use/] that is published by the Consumer Financial Protection Bureau a U.S. government agency.
+page1-elem5,Step 1: Import Libraries
+page1-elem5,First the Watson NLP library needs to be imported which is part of Watson Studio.
+page1-elem5,!pip install ibm-watson
+page1-elem5,import watson_nlp
+page1-elem5,...
+page1-elem5,from watson_core.data_model.streams.resolver import DataStreamResolver
+page1-elem5,from watson_core.toolkit import fileio
+page1-elem5,from watson_nlp.blocks.classification.svm import SVM
+page1-elem5,from watson_nlp.workflows.classification import Ensemble
+page1-elem5,from watson_core.toolkit.quality_evaluation import QualityEvaluator EvalTypes
+page1-elem5,Step 2: Load Data
+page1-elem5,For convenience reasons the data can be downloaded from Box.
+page1-elem5,This is the original structure of the data.
+page1-elem5,Step 3: Clean up Data and prepare Training
+page1-elem5,The dataset is divided in training and test data.
+page1-elem5,# 80% training data
+page1-elem5,train_orig_df = train_test_df.groupby('Product').sample(frac=0.8 random_state=6)
+page1-elem5,# 20% test data
+page1-elem5,test_orig_df = train_test_df.drop(train_orig_df.index)
+page1-elem5,Unnecessary columns are dropped and columns are renamed.
+page1-elem5,def prepare_data(df):
+page1-elem5,# only the text column and the target label *Product* are needed
+page1-elem5,df_out = df[['Consumer complaint narrative' 'Product']].reset_index(drop=True)
+page1-elem5,# rename to the identifiers expected by Watson NLP
+page1-elem5,df_out = df_out.rename(columns={"Consumer complaint narrative": "text" 'Product': 'labels'})
+page1-elem5,# the label column should be an array (although we have only one label per complaint)
+page1-elem5,df_out['labels'] = df_out['labels'].map(lambda label: [label])
+page1-elem5,return df_out
+page1-elem5,train_df = prepare_data(train_orig_df)
+page1-elem5,train_file = './train_data.json'
+page1-elem5,train_df.to_json(train_file orient='records')
+page1-elem5,test_df = prepare_data(test_orig_df)
+page1-elem5,test_file = './test_data.json'
+page1-elem5,test_df.to_json(test_file orient='records')
+page1-elem5,test_df.explode('labels')
+page1-elem5,This is the resulting structure which can be used for the training.
+page1-elem5,Step 4: Train Model
+page1-elem5,In this example ensemble methods [https://en.wikipedia.org/wiki/Ensemble_learning] are applied which “use multiple learning algorithms to obtain better predictive performance than could be obtained from any of the constituent learning algorithms alone”.
+page1-elem5,The following models are downloaded:
+page1-elem5,syntax_model = watson_nlp.load(watson_nlp.download('syntax_izumo_en_stock'))
+page1-elem5,use_model = watson_nlp.load(watson_nlp.download('embedding_use_en_stock'))
+page1-elem5,stopwords = watson_nlp.download_and_load('text_stopwords_classification_ensemble_en_stock')
+page1-elem5,The ensemble model depends on the syntax model and the GloVe and USE embeddings.
+page1-elem5,They are passed with the file containing the training data.
+page1-elem5,‘Ensemble.train’ runs the actual training which takes roughly one hour if you run the training in Watson Studio using the TechZone demo environment [https://techzone.ibm.com/collection/watson-nlp-text-classification#tab-1].
+page1-elem5,from watson_nlp.workflows.classification import Ensemble
+page1-elem5,ensemble_model = Ensemble.train(train_file 'syntax_izumo_en_stock' 'embedding_glove_en_stock' 'embedding_use_en_stock' stopwords=stopwords cnn_epochs=5)
+page1-elem5,Step 5: Evaluate Model
+page1-elem5,In the last step the trained model is evaluated by using the test dataset which was not part of the training.
+page1-elem5,To understand the results you need to know what precision recall and f1-score mean.
+page1-elem5,Read the article How to measure an AI models performance [https://abeyon.com/ai-performance-measurement-f1score] or watch the video What is Precision Recall and F1-Score [https://www.youtube.com/watch?v=wYevg3gLhnI]?.
+page1-elem5,Summary from the article:
+page1-elem5,* Precision can be thought of as a measure of exactness
+page1-elem5,* Recall can be thought of as a measure of completeness
+page1-elem5,* F1-score is a combination of Precision and Recall.
+page1-elem5,A good F1 score means that you have low false positives and low false negatives
+page1-elem5,Accuracy is used when the True Positives and True negatives are more important while F1-score is used when the False Negatives and False Positives are crucial.
+page1-elem5,Here are the results:
+page1-elem5,To find out more about Watson NLP and Watson for Embed in general check out these resources:
+page1-elem5,* IBM Watson NLP Documentation [https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home]
+page1-elem5,* IBM Watson NLP Model catalog [https://www.ibm.com/docs/en/watson-libraries?topic=models-catalog]
+page1-elem5,* IBM Watson NLP Trial [https://www.ibm.com/account/reg/us-en/signup?formid=urx-51726]
+page1-elem5,* IBM Watson NLP Entitlement Key [https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726]
+page1-elem5,* Automation for Watson NLP Deployments [https://github.com/IBM/watson-automation]
+page1-elem5,* Running IBM Watson NLP locally in Containers [http://heidloff.net/article/running-ibm-watson-nlp-locally-in-containers/]
+page1-elem5,* Running IBM Watson NLP in Minikube [http://heidloff.net/article/running-ibm-watson-nlp-in-minikube/]
+page1-elem5,The post Training IBM Watson NLP Models [http://heidloff.net/article/training-ibm-watson-nlp-models/] appeared first on Niklas Heidloff [http://heidloff.net].

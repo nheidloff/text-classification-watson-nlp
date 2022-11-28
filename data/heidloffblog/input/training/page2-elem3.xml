@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 2 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=2" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Thu, 24 Nov 2022 10:47:53 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>The new Watson Assistant is awesome</title><link>http://heidloff.net/article/the-new-watson-assistant-is-awesome/</link><pubDate>Mon, 14 Nov 2022 08:42:31 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=5297</guid><description><![CDATA[<p>IBM Watson Assistant is a SaaS offering from IBM to build conversational user experiences. The first version was already good, but the new(ish) version is just awesome! Over the last years Watson Assistant has successfully been used by many IBM clients and partners. Based on the feedback from clients, the IBM development and design team [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/the-new-watson-assistant-is-awesome/">The new Watson Assistant is awesome</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p><em>IBM Watson Assistant is a SaaS offering from IBM to build conversational user experiences. The first version was already good, but the new(ish) version is just awesome!</em><span id="more-5297"></span></p>
+<p>Over the last years Watson Assistant has successfully been used by many IBM clients and partners. Based on the feedback from clients, the IBM development and design team has created a brand new experience. This second version was released at the end of 2021. I was only able to try it recently and was positively surprised how much the offering has evolved. Below are some of my highlights.</p>
+<p><strong>1. Actions</strong></p>
+<p>The new Watson Assistant uses a more natural way to define conversations. The old &#8216;dialog&#8217; experience was replaced with a more intuitive concept which is more goal oriented. For example Assistant users don&#8217;t use intents anymore, but actions. Intents still exist internally, but users want to define actions so that end users can reach their goals.</p>
+<p>Similarly Assistant users don&#8217;t have to define entities anymore. Again, they still exist internally, but as far as users are concerned they just define types (e.g. free text) in the actions experience and the entities are created automatically.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-08.57.43.png" alt="" width="3026" height="1676" class="alignnone size-full wp-image-5298" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-08.57.43.png 3026w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-08.57.43-300x166.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-08.57.43-768x425.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-08.57.43-1024x567.png 1024w" sizes="(max-width: 3026px) 100vw, 3026px" /></p>
+<p><strong>2. Integration of Watson Discovery</strong></p>
+<p>With the Assistant the most typical conversation flows are covered. However, for advanced topics Assistant can call out to other services like Watson Discovery. This is useful if you have FAQs or other data stored in other systems that you want to expose to end users. </p>
+<p>The following screenshot shows how Assistant can return articles from my blog. It only takes five minutes to implement this.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-09.07.44.png" alt="" width="3034" height="1616" class="alignnone size-full wp-image-5299" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-09.07.44.png 3034w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-09.07.44-300x160.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-09.07.44-768x409.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-09.07.44-1024x545.png 1024w" sizes="(max-width: 3034px) 100vw, 3034px" /></p>
+<p><strong>3. Much more</strong></p>
+<p>There are so many more cool features and improvements.</p>
+<ul>
+<li>Via REST APIs services can be queried or perform business logic</li>
+<li>Integrations with phone</li>
+<li>Integrations with chat clients and SMS</li>
+<li>Custom integrations</li>
+<li>Embeddable web chat widget</li>
+<li>Hand over to agent</li>
+<li>Free text responses</li>
+<li>Integrated debugger in preview chat window</li>
+<li>Clarifying question to identify the right action</li>
+<li>Change conversation topics (switch between actions)</li>
+<li>Built in analytics</li>
+<li>User authentication and secure traffic</li>
+<li>Private endpoints</li>
+<li>Different plans for different needs including isolated deployments</li>
+<li>High availability mechanisms</li>
+<li>Multiple languages</li>
+<li>Templates with lots of predefined reusable actions</li>
+<li>Production and development environments</li>
+<li>APIs for most common languages</li>
+<li>&#8230;</li>
+</ul>
+<p><strong>Getting started</strong></p>
+<p>To get started, try it out yourselves. There is a <a href="https://cloud.ibm.com/catalog/services/watson-assistant" rel="noopener noreferrer" target="_blank">free lite plan</a>.</p>
+<p>The first time you log in, a guided tour is offered. I&#8217;m usually not a fan of those, but it worked very well for me to learn a lot in a short amout of time. The tour is also documented in a <a href="https://cloud.ibm.com/docs/assistant?topic=assistant-getting-started" rel="noopener noreferrer" target="_blank">blog series</a>.</p>
+<p>The <a href="https://cloud.ibm.com/docs/watson-assistant?topic=watson-assistant-about" rel="noopener noreferrer" target="_blank">documentation</a> is well structured, complete and easy to read.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/the-new-watson-assistant-is-awesome/">The new Watson Assistant is awesome</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><post-id xmlns="com-wordpress:feed-additions:1">5297</post-id></item></channel></rss>

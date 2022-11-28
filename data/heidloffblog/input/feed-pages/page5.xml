@@ -1,0 +1,954 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	
+xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+>
+
+<channel>
+	<title>Page 5 &#8211; Niklas Heidloff</title>
+	<atom:link href="http://heidloff.net/feed/?paged=5" rel="self" type="application/rss+xml" />
+	<link>http://heidloff.net</link>
+	<description></description>
+	<lastBuildDate>
+	Thu, 24 Nov 2022 10:47:53 +0000	</lastBuildDate>
+	<language>en-US</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=5.1.15</generator>
+<site xmlns="com-wordpress:feed-additions:1">102773794</site>	<item>
+		<title>Tekton without Tekton in DevSecOps Pipelines</title>
+		<link>http://heidloff.net/article/tekton-without-tekton-devsecops-pipelines/</link>
+				<pubDate>Tue, 05 Apr 2022 08:48:31 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=4976</guid>
+				<description><![CDATA[<p>IBM provides a DevSecOps reference implementation which is especially useful for regulated industries to adhere to policies. This article describes how we have implemented the CI and CD pipelines for our SaaS reference architecture. This article is part of a mini series. Read the previous articles to understand the benefits of the DevSecOps reference implementation [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/tekton-without-tekton-devsecops-pipelines/">Tekton without Tekton in DevSecOps Pipelines</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>IBM provides a DevSecOps reference implementation which is especially useful for regulated industries to adhere to policies. This article describes how we have implemented the CI and CD pipelines for our SaaS reference architecture.</em><span id="more-4976"></span></p>
+<p>This article is part of a mini series. Read the previous articles to understand the benefits of the DevSecOps reference implementation and how to use the CI/CD pipelines from a consumer perspective. In those articles I explain the DevSecOps reference implementation via a concrete sample scenario which is a <a href="https://github.com/IBM/multi-tenancy" rel="noopener noreferrer" target="_blank">SaaS reference architecture</a> that shows how our clients and partners can build software as a service.</p>
+<ul>
+<li><a href="http://heidloff.net/article/devsecops-saas-reference-architecture-openshift/" rel="noopener noreferrer" target="_blank">DevSecOps for SaaS Reference Architecture on OpenShift</a></li>
+<li><a href="http://heidloff.net/article/shift-left-continuous-integration-devsecops-pipelines/" rel="noopener noreferrer" target="_blank">Shift-Left Continuous Integration with DevSecOps Pipelines</a></li>
+<li><a href="http://heidloff.net/article/change-evidence-issue-management-devsecops/" rel="noopener noreferrer" target="_blank">Change, Evidence and Issue Management with DevSecOps</a></li>
+<li><a href="http://heidloff.net/article/continuous-delivery-ibm-devsecops-reference-architecture/" rel="noopener noreferrer" target="_blank">Continuous Delivery with DevSecOps Reference Architecture</a></li>
+<li>This article: <a href="http://heidloff.net/article/tekton-without-tekton-devsecops-pipelines/" rel="noopener noreferrer" target="_blank">Tekton without Tekton in DevSecOps Pipelines</a></li>
+</ul>
+<p>The DevSecOps reference implementation uses internally <a href="https://tekton.dev/" rel="noopener noreferrer" target="_blank">Tekton</a> which is a Kubernetes-native CI/CD technology with several benefits like the big community, lots of reusable tasks, multi-cloud support and more. One challenge I&#8217;ve experienced with Tekton is that it is sometimes not as easy and convenient as I had hoped. A good example is how parameters are passed around. To support clean encapsulations and allow reuse of assets, Tekton assets provide interfaces which describe exactly the input and output of assets like tasks. While this concept makes a lot of sense, it can add complexity (some people might say unnecessary work) when developing pipelines. For example to pass a property to a task it might involve multiple stages: from initial definition to pipeline to pipeline run to task and then to task run. In my case this often caused issues since I forgot steps and the debugging was time consuming.</p>
+<p>This is why I use the article title &#8216;Tekton without Tekton&#8217;. The DevSecOps reference implementation comes with its own programming model to make it easier to build pipelines. For common tasks like vulnerability checks, secret detections and building images out of the box functionality is provided. In other words no code has to be written. Instead tasks can be reused and customized either declaratively or programmatically.</p>
+<p>Rather than writing Tekton tasks, scripts can be invoked. The <a href="https://github.com/IBM/multi-tenancy/blob/2692acce6588f12011ce4b52e7dccb425b219530/.pipeline-config.yaml" rel="noopener noreferrer" target="_blank">.pipeline-config.yaml</a> file defines which scripts to invoke in which stages of the CI/CD pipelines. For each stage different base images can be chosen. For example the &#8216;deploy&#8217; stage cannot be handled generically which is why custom specific scripts need to be provided.</p>
+<pre class="brush: plain; title: ; notranslate">
+# Documentation: https://pages.github.ibm.com/one-pipeline/docs/custom-scripts.html
+version: '1'
+setup:
+  image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
+  script: |
+    #!/usr/bin/env bash
+    source cd-scripts/setup.sh
+deploy:
+  image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
+  script: |
+    #!/usr/bin/env bash
+    if [[ &quot;$PIPELINE_DEBUG&quot; == 1 ]]; then
+      trap env EXIT
+      env
+      set -x
+    fi
+    source cd-scripts/deploy_setup.sh
+    source cd-scripts/deploy.sh
+</pre>
+<p>I especially like the tools that provide various convenience functionality. For example this is how you can use global variables (see <a href="https://cloud.ibm.com/docs/devsecops?topic=devsecops-devsecops-pipelinectl" rel="noopener noreferrer" target="_blank">documentation</a>).</p>
+<p><a href="https://github.com/IBM/multi-tenancy/blob/2692acce6588f12011ce4b52e7dccb425b219530/cd-scripts/deploy_setup.sh#L154" rel="noopener noreferrer" target="_blank">Define variable</a>:</p>
+<pre class="brush: plain; title: ; notranslate">
+set_env PLATFORM_NAME &quot;${PLATFORM_NAME}&quot;
+</pre>
+<p><a href="https://github.com/IBM/multi-tenancy/blob/2692acce6588f12011ce4b52e7dccb425b219530/cd-scripts/deploy.sh#L5" rel="noopener noreferrer" target="_blank">Read variable:</a></p>
+<pre class="brush: plain; title: ; notranslate">
+PLATFORM_NAME=&quot;$(get_env PLATFORM_NAME)&quot;
+</pre>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/04/Screenshot-2022-04-01-at-10.37.46.png" alt="" width="2286" height="1420" class="alignnone size-full wp-image-4982" srcset="http://heidloff.net/wp-content/uploads/2022/04/Screenshot-2022-04-01-at-10.37.46.png 2286w, http://heidloff.net/wp-content/uploads/2022/04/Screenshot-2022-04-01-at-10.37.46-300x186.png 300w, http://heidloff.net/wp-content/uploads/2022/04/Screenshot-2022-04-01-at-10.37.46-768x477.png 768w, http://heidloff.net/wp-content/uploads/2022/04/Screenshot-2022-04-01-at-10.37.46-1024x636.png 1024w" sizes="(max-width: 2286px) 100vw, 2286px" /></p>
+<p>Check out the <a href="https://cloud.ibm.com/docs/devsecops?topic=devsecops-tutorial-cd-devsecops" rel="noopener noreferrer" target="_blank">IBM Toolchains documentation</a> and the <a href="https://github.com/IBM/multi-tenancy" rel="noopener noreferrer" target="_blank">SaaS reference architecture</a> to find out more.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/tekton-without-tekton-devsecops-pipelines/">Tekton without Tekton in DevSecOps Pipelines</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">4976</post-id>	</item>
+		<item>
+		<title>Continuous Delivery with DevSecOps Reference Architecture</title>
+		<link>http://heidloff.net/article/continuous-delivery-ibm-devsecops-reference-architecture/</link>
+				<pubDate>Mon, 04 Apr 2022 07:59:07 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=4963</guid>
+				<description><![CDATA[<p>IBM provides a DevSecOps reference implementation which is especially useful for regulated industries to adhere to policies. This article describes the CD pipeline to deploy software using a GitOps approach. Here is the definition of DevSecOps from IBM: DevSecOps is an evolution of Agile and DevOps, integrating secure development best practices as early as possible [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/continuous-delivery-ibm-devsecops-reference-architecture/">Continuous Delivery with DevSecOps Reference Architecture</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>IBM provides a DevSecOps reference implementation which is especially useful for regulated industries to adhere to policies. This article describes the CD pipeline to deploy software using a GitOps approach.</em><span id="more-4963"></span></p>
+<p>Here is the definition of <a href="https://cloud.ibm.com/docs/devsecops?topic=devsecops-devsecops_intro" rel="noopener noreferrer" target="_blank">DevSecOps</a> from IBM:</p>
+<blockquote><p>DevSecOps is an evolution of Agile and DevOps, integrating secure development best practices as early as possible in the software delivery lifecycle (also known as &#8220;shift left&#8221;). This approach prevents security problems from reaching production systems and failing corporate audits. DevSecOps requires automating security and compliance controls as part of continuous integration and continuous delivery processes. Evidence of these controls is also collected to demonstrate to auditors that every change in history meets the necessary controls.</p></blockquote>
+<p>This article is part of a mini series:</p>
+<ul>
+<li><a href="http://heidloff.net/article/devsecops-saas-reference-architecture-openshift/" rel="noopener noreferrer" target="_blank">DevSecOps for SaaS Reference Architecture on OpenShift</a></li>
+<li><a href="http://heidloff.net/article/shift-left-continuous-integration-devsecops-pipelines/" rel="noopener noreferrer" target="_blank">Shift-Left Continuous Integration with DevSecOps Pipelines</a></li>
+<li><a href="http://heidloff.net/article/change-evidence-issue-management-devsecops/" rel="noopener noreferrer" target="_blank">Change, Evidence and Issue Management with DevSecOps</a></li>
+<li>This article: <a href="http://heidloff.net/article/continuous-delivery-ibm-devsecops-reference-architecture/" rel="noopener noreferrer" target="_blank">Continuous Delivery with DevSecOps Reference Architecture</a></li>
+<li><a href="http://heidloff.net/article/tekton-without-tekton-devsecops-pipelines/" rel="noopener noreferrer" target="_blank">Tekton without Tekton in DevSecOps Pipelines</a></li>
+</ul>
+<p>In my previous <a href="http://heidloff.net/article/change-evidence-issue-management-devsecops/" rel="noopener noreferrer" target="_blank">blog</a> I explained the CI pipeline. The CI pipeline template that is part of IBM&#8217;s DevSecOps reference implementation builds and pushes images and runs various security and code tests. Only if all checks pass, the application can be deployed to production via the CD pipeline. This assures that new versions can be deployed at any time based on business (not technical) decisions.</p>
+<p>The CD (continuous delivery) pipeline generates all of the evidence and change request summary content. The pipeline deploys the build artifacts to a specific environment and collects, creates, and uploads all existing log files, evidence, and artifacts to the evidence locker. Here is an overview of the <a href="https://cloud.ibm.com/docs/devsecops?topic=devsecops-cd-devsecops-cd-pipeline" rel="noopener noreferrer" target="_blank">functionality</a> provided by the CD pipeline:</p>
+<ul>
+<li>Determine deployment delta</li>
+<li>Calculate deployment BOM</li>
+<li>Collect evidence summary</li>
+<li>Prepare and create change request</li>
+<li>Check change request approval</li>
+<li>Perform deployment</li>
+<li>Run acceptance test</li>
+</ul>
+<p>Let&#8217;s take a look at a concrete sample. My team has developed a <a href="https://github.com/IBM/multi-tenancy" rel="noopener noreferrer" target="_blank">SaaS reference architecture</a> that shows how our clients and partners can build software as a service. While the compute components are identical for multiple platforms like Kubernetes, OpenShift and Serverless, the way these components are deployed is specific to the platforms.</p>
+<p>Here is how the CD pipeline is used for Kubernetes and OpenShift deployments. In order to deploy a new application version for a specific tenant, a pull request has to be created and merged. The pull request asks to merge the latest version from the main branch of the inventory to the tenant specific branches in the inventory. After the latest version has been merged into the branch of a specific tenant, the deployment functionality of the DevSecOps reference implementation uses GitOps to deploy the application to the production environment of the tenant. This is done by comparing the actual &#8216;as is&#8217; state in the cluster with the &#8216;to be&#8217; state in the tenant branch.</p>
+<p>Here are the key steps performed in the CD pipelines. For the complete flow read the documentation.</p>
+<ul>
+<li><a href="https://github.com/IBM/multi-tenancy-documentation/blob/main/documentation/kubernetes-via-ibm-kubernetes-service-and-ibm-openshift/cd-pull-request.md" rel="noopener noreferrer" target="_blank">Promotion pipeline</a>: The first CD pipeline is a very simple &#8216;pipeline&#8217; which only creates a pull request.</li>
+<li><a href="https://github.com/IBM/multi-tenancy-documentation/blob/main/documentation/kubernetes-via-ibm-kubernetes-service-and-ibm-openshift/cd-pipeline.md" rel="noopener noreferrer" target="_blank">CD pipeline</a>: The second CD pipeline is the actual CD pipeline.</li>
+</ul>
+<p>Create the pull request to deploy the latest version for a specific tenant.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-0.png" alt="" width="3840" height="2160" class="alignnone size-full wp-image-4965" srcset="http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-0.png 3840w, http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-0-300x169.png 300w, http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-0-768x432.png 768w, http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-0-1024x576.png 1024w" sizes="(max-width: 3840px) 100vw, 3840px" /></p>
+<p>After defining all data, the pull request can be merged.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-1.png" alt="" width="3840" height="2160" class="alignnone size-full wp-image-4966" srcset="http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-1.png 3840w, http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-1-300x169.png 300w, http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-1-768x432.png 768w, http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-1-1024x576.png 1024w" sizes="(max-width: 3840px) 100vw, 3840px" /></p>
+<p>The actual CD pipeline (the second one) can be started in either of the following ways:</p>
+<ul>
+<li>Preferred: Trigger the CD pipeline manually.</li>
+<li>Optional: Automatically after every merge action in the inventory repository</li>
+</ul>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-3.png" alt="" width="3840" height="2160" class="alignnone size-full wp-image-4967" srcset="http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-3.png 3840w, http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-3-300x169.png 300w, http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-3-768x432.png 768w, http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-3-1024x576.png 1024w" sizes="(max-width: 3840px) 100vw, 3840px" /></p>
+<p>Global and tenant specific configuration is read. Either Kubernetes or OpenShift can be used; in a shared cluster or isolated clusters for tentants.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-4.png" alt="" width="3840" height="2160" class="alignnone size-full wp-image-4968" srcset="http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-4.png 3840w, http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-4-300x169.png 300w, http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-4-768x432.png 768w, http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-4-1024x576.png 1024w" sizes="(max-width: 3840px) 100vw, 3840px" /></p>
+<p>The delta is calculated, since only changes are deployed. Additionally security checks are performed again.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-5.png" alt="" width="3840" height="2160" class="alignnone size-full wp-image-4969" srcset="http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-5.png 3840w, http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-5-300x169.png 300w, http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-5-768x432.png 768w, http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-5-1024x576.png 1024w" sizes="(max-width: 3840px) 100vw, 3840px" /></p>
+<p>After the actual deployment has been performed, data is collected.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-6.png" alt="" width="3840" height="2160" class="alignnone size-full wp-image-4970" srcset="http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-6.png 3840w, http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-6-300x169.png 300w, http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-6-768x432.png 768w, http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-6-1024x576.png 1024w" sizes="(max-width: 3840px) 100vw, 3840px" /></p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-7.png" alt="" width="3840" height="2160" class="alignnone size-full wp-image-4971" srcset="http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-7.png 3840w, http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-7-300x169.png 300w, http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-7-768x432.png 768w, http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-7-1024x576.png 1024w" sizes="(max-width: 3840px) 100vw, 3840px" /></p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-8.png" alt="" width="3840" height="2160" class="alignnone size-full wp-image-4972" srcset="http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-8.png 3840w, http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-8-300x169.png 300w, http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-8-768x432.png 768w, http://heidloff.net/wp-content/uploads/2022/04/devsecops-cd-8-1024x576.png 1024w" sizes="(max-width: 3840px) 100vw, 3840px" /></p>
+<p>Check out the <a href="https://cloud.ibm.com/docs/devsecops?topic=devsecops-tutorial-cd-devsecops" rel="noopener noreferrer" target="_blank">IBM Toolchains documentation</a> and the <a href="https://github.com/IBM/multi-tenancy" rel="noopener noreferrer" target="_blank">SaaS reference architecture</a> to find out more.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/continuous-delivery-ibm-devsecops-reference-architecture/">Continuous Delivery with DevSecOps Reference Architecture</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">4963</post-id>	</item>
+		<item>
+		<title>Change, Evidence and Issue Management with DevSecOps</title>
+		<link>http://heidloff.net/article/change-evidence-issue-management-devsecops/</link>
+				<pubDate>Fri, 01 Apr 2022 13:30:31 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=4951</guid>
+				<description><![CDATA[<p>IBM provides a DevSecOps reference implementation which is especially useful for regulated industries to adhere to policies. This article describes the CI pipeline which provides in addition to the usual CI functionality change, evidence and issue management capabilities. This article is part of a mini series: DevSecOps for SaaS Reference Architecture on OpenShift Shift-Left Continuous [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/change-evidence-issue-management-devsecops/">Change, Evidence and Issue Management with DevSecOps</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>IBM provides a DevSecOps reference implementation which is especially useful for regulated industries to adhere to policies. This article describes the CI pipeline which provides in addition to the usual CI functionality change, evidence and issue management capabilities.</em><span id="more-4951"></span></p>
+<p>This article is part of a mini series:</p>
+<ul>
+<li><a href="http://heidloff.net/article/devsecops-saas-reference-architecture-openshift/" rel="noopener noreferrer" target="_blank">DevSecOps for SaaS Reference Architecture on OpenShift</a></li>
+<li><a href="http://heidloff.net/article/shift-left-continuous-integration-devsecops-pipelines/" rel="noopener noreferrer" target="_blank">Shift-Left Continuous Integration with DevSecOps Pipelines</a></li>
+<li>This article: <a href="http://heidloff.net/article/change-evidence-issue-management-devsecops/" rel="noopener noreferrer" target="_blank">Change, Evidence and Issue Management with DevSecOps</a></li>
+<li><a href="http://heidloff.net/article/continuous-delivery-ibm-devsecops-reference-architecture/" rel="noopener noreferrer" target="_blank">Continuous Delivery with DevSecOps Reference Architecture</a></li>
+<li><a href="http://heidloff.net/article/tekton-without-tekton-devsecops-pipelines/" rel="noopener noreferrer" target="_blank">Tekton without Tekton in DevSecOps Pipelines</a></li>
+</ul>
+<p>The CI pipeline template that is part of IBM&#8217;s DevSecOps reference implementation builds and pushes images and runs various security and code tests. Only if all checks pass, the application can be deployed to production via the CD pipelines. This assures that new versions can be deployed at any time based on business (not technical) decisions.</p>
+<p>Functionality of the (second) CI pipeline:</p>
+<ul>
+<li>Build and push images</li>
+<li>Run various security checks (secret detection, image vulnerabilities, compliance)</li>
+<li>Run various code tests (unit tests, acceptance tests)</li>
+<li>Deploy services to integration/testing Kubernetes namespaces or OpenShift projects</li>
+<li>Manage changes, evidence and issues</li>
+</ul>
+<p>I&#8217;ve <a href="https://github.com/IBM/multi-tenancy-documentation/blob/main/documentation/kubernetes-via-ibm-kubernetes-service-and-ibm-openshift/ci-pipeline.md" rel="noopener noreferrer" target="_blank">documented</a> all steps of the pipeline on GitHub. Let&#8217;s take a look at the most important steps.</p>
+<p>The CI pipeline is triggered automatically after the pull request has been merged (<a href="http://heidloff.net/article/shift-left-continuous-integration-devsecops-pipelines/" rel="noopener noreferrer" target="_blank">see previous article</a>).</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-002.png" alt="" width="3840" height="2160" class="alignnone size-full wp-image-4953" srcset="http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-002.png 3840w, http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-002-300x169.png 300w, http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-002-768x432.png 768w, http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-002-1024x576.png 1024w" sizes="(max-width: 3840px) 100vw, 3840px" /></p>
+<p>The CI pipeline reads both global and tenant specific configuration from a Git repo. In the CI pipeline the tenant configuration is not from an actual tenant, but a dummy/test tenant used to run the CI tests.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-007.png" alt="" width="3840" height="2160" class="alignnone size-full wp-image-4954" srcset="http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-007.png 3840w, http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-007-300x169.png 300w, http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-007-768x432.png 768w, http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-007-1024x576.png 1024w" sizes="(max-width: 3840px) 100vw, 3840px" /></p>
+<p>The image is built and pushed.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-010.png" alt="" width="3840" height="2160" class="alignnone size-full wp-image-4955" srcset="http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-010.png 3840w, http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-010-300x169.png 300w, http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-010-768x432.png 768w, http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-010-1024x576.png 1024w" sizes="(max-width: 3840px) 100vw, 3840px" /></p>
+<p>Next various security, vulnerability and compliance checks are run. Then the container is deployed to an integration/testing Kubernetes namespace or OpenShift project to run more tests.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-015.png" alt="" width="3840" height="2160" class="alignnone size-full wp-image-4956" srcset="http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-015.png 3840w, http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-015-300x169.png 300w, http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-015-768x432.png 768w, http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-015-1024x576.png 1024w" sizes="(max-width: 3840px) 100vw, 3840px" /></p>
+<p>The status can be monitored in IBM DevOps Insights.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-028.png" alt="" width="3840" height="2160" class="alignnone size-full wp-image-4957" srcset="http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-028.png 3840w, http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-028-300x169.png 300w, http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-028-768x432.png 768w, http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-028-1024x576.png 1024w" sizes="(max-width: 3840px) 100vw, 3840px" /></p>
+<p>The latest successful version is stored in the inventory repo.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-032.png" alt="" width="3840" height="2160" class="alignnone size-full wp-image-4958" srcset="http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-032.png 3840w, http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-032-300x169.png 300w, http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-032-768x432.png 768w, http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-032-1024x576.png 1024w" sizes="(max-width: 3840px) 100vw, 3840px" /></p>
+<p>Evidence is collected in the evidence repo.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-035.png" alt="" width="3840" height="2160" class="alignnone size-full wp-image-4959" srcset="http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-035.png 3840w, http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-035-300x169.png 300w, http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-035-768x432.png 768w, http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-035-1024x576.png 1024w" sizes="(max-width: 3840px) 100vw, 3840px" /></p>
+<p>If the pipeline run has been successful, no issues are created in the compliance issues repo.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-037.png" alt="" width="3840" height="2160" class="alignnone size-full wp-image-4960" srcset="http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-037.png 3840w, http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-037-300x169.png 300w, http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-037-768x432.png 768w, http://heidloff.net/wp-content/uploads/2022/03/devsecops-ci2-037-1024x576.png 1024w" sizes="(max-width: 3840px) 100vw, 3840px" /></p>
+<p>After a successful run of the CI pipeline, the CD pipeline can be run. I&#8217;ll blog about this soon. Check out the <a href="https://cloud.ibm.com/docs/devsecops?topic=devsecops-tutorial-cd-devsecops" rel="noopener noreferrer" target="_blank">IBM Toolchains documentation</a> and the <a href="https://github.com/IBM/multi-tenancy" rel="noopener noreferrer" target="_blank">SaaS reference architecture</a> to find out more.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/change-evidence-issue-management-devsecops/">Change, Evidence and Issue Management with DevSecOps</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">4951</post-id>	</item>
+		<item>
+		<title>Shift-Left Continuous Integration with DevSecOps Pipelines</title>
+		<link>http://heidloff.net/article/shift-left-continuous-integration-devsecops-pipelines/</link>
+				<pubDate>Thu, 31 Mar 2022 18:06:56 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=4936</guid>
+				<description><![CDATA[<p>IBM provides a DevSecOps reference implementation that I&#8217;ve used to build our SaaS reference architecture. This article describes the CI pipeline, especially the part to enforce branch protection. This article is part of a mini series. DevSecOps for SaaS Reference Architecture on OpenShift This article: Shift-Left Continuous Integration with DevSecOps Pipelines Change, Evidence and Issue [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/shift-left-continuous-integration-devsecops-pipelines/">Shift-Left Continuous Integration with DevSecOps Pipelines</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>IBM provides a DevSecOps reference implementation that I&#8217;ve used to build our SaaS reference architecture. This article describes the CI pipeline, especially the part to enforce branch protection.</em><span id="more-4936"></span></p>
+<p>This article is part of a mini series.</p>
+<ul>
+<li><a href="http://heidloff.net/article/devsecops-saas-reference-architecture-openshift/" rel="noopener noreferrer" target="_blank">DevSecOps for SaaS Reference Architecture on OpenShift</a></li>
+<li>This article: <a href="http://heidloff.net/article/shift-left-continuous-integration-devsecops-pipelines/" rel="noopener noreferrer" target="_blank">Shift-Left Continuous Integration with DevSecOps Pipelines</a></li>
+<li><a href="http://heidloff.net/article/change-evidence-issue-management-devsecops/" rel="noopener noreferrer" target="_blank">Change, Evidence and Issue Management with DevSecOps</a></li>
+<li><a href="http://heidloff.net/article/continuous-delivery-ibm-devsecops-reference-architecture/" rel="noopener noreferrer" target="_blank">Continuous Delivery with DevSecOps Reference Architecture</a></li>
+<li><a href="http://heidloff.net/article/tekton-without-tekton-devsecops-pipelines/" rel="noopener noreferrer" target="_blank">Tekton without Tekton in DevSecOps Pipelines</a></li>
+</ul>
+<p>A core concept of DevSecOps is &#8216;shift left testing and security&#8217;. The basic idea is simple. Do as much security and functional testing as early as possible in the software development lifecycle. The earlier issues are detected, the easier and cheaper is it to fix the issues. </p>
+<p>These are the main tasks of the first of the two CI pipelines that are part of the IBM DevSecOps reference implementation.</p>
+<ul>
+<li>Branch protection is ensured so that developers cannot push to the main branch directly</li>
+<li>CIS checks are run</li>
+<li>Secrets in code and config files are detected</li>
+<li>Unit tests are run</li>
+<li>Vulnerability scans are performed</li>
+</ul>
+<p>The <a href="http://Continuous Integration (CI) toolchain introduction https://cloud.ibm.com/docs/devsecops?topic=devsecops-tutorial-cd-devsecops#devsecops-ci-toolchain-intro" rel="noopener noreferrer" target="_blank">documentation</a> describes these steps in more details. Let&#8217;s look how this can be done when developers check in code. You can find the <a href="https://github.com/IBM/multi-tenancy-documentation/blob/main/documentation/kubernetes-via-ibm-kubernetes-service-and-ibm-openshift/ci-pull-request.md" rel="noopener noreferrer" target="_blank">complete flow</a> in the GitHub repo.</p>
+<p>Changes from developers are not pushed into the main branch directly. Instead feature branches are used which is a good pattern anyway.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/03/devsecops1-002.png" alt="" width="3840" height="2160" class="alignnone size-full wp-image-4940" srcset="http://heidloff.net/wp-content/uploads/2022/03/devsecops1-002.png 3840w, http://heidloff.net/wp-content/uploads/2022/03/devsecops1-002-300x169.png 300w, http://heidloff.net/wp-content/uploads/2022/03/devsecops1-002-768x432.png 768w, http://heidloff.net/wp-content/uploads/2022/03/devsecops1-002-1024x576.png 1024w" sizes="(max-width: 3840px) 100vw, 3840px" /></p>
+<p>After the pull request has been created, the first CI pipeline starts automatically to perform the various security and functional tests.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/03/devsecops1-008.png" alt="" width="3840" height="2160" class="alignnone size-full wp-image-4941" srcset="http://heidloff.net/wp-content/uploads/2022/03/devsecops1-008.png 3840w, http://heidloff.net/wp-content/uploads/2022/03/devsecops1-008-300x169.png 300w, http://heidloff.net/wp-content/uploads/2022/03/devsecops1-008-768x432.png 768w, http://heidloff.net/wp-content/uploads/2022/03/devsecops1-008-1024x576.png 1024w" sizes="(max-width: 3840px) 100vw, 3840px" /></p>
+<p>I like the integration in GitHub. As a developer I can see most of the results directly in the GitHub experience. In the background the pipeline on the IBM Cloud is run.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/03/devsecops1-009.png" alt="" width="3840" height="2160" class="alignnone size-full wp-image-4942" srcset="http://heidloff.net/wp-content/uploads/2022/03/devsecops1-009.png 3840w, http://heidloff.net/wp-content/uploads/2022/03/devsecops1-009-300x169.png 300w, http://heidloff.net/wp-content/uploads/2022/03/devsecops1-009-768x432.png 768w, http://heidloff.net/wp-content/uploads/2022/03/devsecops1-009-1024x576.png 1024w" sizes="(max-width: 3840px) 100vw, 3840px" /></p>
+<p>Even if the various security checks have been successful, the pull request still cannot be merged. A second developer (in this case my colleague Adam) needs to approve first. From my personal experience I can say that these reviews are another very good pattern.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/03/devsecops1-015.png" alt="" width="3840" height="2160" class="alignnone size-full wp-image-4944" srcset="http://heidloff.net/wp-content/uploads/2022/03/devsecops1-015.png 3840w, http://heidloff.net/wp-content/uploads/2022/03/devsecops1-015-300x169.png 300w, http://heidloff.net/wp-content/uploads/2022/03/devsecops1-015-768x432.png 768w, http://heidloff.net/wp-content/uploads/2022/03/devsecops1-015-1024x576.png 1024w" sizes="(max-width: 3840px) 100vw, 3840px" /></p>
+<p>Check out the <a href="https://cloud.ibm.com/docs/devsecops?topic=devsecops-tutorial-cd-devsecops" rel="noopener noreferrer" target="_blank">IBM Toolchains documentation</a> and the <a href="https://github.com/IBM/multi-tenancy" rel="noopener noreferrer" target="_blank">SaaS reference architecture</a> to find out more.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/shift-left-continuous-integration-devsecops-pipelines/">Shift-Left Continuous Integration with DevSecOps Pipelines</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">4936</post-id>	</item>
+		<item>
+		<title>The Kubernetes Operator Metamodel</title>
+		<link>http://heidloff.net/article/the-kubernetes-operator-metamodel/</link>
+				<pubDate>Wed, 30 Mar 2022 08:35:34 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=4926</guid>
+				<description><![CDATA[<p>Operators provide huge value by automating day 2 operations for software running on Kubernetes. However, for operator developers there is a steep learning curve. This article describes the key objects and concepts you need to understand before building operators. There are several sites, tutorials and articles that describe operators. When I started to work on [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/the-kubernetes-operator-metamodel/">The Kubernetes Operator Metamodel</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>Operators provide huge value by automating day 2 operations for software running on Kubernetes. However, for operator developers there is a steep learning curve. This article describes the key objects and concepts you need to understand before building operators.</em><span id="more-4926"></span></p>
+<p>There are several sites, tutorials and articles that describe operators. When I started to work on operators, it would have helped me to understand the metamodel, key concepts and high level architecture first. Unfortunately I didn&#8217;t find such an overview. The best overview I found is the <a href="https://book.kubebuilder.io/architecture.html" rel="noopener noreferrer" target="_blank">Kubebuilder Architecture Concept Diagram</a>. I&#8217;ve extended and changed this diagram to add key components that were missing and to help me explaining our clients how operators work. I&#8217;ve also simplified the diagram to focus on key capabilities only.</p>
+<p>Most of the concepts in the diagram are generic for all types of operators, no matter how they have been implemented. Some parts are specific to operators built with <a href="https://go.dev/" rel="noopener noreferrer" target="_blank">Golang</a>, <a href="https://sdk.operatorframework.io/" rel="noopener noreferrer" target="_blank">Operator SDK</a> including <a href="https://github.com/kubernetes-sigs/kubebuilder" rel="noopener noreferrer" target="_blank">Kubebuilder</a> and the <a href="https://operatorframework.io/" rel="noopener noreferrer" target="_blank">Operator Lifecycle Manager Framework</a>.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/03/OperatorMetaModel.png" alt="" width="1474" height="814" class="alignnone size-full wp-image-4925" srcset="http://heidloff.net/wp-content/uploads/2022/03/OperatorMetaModel.png 1474w, http://heidloff.net/wp-content/uploads/2022/03/OperatorMetaModel-300x166.png 300w, http://heidloff.net/wp-content/uploads/2022/03/OperatorMetaModel-768x424.png 768w, http://heidloff.net/wp-content/uploads/2022/03/OperatorMetaModel-1024x565.png 1024w" sizes="(max-width: 1474px) 100vw, 1474px" /></p>
+<p>Below are some more details about the different objects. I have also added links to samples. The samples are part of a bigger sample, called <a href="https://github.com/IBM/operator-sample-go" rel="noopener noreferrer" target="_blank">operator-sample-go</a>, which is available on GitHub that describes various operator patterns and best practises.</p>
+<p><strong>Operator</strong></p>
+<p>The term &#8216;Operator&#8217; or &#8216;Kubernetes Operator&#8217; describes the mechanism to automate deployments and day 2 operations for software running on Kubernetes which implements the <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/operator/" rel="noopener noreferrer" target="_blank">operator pattern</a>. This pattern is used by Kubernetes internally as well as externally for custom resources. Operators contain custom resource definitions and business logic to manage these resources. The self contained operators are deployed as containers on Kubernetes. Usually there is one running operator instance per cluster. For production deployments the Operator Lifecycle Manager (OLM) provides functionality to deploy and operate the operators, for example to handle multiple versions. Operators are packaged in CSVs (cluster service versions).</p>
+<p>Samples:</p>
+<ul>
+<li><a href="https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/Dockerfile" rel="noopener noreferrer" target="_blank">Operator Dockerfile</a></li>
+<li><a href="https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/bundle/manifests/operator-application.clusterserviceversion.yaml" rel="noopener noreferrer" target="_blank">Operator CSV</a></li>
+<li><a href="https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/main.go" rel="noopener noreferrer" target="_blank">Operator initialization in main.go</a></li>
+</ul>
+<p><strong>API</strong></p>
+<p>The term API is often used as synonym to custom resource definition. Custom resource definitions have schemas and potentially multiple versions. This allows managing resources declaratively in Kubernetes production environments. Custom resource definitions are <a href="https://book.kubebuilder.io/cronjob-tutorial/gvks.html" rel="noopener noreferrer" target="_blank">identified</a> by their group, version and resource name. One operator can contain multiple resource definitions. </p>
+<p>Samples:</p>
+<ul>
+<li><a href="https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/config/samples/application.sample_v1beta1_application.yaml" rel="noopener noreferrer" target="_blank">Sample resource</a></li>
+<li><a href="https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/api/v1beta1/application_types.go" rel="noopener noreferrer" target="_blank">Schema as Go struct</a></li>
+<li><a href="https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/config/crd/bases/application.sample.ibm.com_applications.yaml" rel="noopener noreferrer" target="_blank">Schema as yaml</a></li>
+<li><a href="https://github.com/IBM/operator-sample-go/tree/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/api" rel="noopener noreferrer" target="_blank">Versions</a></li>
+</ul>
+<p><strong>Manager</strong></p>
+<p>The manager contains the business logic of the operator which knows how to deploy and manage custom resources. Additionally it comes with generic built in functionality to handle HA leader election, export metrics, handle webhook certs and broadcasts events. It also provides a client to access Kubernetes and a cache to improve efficiency.</p>
+<p>Sample:</p>
+<ul>
+<li><a href="https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/main.go#L57" rel="noopener noreferrer" target="_blank">Manager creation in main.go</a></li>
+</ul>
+<p><strong>Controller</strong></p>
+<p>The main responsibility of controllers is to synchronize the &#8216;to be&#8217; states as defined in custom resources with the &#8216;as is&#8217; states in Kubernetes clusters. This includes creations of new resources, updates to existing resources or deletions. This logic is implemented in the controllers&#8217; reconcile function. The reconciler doesn&#8217;t use an imperative model to manage resources because of the nature of distributed Kubernetes systems and because of the long time it can take to change resources without blocking anything. Instead the reconciler is invoked over and over again until it signals that it&#8217;s done. This is why reconcilers need to be idempotent. One controller manages one custom resource definition including all versions of it. The controller uses caches and Kubernetes clients and gets events via filters.</p>
+<p>Samples:</p>
+<ul>
+<li><a href="https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/controllers/application/controller.go" rel="noopener noreferrer" target="_blank">Flow in Reconcile function</a></li>
+<li><a href="https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/controllers/application/service.go#L43-L49" rel="noopener noreferrer" target="_blank">Synchronization of resources</a></li>
+<li><a href="https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/controllers/application/secret.go" rel="noopener noreferrer" target="_blank">Creations and updates of resources</a></li>
+<li><a href="https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/controllers/application/controller.go#L126" rel="noopener noreferrer" target="_blank">Definition of resources to watch</a></li>
+</ul>
+<p><strong>Webhooks</strong></p>
+<p>With webhooks values of resources can be changed and conversions between different versions can be done.</p>
+<p>Samples:</p>
+<ul>
+<li><a href="https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/api/v1beta1/application_webhook.go#L28" rel="noopener noreferrer" target="_blank">Initialization</a></li>
+<li><a href="https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/api/v1beta1/application_webhook.go#L38-L83" rel="noopener noreferrer" target="_blank">Validation</a></li>
+<li><a href="https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/api/v1alpha1/application_conversion.go" rel="noopener noreferrer" target="_blank">Conversion</a></li>
+</ul>
+<p>To learn more about operator patterns and best practices, check out the repo <a href="https://github.com/IBM/operator-sample-go" rel="noopener noreferrer" target="_blank">operator-sample-go</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/the-kubernetes-operator-metamodel/">The Kubernetes Operator Metamodel</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">4926</post-id>	</item>
+		<item>
+		<title>Converting Custom Resource Versions in Operators</title>
+		<link>http://heidloff.net/article/converting-custom-resource-versions-kubernetes-operators/</link>
+				<pubDate>Tue, 29 Mar 2022 10:12:49 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=4912</guid>
+				<description><![CDATA[<p>Custom Kubernetes resources typically have multiple versions. Operators need to be able to convert between all different versions in all directions. This article describes how to implement this using a simple example. As applications evolve, custom resource definitions need to be extended. As for every API these changes need to be upwards compatible. Additionally the [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/converting-custom-resource-versions-kubernetes-operators/">Converting Custom Resource Versions in Operators</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>Custom Kubernetes resources typically have multiple versions. Operators need to be able to convert between all different versions in all directions. This article describes how to implement this using a simple example.</em><span id="more-4912"></span></p>
+<p>As applications evolve, custom resource definitions need to be extended. As for every API these changes need to be upwards compatible. Additionally the information from the newer versions needs also to be stored in older versions. This is why conversions need to be done in BOTH directions without loosing information.</p>
+<p>This allows Kubernetes to provide the following functionality. See the documentation <a href="https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definition-versioning/" rel="noopener noreferrer" target="_blank">Versions in CustomResourceDefinitions</a> for details.</p>
+<ul>
+<li>Custom resource is requested in a different version than stored version.</li>
+<li>Watch is created in one version but the changed object is stored in another version.</li>
+<li>Custom resource PUT request is in a different version than storage version.</li>
+</ul>
+<p>The best documentation I&#8217;ve found about conversion comes from Kubebuilder:</p>
+<ul>
+<li><a href="https://book.kubebuilder.io/multiversion-tutorial/conversion-concepts.html" rel="noopener noreferrer" target="_blank">Hubs, spokes, and other wheel metaphors</a></li>
+<li><a href="https://book.kubebuilder.io/multiversion-tutorial/conversion.html" rel="noopener noreferrer" target="_blank">Kubebuilder Doc &#8211; Implementing Conversion</a></li>
+</ul>
+<p>Let&#8217;s look at a concrete example. I&#8217;m working on a GitHub repo that describes various <a href="https://github.com/IBM/operator-sample-go" rel="noopener noreferrer" target="_blank">operator patterns and best practises</a>. There is a custom resource &#8216;Application&#8217; which has two version: The intial v1alpha1 version and the latest version v1beta1.</p>
+<p>This is a resource using the <a href="https://github.com/IBM/operator-sample-go/blob/d4b54480a059a8d46443a03f02a5af0e2f3d15a2/operator-application/config/samples/application.sample_v1alpha1_application.yaml" rel="noopener noreferrer" target="_blank">alpha version</a>:</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: application.sample.ibm.com/v1alpha1
+kind: Application
+metadata:
+  name: application
+  namespace: application-alpha
+spec:
+  version: &quot;1.0.0&quot;
+  amountPods: 1
+  databaseName: database
+  databaseNamespace: database
+</pre>
+<p>The <a href="https://github.com/IBM/operator-sample-go/blob/d4b54480a059a8d46443a03f02a5af0e2f3d15a2/operator-application/config/samples/application.sample_v1beta1_application.yaml" rel="noopener noreferrer" target="_blank">beta version</a> has one additional property &#8216;title&#8217;.</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: application.sample.ibm.com/v1beta1
+kind: Application
+metadata:
+  name: application
+  namespace: application-beta
+spec:
+  version: &quot;1.0.0&quot;
+  amountPods: 1
+  databaseName: database
+  databaseNamespace: database
+  title: Movies
+</pre>
+<p>Once deployed, the application resource can be read via the following kubectl commands. By default the latest version is returned.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl get applications/application -n application-beta -oyaml
+or
+$ kubectl get applications.v1beta1.application.sample.ibm.com/application -n application-beta -oyaml 
+apiVersion: application.sample.ibm.com/v1beta1
+kind: Application
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: ...
+...
+spec:
+  amountPods: 1
+  databaseName: database
+  databaseNamespace: database
+  title: Movies
+  version: 1.0.0
+</pre>
+<p>You can also request a specific version, in this case the alpha version from the application-alpha resource. In the sample the &#8216;title&#8217; is missing since it wasn&#8217;t part of the resource when it was created.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl get applications.v1alpha1.application.sample.ibm.com/application -n application-alpha -oyaml
+apiVersion: application.sample.ibm.com/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: ...
+...
+spec:
+  amountPods: 1
+  databaseName: database
+  databaseNamespace: database
+  version: 1.0.0
+</pre>
+<p>Furthermore you can request the beta version of the application-alpha resource. In this case there is a title which has the value &#8216;Undefined&#8217; since it was not set initially.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl get applications.v1beta1.application.sample.ibm.com/application -n application-alpha -oyaml | grep -A6 -e &quot;spec:&quot; -e &quot;apiVersion: application.sample.ibm.com/&quot; 
+apiVersion: application.sample.ibm.com/v1beta1
+kind: Application
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: ...
+...
+spec:
+  amountPods: 1
+  databaseName: database
+  databaseNamespace: database
+  title: Undefined
+  version: 1.0.0
+</pre>
+<p>You can even request the application-beta resource in the alpha version. In this case the title can not be stored in the &#8216;spec&#8217; part. The trick is to use annotations. Annotations are part of every resource in the metadata section. They are basically a &#8216;generic schema&#8217; which name/values pairs.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl get applications.v1alpha1.application.sample.ibm.com/application -n application-beta -oyaml | grep -A6 -e &quot;spec:&quot; -e &quot;apiVersion: application.sample.ibm.com/&quot; 
+apiVersion: application.sample.ibm.com/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    applications.application.sample.ibm.com/title: Movies
+    kubectl.kubernetes.io/last-applied-configuration: ...
+...
+spec:
+  amountPods: 1
+  databaseName: database
+  databaseNamespace: database
+  version: 1.0.0
+</pre>
+<p>Next let me describe how to implement this scenario. First you need to define which of the versions should be used to store the resources in etcd via &#8216;+kubebuilder:storageversion&#8217; (<a href="https://github.com/IBM/operator-sample-go/blob/d4b54480a059a8d46443a03f02a5af0e2f3d15a2/operator-application/api/v1beta1/application_types.go#L31-L41" rel="noopener noreferrer" target="_blank">code</a>).</p>
+<pre class="brush: plain; title: ; notranslate">
+//+kubebuilder:object:root=true
+//+kubebuilder:subresource:status
+//+kubebuilder:storageversion
+type Application struct {
+  metav1.TypeMeta   `json:&quot;,inline&quot;`
+  metav1.ObjectMeta `json:&quot;metadata,omitempty&quot;`
+  Spec   ApplicationSpec   `json:&quot;spec,omitempty&quot;`
+  Status ApplicationStatus `json:&quot;status,omitempty&quot;`
+}
+</pre>
+<p>Next you need to define which of the versions is your hub. All other ones are spokes. See the Kubebuilder documentation. I&#8217;ve defined the latest as hub which only contains the empty Hub() function (<a href="https://github.com/IBM/operator-sample-go/blob/d4b54480a059a8d46443a03f02a5af0e2f3d15a2/operator-application/api/v1beta1/application_conversion.go" rel="noopener noreferrer" target="_blank">code</a>).</p>
+<pre class="brush: plain; title: ; notranslate">
+package v1beta1
+func (*Application) Hub() {}
+</pre>
+<p>Next the spokes need to implement ConvertTo() and ConvertFrom(). Here is the ConvertFrom() <a href="https://github.com/IBM/operator-sample-go/blob/d4b54480a059a8d46443a03f02a5af0e2f3d15a2/operator-application/api/v1alpha1/application_conversion.go#L42-L60" rel="noopener noreferrer" target="_blank">function</a> that converts from the latest to the initial version.</p>
+<pre class="brush: plain; title: ; notranslate">
+// convert from the hub version (src= v1beta1) to this version (dst = v1alpha1)
+func (dst *Application) ConvertFrom(srcRaw conversion.Hub) error {
+  src := srcRaw.(*v1beta1.Application)
+  dst.ObjectMeta = src.ObjectMeta
+  dst.Status.Conditions = src.Status.Conditions
+  dst.Spec.AmountPods = src.Spec.AmountPods
+  dst.Spec.DatabaseName = src.Spec.DatabaseName
+  dst.Spec.DatabaseNamespace = src.Spec.DatabaseNamespace
+  dst.Spec.SchemaUrl = src.Spec.SchemaUrl
+  dst.Spec.Version = src.Spec.Version
+  if dst.ObjectMeta.Annotations == nil {
+    dst.ObjectMeta.Annotations = make(map[string]string)
+  }
+  dst.ObjectMeta.Annotations[variables.ANNOTATION_TITLE] = string(src.Spec.Title)
+  return nil
+}
+</pre>
+<p>And here is the ConvertTo() <a href="https://github.com/IBM/operator-sample-go/blob/d4b54480a059a8d46443a03f02a5af0e2f3d15a2/operator-application/api/v1alpha1/application_conversion.go#L12-L40" rel="noopener noreferrer" target="_blank">function</a> that converts from the initial to the latest version.</p>
+<pre class="brush: plain; title: ; notranslate">
+// convert this version (src = v1alpha1) to the hub version (dst = v1beta1)
+func (src *Application) ConvertTo(dstRaw conversion.Hub) error {
+  dst := dstRaw.(*v1beta1.Application)
+  dst.Spec.AmountPods = src.Spec.AmountPods
+  dst.Spec.DatabaseName = src.Spec.DatabaseName
+  dst.Spec.DatabaseNamespace = src.Spec.DatabaseNamespace
+  dst.Spec.SchemaUrl = src.Spec.SchemaUrl
+  dst.Spec.Version = src.Spec.Version
+  if src.ObjectMeta.Annotations == nil {
+    dst.Spec.Title = variables.DEFAULT_ANNOTATION_TITLE
+  } else {
+    title, annotationFound := src.ObjectMeta.Annotations[variables.ANNOTATION_TITLE]
+    if annotationFound {
+      dst.Spec.Title = title
+    } else {
+      dst.Spec.Title = variables.DEFAULT_ANNOTATION_TITLE
+    }
+  }
+  dst.ObjectMeta = src.ObjectMeta
+  dst.Status.Conditions = src.Status.Conditions
+  return nil
+}
+</pre>
+<p>The implementation of the conversion webhooks is rather straight forward. The setup of the webhooks is a little bit more tricky. Check out my earlier blog <a href="http://heidloff.net/article/configuring-webhooks-kubernetes-operators/" rel="noopener noreferrer" target="_blank">Configuring Webhooks for Kubernetes Operators</a>.</p>
+<p>Try the <a href="https://github.com/IBM/operator-sample-go" rel="noopener noreferrer" target="_blank">sample operator</a> which demonstrates the capabilities outlined above as well as many other operator patterns.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/converting-custom-resource-versions-kubernetes-operators/">Converting Custom Resource Versions in Operators</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">4912</post-id>	</item>
+		<item>
+		<title>Initialization and Validation Webhooks in Operators</title>
+		<link>http://heidloff.net/article/developing-initialization-validation-webhooks-kubernetes-operators/</link>
+				<pubDate>Mon, 28 Mar 2022 06:26:59 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=4902</guid>
+				<description><![CDATA[<p>When developing custom Kubernetes resources, static defaults and simple validations for resource properties can be defined in OpenAPI/JSON schemas. For more flexible scenarios webhooks can be used to initialize and validate resources with Go code. In the easiest case defaults and validations can be defined via Kubebuilder annotations directly in the Go code of the [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/developing-initialization-validation-webhooks-kubernetes-operators/">Initialization and Validation Webhooks in Operators</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>When developing custom Kubernetes resources, static defaults and simple validations for resource properties can be defined in OpenAPI/JSON schemas. For more flexible scenarios webhooks can be used to initialize and validate resources with Go code.</em><span id="more-4902"></span></p>
+<p>In the easiest case defaults and validations can be defined via Kubebuilder annotations directly in the Go <a href="https://github.com/IBM/operator-sample-go/blob/a449303076310bc99e3595c1904e6aeb6ee03b87/operator-application/api/v1beta1/application_types.go" rel="noopener noreferrer" target="_blank">code</a> of the custom resource definition, for example:</p>
+<pre class="brush: plain; title: ; notranslate">
+type ApplicationSpec struct {
+  //+kubebuilder:default:=&quot;1.0.0&quot;
+  Version string `json:&quot;version,omitempty&quot;`
+  //+kubebuilder:validation:Minimum=0
+  //+kubebuilder:default:=1
+  AmountPods int32 `json:&quot;amountPods&quot;`
+  // +kubebuilder:default:=&quot;database&quot;
+  DatabaseName string `json:&quot;databaseName,omitempty&quot;`
+  // +kubebuilder:default:=&quot;databaseNamespace&quot;
+  DatabaseNamespace string `json:&quot;databaseNamespace,omitempty&quot;`
+  // +kubebuilder:default:=&quot;https://raw.githubusercontent.com/IBM/multi-tenancy/main/my.sql&quot;
+  SchemaUrl string `json:&quot;schemaUrl,omitempty&quot;`
+  Title string `json:&quot;title`
+}
+</pre>
+<p>Read the <a href="https://book.kubebuilder.io/reference/markers/crd-validation.html" rel="noopener noreferrer" target="_blank">Kubebuilder documentation</a> for more details.</p>
+<p>Additionally webhooks can be implemented as part of Kubernetes operators which are executed before custom resources are created, updated and deleted. The implementation of these webhooks is straight forward. The setup of the webhooks is a little bit more tricky. Check out my earlier blog <a href="http://heidloff.net/article/configuring-webhooks-kubernetes-operators/" rel="noopener noreferrer" target="_blank">Configuring Webhooks for Kubernetes Operators</a>.</p>
+<p>In order to develop initialization and validation webhooks, you have to implement the methods &#8216;Default()&#8217;, &#8216;ValidateCreate()&#8217;, &#8216;ValidateUpdate()&#8217; and &#8216;ValidateDelete()&#8217;. Let&#8217;s take a look at a sample. The <a href="https://github.com/IBM/operator-sample-go" rel="noopener noreferrer" target="_blank">sample</a> is part of a GitHub repo that demonstrates various best practises for building operators.</p>
+<p>The Default() function sets the default of the title property read from a Go variable (<a href="https://github.com/IBM/operator-sample-go/blob/a449303076310bc99e3595c1904e6aeb6ee03b87/operator-application/api/v1beta1/application_webhook.go#L28-L33" rel="noopener noreferrer" target="_blank">code</a>).</p>
+<pre class="brush: plain; title: ; notranslate">
+func (reconciler *Application) Default() {
+  if reconciler.Spec.Title == &quot;&quot; {
+    reconciler.Spec.Title = variables.DEFAULT_ANNOTATION_TITLE
+  }
+}
+</pre>
+<p>Here are some <a href="https://github.com/IBM/operator-sample-go/blob/a449303076310bc99e3595c1904e6aeb6ee03b87/operator-application/api/v1beta1/application_webhook.go#L38-L83" rel="noopener noreferrer" target="_blank">snippets</a> how to validate two properties.</p>
+<pre class="brush: plain; title: ; notranslate">
+func (reconciler *Application) ValidateCreate() error {
+  return reconciler.validate()
+}
+func (reconciler *Application) ValidateUpdate(old runtime.Object) error {
+  return reconciler.validate()
+}
+func (reconciler *Application) validate() error {
+  var allErrors field.ErrorList
+  if err := reconciler.validateSchemaUrl(); err != nil {
+    allErrors = append(allErrors, err)
+  }
+  if err := reconciler.validateName(); err != nil {
+    allErrors = append(allErrors, err)
+  }
+  if len(allErrors) == 0 {
+    return nil
+  }
+    return apierrors.NewInvalid(
+      schema.GroupKind{Group: GroupVersion.Group, Kind: reconciler.Kind},
+      reconciler.Name, allErrors)
+}
+func (reconciler *Application) validateSchemaUrl() *field.Error {
+  if !strings.HasPrefix(reconciler.Spec.SchemaUrl, &quot;http&quot;) {
+    return field.Invalid(field.NewPath(&quot;spec&quot;).Child(&quot;schemaUrl&quot;), reconciler.Name, &quot;must start with 'http'&quot;)
+  }
+  return nil
+}
+func (reconciler *Application) validateName() *field.Error {
+  // Note: Names of Kubernetes objects can only have a length is 63 characters
+  // Note: Since deployment name = application name + ‘-deployment-microservice', the name cannot have more than 35 characters
+  if len(reconciler.ObjectMeta.Name) &gt; validationutils.DNS1035LabelMaxLength-24 {
+    return field.Invalid(field.NewPath(&quot;metadata&quot;).Child(&quot;name&quot;), reconciler.Name, &quot;must be no more than 35 characters&quot;)
+  }
+  return nil
+}
+</pre>
+<p>To learn more read the <a href="https://book.kubebuilder.io/cronjob-tutorial/webhook-implementation.html" rel="noopener noreferrer" target="_blank">Kubebuilder documentation</a> and try the <a href="https://github.com/IBM/operator-sample-go" rel="noopener noreferrer" target="_blank">sample</a> operator which demonstrates defaulting/validation webhooks as well as many other operator patterns.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/developing-initialization-validation-webhooks-kubernetes-operators/">Initialization and Validation Webhooks in Operators</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">4902</post-id>	</item>
+		<item>
+		<title>Configuring Webhooks for Kubernetes Operators</title>
+		<link>http://heidloff.net/article/configuring-webhooks-kubernetes-operators/</link>
+				<pubDate>Fri, 25 Mar 2022 07:51:49 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=4889</guid>
+				<description><![CDATA[<p>Kubernetes operators can initialize, validate and convert custom resources via webhooks. Coding the webhooks is straight forward, setting them up is a lot harder. This article summarizes the important setup steps. There are three types of webhooks used by operators: Initialization: To set defaults when creating new resources. This webhook is a Kubernetes admission webhook. [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/configuring-webhooks-kubernetes-operators/">Configuring Webhooks for Kubernetes Operators</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>Kubernetes operators can initialize, validate and convert custom resources via webhooks. Coding the webhooks is straight forward, setting them up is a lot harder. This article summarizes the important setup steps.</em><span id="more-4889"></span></p>
+<p>There are three types of webhooks used by operators:</p>
+<ol>
+<li>Initialization: To set defaults when creating new resources. This webhook is a Kubernetes admission webhook.</li>
+<li>Validation: To validate resources when created, updated or deleted. This webhook is a Kubernetes admission webhook.</li>
+<li>Conversion: To convert between different resource definition versions in all directions. This webhook is a Kubernetes CRD conversion webhook.</li>
+</ol>
+<p>As mentioned the setup of the webhooks is not trivial. There are different pieces of documentation in various articles and blogs. My colleague Vincent Hou has written a great mini series and helped me to get our <a href="https://github.com/IBM/operator-sample-go" rel="noopener noreferrer" target="_blank">sample</a> working.</p>
+<ul>
+<li><a href="https://book.kubebuilder.io/reference/webhook-overview.html" rel="noopener noreferrer" target="_blank">What is a webhook?</a></li>
+<li><a href="https://book.kubebuilder.io/cronjob-tutorial/cert-manager.html" rel="noopener noreferrer" target="_blank">Deploying the cert manager</a></li>
+<li><a href="https://book.kubebuilder.io/cronjob-tutorial/running-webhook.html" rel="noopener noreferrer" target="_blank">Deploying Admission Webhooks</a></li>
+<li><a href="https://vincenthou.medium.com/how-to-create-conversion-webhook-for-my-operator-with-operator-sdk-36f5ee0170de" rel="noopener noreferrer" target="_blank">How to create conversion webhook for my operator with operator-sdk</a></li>
+<li><a href="https://vincenthou.medium.com/how-to-use-mutating-webhook-for-the-operator-with-operator-sdk-f940bd98e10b" rel="noopener noreferrer" target="_blank">How to use mutating webhook for the operator with operator-sdk</a></li>
+<li><a href="https://vincenthou.medium.com/how-to-create-validating-webhook-with-operator-sdk-73f9c6332609" rel="noopener noreferrer" target="_blank">How to create validating webhook with operator-sdk</a></li>
+<li><a href="https://olm.operatorframework.io/docs/advanced-tasks/adding-admission-and-conversion-webhooks/" rel="noopener noreferrer" target="_blank">Shipping an operator that includes Webhooks</a></li>
+<li><a href="https://book.kubebuilder.io/reference/markers/webhook.html" rel="noopener noreferrer" target="_blank">Webhook Configuration</a></li>
+<li><a href="https://book.kubebuilder.io/cronjob-tutorial/running.html" rel="noopener noreferrer" target="_blank">Running and deploying the controller</a></li>
+</ul>
+<p>Before you get started it&#8217;s important to understand that webhooks require another component that needs to be installed in Kubernetes. Webhooks are invoked by the Kubernetes API server and require authentication and authorization. That&#8217;s why components like <a href="https://cert-manager.io/docs/" rel="noopener noreferrer" target="_blank">cert-manager</a> are required to inject the credentials. And that&#8217;s one of the reasons why running webhooks locally is very difficult (plus you need a proxy to call the local webhooks from Kubernetes).</p>
+<p>Let&#8217;s take a look how to set up a new operator with initialization and validation webhooks. The steps are a summary from Vincent&#8217;s article above.</p>
+<p>Create the project, api and webhook:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ operator-sdk init --domain ibm.com --repo github.com/houshengbo/operator-sample-go/operator-application
+$ operator-sdk create api --group application.sample --version v1beta1 --kind Application --resource --controller
+$ operator-sdk create webhook --group application.sample --version v1beta1 --kind Application --defaulting --programmatic-validation --force
+</pre>
+<p>In api/v1beta1/application_webhook.go change from admissionReviewVersions=v1 to admissionReviewVersions=v1beta1. Then change Default():</p>
+<pre class="brush: plain; title: ; notranslate">
+func (r *Application) Default() {
+	applicationlog.Info(“default”, “name”, r.Name)
+    r.Spec.Foo = “default”
+}
+</pre>
+<p>Get the dependencies and create manifests:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ go mod vendor
+$ make generate
+$ make manifests
+</pre>
+<p>In config/crd/kustomization.yaml, uncomment the following lines:</p>
+<pre class="brush: plain; title: ; notranslate">
+#- patches/webhook_in_memcacheds.yaml
+#- patches/cainjection_in_memcacheds.yaml
+</pre>
+<p>In config/default/kustomization.yaml, uncomment the following lines:</p>
+<pre class="brush: plain; title: ; notranslate">
+#- ../webhook
+#- ../certmanager
+#- manager_webhook_patch.yaml
+#- webhookcainjection_patch.yaml
+</pre>
+<p>In the same file uncomment all the lines below &#8216;vars&#8217;:</p>
+<pre class="brush: plain; title: ; notranslate">
+#- name: CERTIFICATE_NAMESPACE # namespace of the certificate CR
+#  objref:
+#    kind: Certificate
+#    group: cert-manager.io
+#    version: v1
+#    name: serving-cert # this name should match the one in certificate.yaml
+#  fieldref:
+#    fieldpath: metadata.namespace
+#- name: CERTIFICATE_NAME
+#  objref:
+#    kind: Certificate
+#    group: cert-manager.io
+#    version: v1
+#    name: serving-cert # this name should match the one in certificate.yaml
+#- name: SERVICE_NAMESPACE # namespace of the service
+#  objref:
+#    kind: Service
+#    version: v1
+#    name: webhook-service
+#  fieldref:
+#    fieldpath: metadata.namespace
+#- name: SERVICE_NAME
+#  objref:
+#    kind: Service
+#    version: v1
+#    name: webhook-service
+</pre>
+<p>Change config/samples/application.sample_v1beta1_application.yaml into this:</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: application-sample
+---
+apiVersion: application.sample.ibm.com/v1beta1
+kind: Application
+metadata:
+  name: application-sample
+  namespace: application-sample
+</pre>
+<p>Deploy the operator including the webhook to Kubernetes and run it:</p>
+<pre class="brush: plain; title: ; notranslate">
+export REGISTRY=‘docker.io’
+export ORG=‘nheidloff’
+export IMAGE=‘application-controller:v1’
+make docker-build docker-push IMG=“$REGISTRY/$ORG/$IMAGE”
+make deploy IMG=“$REGISTRY/$ORG/$IMAGE”
+kubectl logs -f deploy/operator-application-controller-manager -n operator-application-system -c manager
+</pre>
+<p>Create the custom resource	and check whether foo is &#8220;default&#8221;:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl apply -f config/samples/application.sample_v1beta1_application.yaml
+$ kubectl get Application -n application-sample -oyaml
+</pre>
+<p>Check out our <a href="https://github.com/IBM/operator-sample-go" rel="noopener noreferrer" target="_blank">repo</a> that contains samples for all webhooks. Keep an eye on my blog. I’ll write more about other operator patterns soon.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/configuring-webhooks-kubernetes-operators/">Configuring Webhooks for Kubernetes Operators</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">4889</post-id>	</item>
+		<item>
+		<title>Defining Dependencies in Kubernetes Operators</title>
+		<link>http://heidloff.net/article/defining-dependencies-kubernetes-operators/</link>
+				<pubDate>Thu, 24 Mar 2022 07:33:35 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=4882</guid>
+				<description><![CDATA[<p>Operators can automate the deployment and operations of custom Kubernetes resources. These resources might dependent on other third party resources. This article describes how to define these dependencies. I’m working on a sample that describes different patterns and best practices to build operators with Golang. The repo demonstrates how a custom resource ‘Application’ uses internally [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/defining-dependencies-kubernetes-operators/">Defining Dependencies in Kubernetes Operators</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>Operators can automate the deployment and operations of custom Kubernetes resources. These resources might dependent on other third party resources. This article describes how to define these dependencies.</em><span id="more-4882"></span></p>
+<p>I’m working on a <a href="https://github.com/nheidloff/operator-sample-go" rel="noopener noreferrer" target="_blank">sample</a> that describes different patterns and best practices to build operators with Golang. The repo demonstrates how a custom resource ‘Application’ uses internally a third party ‘Database’ resource which is managed by another controller. This is a simplified version of the typical scenario to use a managed database in the cloud. Read my previous <a href="http://heidloff.net/article/accessing-third-party-custom-resources-go-operators/" rel="noopener noreferrer" target="_blank">blog</a> that explains how to access third party resources in controllers&#8217; Go code.</p>
+<p>Additionally you need to ensure that the dependent operator (in my sample the database operator) exists when an operator (in my sample the application operator) is deployed. This can be done in the cluster service version (CSV). The CSV is the operator bundle/package which contains the definition of a specific operator version.</p>
+<p>Here is the <a href="https://github.com/nheidloff/operator-sample-go/blob/1280fe242726a329642a6a3950d1a8b9990e14d0/operator-application/bundle/manifests/operator-application.clusterserviceversion.yaml#L26-L38" rel="noopener noreferrer" target="_blank">CSV</a> of the application operator. The dependency is defined in the &#8216;required&#8217; section of the spec.</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - displayName: Application
+      kind: Application
+      name: applications.application.sample.ibm.com
+      version: v1alpha1
+    required:
+    - displayName: Database
+      kind: Database
+      name: databases.database.sample.third.party
+      version: v1alpha1    
+</pre>
+<p>When you try to deploy the application operator, but the database operator doesn&#8217;t exist, you get an error.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ operator-sdk run bundle &quot;$REGISTRY/$ORG/$BUNDLEIMAGE&quot; -n operators
+INFO[0040] Successfully created registry pod: docker-io-nheidloff-application-controller-bundle-v15 
+INFO[0041] Created CatalogSource: operator-application-catalog 
+INFO[0041] Created Subscription: operator-application-v0-0-1-sub 
+FATA[0120] Failed to run bundle: install plan is not available for the subscription operator-application-v0-0-1-sub: timed out waiting for the condition 
+</pre>
+<p>The logs in the catalog pod describe the error.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl get pods -n olm
+$ kubectl logs catalog-operator-b4dfcff47-55plr -n olm
+Event(v1.ObjectReference{Kind:&quot;Namespace&quot;, Namespace:&quot;&quot;, Name:&quot;operators&quot;, ... type: 'Warning' reason: 'ResolutionFailed' constraints not satisfiable: bundle operator-application.v0.0.1 requires an operator providing an API with group: database.sample.third.party, version: v1alpha1, kind: Database
+</pre>
+<p>The following resources describe more details.</p>
+<ul>
+<li><a href="https://operator-framework.github.io/olm-book/docs/operator-dependencies-and-requirements.html" rel="noopener noreferrer" target="_blank">Operator Dependency and Requirement Resolution</a></li>
+<li><a href="https://olm.operatorframework.io/docs/tasks/creating-operator-manifests/" rel="noopener noreferrer" target="_blank">Creating operator manifests</a></li>
+<li><a href="https://github.com/nheidloff/operator-sample-go/blob/1280fe242726a329642a6a3950d1a8b9990e14d0/operator-application/SetupDeploymentViaOLM.md" rel="noopener noreferrer" target="_blank">Setup and Deployment via Operator Lifecycle Manager</a></li>
+</ul>
+<p>Check out the <a href="https://github.com/nheidloff/operator-sample-go" rel="noopener noreferrer" target="_blank">repo</a> and keep an eye on my blog. I’ll write more about other operator patterns soon.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/defining-dependencies-kubernetes-operators/">Defining Dependencies in Kubernetes Operators</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">4882</post-id>	</item>
+		<item>
+		<title>Deploying Operators with the Operator Lifecycle Manager</title>
+		<link>http://heidloff.net/article/deploying-operators-operator-lifecycle-manager-olm/</link>
+				<pubDate>Wed, 23 Mar 2022 15:25:00 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=4862</guid>
+				<description><![CDATA[<p>Kubernetes operators automate the deployment and operations of Kubernetes based software. This article describes the Operator Lifecycle Manager which provides a declarative way to install, manage, and upgrade operators on a cluster. I&#8217;m working on an operator sample implemented in Go that shows typical operator patterns. There are instructions how to run the operator: Run [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/deploying-operators-operator-lifecycle-manager-olm/">Deploying Operators with the Operator Lifecycle Manager</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>Kubernetes operators automate the deployment and operations of Kubernetes based software. This article describes the Operator Lifecycle Manager which provides a declarative way to install, manage, and upgrade operators on a cluster.</em><span id="more-4862"></span></p>
+<p>I&#8217;m working on an <a href="https://github.com/nheidloff/operator-sample-go" rel="noopener noreferrer" target="_blank">operator sample</a> implemented in Go that shows typical operator patterns. There are instructions how to run the operator:</p>
+<ol>
+<li><a href="https://github.com/nheidloff/operator-sample-go/blob/main/operator-application/SetupLocal.md" rel="noopener noreferrer" target="_blank">Run and debug the operator locally</a></li>
+<li><a href="https://github.com/nheidloff/operator-sample-go/blob/main/operator-application/SetupManualDeployment.md" rel="noopener noreferrer" target="_blank">Deploy the operator manually to Kubernetes</a></li>
+<li><a href="https://github.com/nheidloff/operator-sample-go/blob/main/operator-application/SetupDeploymentViaOLM.md" rel="noopener noreferrer" target="_blank"><a href="https://github.com/nheidloff/operator-sample-go/blob/main/operator-application/README.md#setup-and-deployment-via-operator-lifecycle-manager" rel="noopener noreferrer" target="_blank">Deploy the operator via Operator Lifecycle Manager</a> (focus of this article)</a></li>
+</ol>
+<p>There is a really good video <a href="https://www.youtube.com/watch?v=5PorcMTYZTo" rel="noopener noreferrer" target="_blank">Intro to the Operator Lifecycle Manager</a> describing OLM. Watch it first before reading on.</p>
+<p>The <a href="https://sdk.operatorframework.io/" rel="noopener noreferrer" target="_blank">Operator SDK</a> and the <a href="https://operatorframework.io/" rel="noopener noreferrer" target="_blank">Operator Framework</a> make it pretty simple to build and deploy operators. Without repeating everything from the video here are the necessary commands and highlights that you need to know. Note that you can also deploy operators via the OLM without using the operator-sdk CLI by using kubectl and yaml files instead. See the bottom of this article.</p>
+<p>First the OLM needs to be installed.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ operator-sdk olm install latest
+$ kubectl get all -n olm
+</pre>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/03/Screenshot-2022-03-21-at-16.20.13.png" alt="" width="2590" height="1822" class="alignnone size-full wp-image-4868" srcset="http://heidloff.net/wp-content/uploads/2022/03/Screenshot-2022-03-21-at-16.20.13.png 2590w, http://heidloff.net/wp-content/uploads/2022/03/Screenshot-2022-03-21-at-16.20.13-300x211.png 300w, http://heidloff.net/wp-content/uploads/2022/03/Screenshot-2022-03-21-at-16.20.13-768x540.png 768w, http://heidloff.net/wp-content/uploads/2022/03/Screenshot-2022-03-21-at-16.20.13-1024x720.png 1024w, http://heidloff.net/wp-content/uploads/2022/03/Screenshot-2022-03-21-at-16.20.13-350x245.png 350w" sizes="(max-width: 2590px) 100vw, 2590px" /></p>
+<p>Next the bundle is created, the bundle image is built and pushed and then the operator is run.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ export REGISTRY='docker.io'
+$ export ORG='nheidloff'
+$ export IMAGE='application-controller:v11'
+$ make bundle IMG=&quot;$REGISTRY/$ORG/$IMAGE&quot;
+</pre>
+<pre class="brush: plain; title: ; notranslate">
+$ export BUNDLEIMAGE=&quot;application-controller-bundle:v11&quot;
+$ make bundle-build BUNDLE_IMG=&quot;$REGISTRY/$ORG/$BUNDLEIMAGE&quot;
+$ docker push &quot;$REGISTRY/$ORG/$BUNDLEIMAGE&quot;
+$ operator-sdk run bundle &quot;$REGISTRY/$ORG/$BUNDLEIMAGE&quot; -n operators
+</pre>
+<p>The key artifact that is created, is the <a href="https://github.com/nheidloff/operator-sample-go/blob/ca204e86e23fe166168af0eb61eac281e1f8de85/operator-application/bundle/manifests/operator-application.clusterserviceversion.yaml" rel="noopener noreferrer" target="_blank">cluster service version</a> (CSV) which contains all metadata describing the operator, or more precisely, one version of the operator.</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+...
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - displayName: Application
+      kind: Application
+      name: applications.application.sample.ibm.com
+      version: v1alpha1
+...
+      clusterPermissions:
+      - rules:
+        - apiGroups:
+          - application.sample.ibm.com
+          resources:
+          - applications
+          verbs:
+          - create
+...
+      deployments:
+      - name: operator-application-controller-manager
+        spec:
+          replicas: 1
+...
+                image: docker.io/nheidloff/application-controller:v10
+...
+  installModes:
+  - supported: true
+    type: AllNamespaces
+  version: 0.0.1
+</pre>
+<p>Additionally <a href="https://github.com/nheidloff/operator-sample-go/blob/ca204e86e23fe166168af0eb61eac281e1f8de85/operator-application/bundle/metadata/annotations.yaml" rel="noopener noreferrer" target="_blank">annotations.yaml</a> is created with defaults that can be overwritten.</p>
+<pre class="brush: plain; title: ; notranslate">
+annotations:
+  # Core bundle annotations.
+  operators.operatorframework.io.bundle.mediatype.v1: registry+v1
+  operators.operatorframework.io.bundle.manifests.v1: manifests/
+  operators.operatorframework.io.bundle.metadata.v1: metadata/
+  operators.operatorframework.io.bundle.package.v1: operator-application
+  operators.operatorframework.io.bundle.channels.v1: alpha
+  operators.operatorframework.io.metrics.builder: operator-sdk-v1.18.0
+  operators.operatorframework.io.metrics.mediatype.v1: metrics+v1
+  operators.operatorframework.io.metrics.project_layout: go.kubebuilder.io/v3
+</pre>
+<p>Let&#8217;s take a look which Kubernetes resources have been created as result of &#8216;operator-sdk run bundle&#8217;. The CatalogSource contains a link to the bundle image. A catalog is a repository of metadata that the OLM uses to discover and install operators and their dependencies.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl get catalogsource -n operators
+NAME                           DISPLAY                TYPE   PUBLISHER      AGE
+operator-application-catalog   operator-application   grpc   operator-sdk   3d1h
+$ kubectl get catalogsource  operator-application-catalog -n operators -oyaml
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  annotations:
+    operators.operatorframework.io/index-image: quay.io/operator-framework/opm:latest
+    operators.operatorframework.io/injected-bundles: '[{&quot;imageTag&quot;:&quot;docker.io/nheidloff/application-controller-bundle:v11&quot;,&quot;mode&quot;:&quot;semver&quot;}]'
+    operators.operatorframework.io/registry-pod-name: docker-io-nheidloff-application-controller-bundle-v11
+...
+</pre>
+<p>Additionally the CSV resource is created which contains the information above plus some state information:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl get csv -n operators
+NAME                          DISPLAY                VERSION   REPLACES   PHASE
+operator-application.v0.0.1   operator-application   0.0.1                Succeeded
+$ kubectl get csv operator-application.v0.0.1 -n operators -oyaml
+</pre>
+<p>The subscription resource is the glue between the catalog and the CSV:</p>
+<pre class="brush: plain; title: ; notranslate">
+kubectl get subscriptions -n operators 
+NAME                              PACKAGE                SOURCE                         CHANNEL
+operator-application-v0-0-1-sub   operator-application   operator-application-catalog   alpha
+$kubectl get subscriptions operator-application-v0-0-1-sub -n operators -oyaml 
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  creationTimestamp: &quot;2022-03-21T15:57:40Z&quot;
+  generation: 1
+  labels:
+    operators.coreos.com/operator-application.operators: &quot;&quot;
+  name: operator-application-v0-0-1-sub
+  namespace: operators
+spec:
+  channel: alpha
+  installPlanApproval: Manual
+  name: operator-application
+  source: operator-application-catalog
+  sourceNamespace: operators
+  startingCSV: operator-application.v0.0.1
+</pre>
+<p>This is the created install plan:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl get installplans -n operators
+$ kubectl get installplans install-xxxxx -n operators -oyaml
+apiVersion: operators.coreos.com/v1alpha1
+kind: InstallPlan
+metadata:
+...
+  name: install-2gxl7
+  namespace: operators
+  ownerReferences:
+  - apiVersion: operators.coreos.com/v1alpha1
+    kind: Subscription
+    name: operator-database-v0-0-1-sub
+...spec:
+  approval: Manual
+  approved: true
+  clusterServiceVersionNames:
+  - operator-database.v0.0.1
+  - operator-application.v0.0.1
+  generation: 1
+</pre>
+<p>Last, but not least the operator resource is created.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl config set-context --current --namespace=test1
+$ kubectl get operators -n operators
+NAME                             AGE
+operator-application.operators   3d2h
+$ kubectl get operators operator-application.operators -n operators -oyaml
+apiVersion: operators.coreos.com/v1
+kind: Operator
+metadata:
+...
+      manager: olm
+      operation: Update
+      subresource: status
+      time: '2022-03-18T12:48:10Z'
+  name: operator-application.operators
+...
+status:
+  components:
+    labelSelector:
+      matchExpressions:
+        - key: operators.coreos.com/operator-application.operators
+          operator: Exists
+      ...
+      - apiVersion: operators.coreos.com/v1alpha1
+        conditions:
+          - lastTransitionTime: '2022-03-18T12:48:58Z'
+            lastUpdateTime: '2022-03-18T12:48:58Z'
+            message: install strategy completed with no errors
+            reason: InstallSucceeded
+            status: 'True'
+            type: Succeeded
+        kind: ClusterServiceVersion
+        name: operator-application.v0.0.1
+        namespace: operators
+...
+</pre>
+<p><strong>Deployment with kubectl</strong></p>
+<p>You can also deploy operators via OLM using kubectl.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl apply -f olm/catalogsource.yaml
+$ kubectl apply -f olm/subscription.yaml 
+$ kubectl get installplans -n operators
+$ kubectl -n operators patch installplan install-xxxxx -p '{&quot;spec&quot;:{&quot;approved&quot;:true}}' --type merge
+</pre>
+<p>This creates the same resources as above.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl get all -n operators
+$ kubectl get catalogsource operator-application-catalog -n operators -oyaml
+$ kubectl get subscriptions operator-application-v0-0-1-sub -n operators -oyaml
+$ kubectl get csv operator-application.v0.0.1 -n operators -oyaml
+$ kubectl get installplans -n operators
+$ kubectl get installplans install-xxxxx -n operators -oyaml
+$ kubectl get operators operator-application.operators -n operators -oyaml
+</pre>
+<p>The real value of the OLM is the management of different versions via a subscription model. I&#8217;d like to blog about this soon as well as other operator based topics. Check out the <a href="https://github.com/nheidloff/operator-sample-go" rel="noopener noreferrer" target="_blank">repo</a> and keep an eye on my blog. </p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/deploying-operators-operator-lifecycle-manager-olm/">Deploying Operators with the Operator Lifecycle Manager</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">4862</post-id>	</item>
+	</channel>
+</rss>

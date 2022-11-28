@@ -1,0 +1,6 @@
+Presentation how to create Alexa Skills with IBM Watson.
+Last week there was a webinar Create Alexa skills with Watson Conversation where I was supposed to present.
+However since I couldn’t make it, my colleague Mark Sturdevant jumped in on a short notice and did a great job.
+You can watch the recording, read the pattern documentation and read the slides.
+Here are some […]
+The post Presentation how to create Alexa Skills with IBM Watson [http://heidloff.net/article/presentation-alexa-skills-watson] appeared first on Niklas Heidloff [http://heidloff.net].

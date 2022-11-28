@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 20 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=20" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Fri, 25 Nov 2022 07:22:15 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>Training TensorFlow.js Models with IBM Watson</title><link>http://heidloff.net/article/tensorflowjs-ibm-watson-web-browsers-dl</link><comments>http://heidloff.net/article/tensorflowjs-ibm-watson-web-browsers-dl#respond</comments><pubDate>Mon, 18 Jun 2018 12:49:02 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=2994</guid><description><![CDATA[<p>Recently Google introduced TensorFlow.js, which is a JavaScript library for training and deploying machine learning models in browsers and on Node.js. I like especially the ability to run predictions in browsers. Since running this code locally saves the remote calls to servers, the performance is amazing! TensorFlow.js even allows the training of models in browsers [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/tensorflowjs-ibm-watson-web-browsers-dl">Training TensorFlow.js Models with IBM Watson</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p>Recently Google introduced <a href="https://js.tensorflow.org/" rel="noopener" target="_blank">TensorFlow.js</a>, which is a JavaScript library for training and deploying machine learning models in browsers and on Node.js. I like especially the ability to run predictions in browsers. Since running this code locally saves the remote calls to servers, the performance is amazing!<span id="more-2994"></span></p>
+<p>TensorFlow.js even allows the training of models in browsers via WebGL. While for smaller models the training is fast, <a href="https://js.tensorflow.org/faq/" rel="noopener" target="_blank">it doesn&#8217;t work well for larger models</a>. That&#8217;s why I describe in this article how to use Watson Machine Learning which is part of <a href="https://www.ibm.com/cloud/watson-studio" rel="noopener" target="_blank">Watson Studio</a> to train models in the cloud leveraging multiple GPUs.</p>
+<p>As example I use a web application provided by the TensorFlow.js team, called <a href="https://github.com/google/emoji-scavenger-hunt" rel="noopener" target="_blank">Emoji Scavenger Hunt</a>. The goal of this game is to find real objects with phone cameras that look similar to certain emojis.</p>
+<p>Try out the <a href="https://emojiscavengerhunt.withgoogle.com/" rel="noopener" target="_blank">live demo</a> of the original application. In order to see how fast the predictions are run, append <a href="https://emojiscavengerhunt.withgoogle.com/?debug=true" rel="noopener" target="_blank">?debug=true</a> to the URL. In my case the experience feels real time.</p>
+<p>You can also try my <a href="https://nh-hunt.mybluemix.net/" rel="noopener" target="_blank">modified version</a> of this application on the IBM Cloud, but it will only work for you if you have items that look similar.</p>
+<p>Check out the <a href="https://youtu.be/4WTpMmqraXI" rel="noopener" target="_blank">video</a> for a quick demo.</p>
+<p>In order to train the model I&#8217;ve taken pictures from seven items: plug, soccer ball, mouse, hat, truck, banana and headphones. Here is how the emojis map to the real objects. </p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/06/items-annotated-small.jpeg"><img src="http://heidloff.net/wp-content/uploads/2018/06/items-annotated-small.jpeg" alt="items-annotated-small" width="1000" height="1000" class="alignnone size-full wp-image-2995" srcset="http://heidloff.net/wp-content/uploads/2018/06/items-annotated-small.jpeg 1000w, http://heidloff.net/wp-content/uploads/2018/06/items-annotated-small-150x150.jpeg 150w, http://heidloff.net/wp-content/uploads/2018/06/items-annotated-small-300x300.jpeg 300w" sizes="(max-width: 1000px) 100vw, 1000px" /></a></p>
+<p>This is a screenshot from the app running on an iPhone where currently a hat is recognized:</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/06/iphone-1-small.jpeg"><img src="http://heidloff.net/wp-content/uploads/2018/06/iphone-1-small.jpeg" alt="iphone-1-small" width="500" height="889" class="alignnone size-full wp-image-2996" srcset="http://heidloff.net/wp-content/uploads/2018/06/iphone-1-small.jpeg 500w, http://heidloff.net/wp-content/uploads/2018/06/iphone-1-small-169x300.jpeg 169w" sizes="(max-width: 500px) 100vw, 500px" /></a></p>
+<p>Let me now explain how a model with your own pictures can be trained and how the model can be used in web applications. You can get the complete code of this example from <a href="https://github.com/nheidloff/watson-deep-learning-javascript" rel="noopener" target="_blank">GitHub</a>.</p>
+<p><strong>Training the Model</strong></p>
+<p>In order to train the model I&#8217;ve used <a href="https://dataplatform.ibm.com/docs/content/analyze-data/ml_dlaas.html" rel="noopener" target="_blank">Watson Deep Learning</a> which is part of IBM Watson Studio. You can get a free <a href="https://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud account</a> (no time restriction, no credit card required).</p>
+<p>Watson Deep Learning supports several <a href="https://dataplatform.ibm.com/docs/content/analyze-data/pm_service_supported_frameworks.html" rel="noopener" target="_blank">machine learning frameworks</a>. I have used TensorFlow, since TensorFlow.js can import <a href="https://github.com/tensorflow/tfjs-converter" rel="noopener" target="_blank">TensorFlow SavedModel</a> (in addition to Keras HDF5 models). </p>
+<p>Before running the training, data needs to be uploaded to <a href="https://dataplatform.ibm.com/docs/content/analyze-data/ml_dlaas_object_store.html" rel="noopener" target="_blank">Cloud Object Storage</a>. This includes the pictures of the objects you want to recognize as well as MobileNet. <a href="https://github.com/tensorflow/models/tree/master/research/slim#Pretrained" rel="noopener" target="_blank">MobileNet</a> is a pre-trained visual recognition model which is optimized for mobile devices. </p>
+<p>In order to run the training, two things need to be provided: A yaml file with the <a href="https://dataplatform.ibm.com/docs/content/analyze-data/ml_dlaas_working_with_training_definitions.html" rel="noopener" target="_blank">training configuration</a> and a <a href="https://github.com/nheidloff/watson-deep-learning-javascript/blob/master/model/retrain.py" rel="noopener" target="_blank">python file</a> with the actual training code.</p>
+<p>In the training configuration file <a href="https://github.com/nheidloff/watson-deep-learning-javascript/blob/master/model/tf-train.yaml" rel="noopener" target="_blank">train.yaml</a> you need to define <a href="https://dataplatform.ibm.com/docs/content/analyze-data/ml_dlaas_gpus.html?audience=wdp&#038;context=analytics" rel="noopener" target="_blank">compute tiers</a> and the credentials to access Cloud Object Storage. In this sample I&#8217;ve used the configuration k80x2 which includes two GPUs.</p>
+<p>In the train.yaml file you also need to define which <a href="https://github.com/nheidloff/watson-deep-learning-javascript/blob/master/model/tf-train.yaml#L14" rel="noopener" target="_blank">code</a> to trigger when the training is invoked. I&#8217;ve reused <a href="https://github.com/tensorflow/tensorflow/blob/r1.7/tensorflow/examples/image_retraining/retrain.py" rel="noopener" target="_blank">code</a> from the TensorFlow retrain example. Here is a snippet that shows how to save the model after the training. Read the <a href="https://dataplatform.ibm.com/docs/content/analyze-data/ml_dlaas_tensorflow_deploy_score.html" rel="noopener" target="_blank">documentation</a> to understand the prerequisites for deploying and serving TensorFlow models in IBM Watson Studio.</p>
+<pre class="brush: python; title: ; notranslate">
+def export_model(model_info, class_count, saved_model_dir):
+  sess, _, _, _, _ = build_eval_session(model_info, class_count)
+  graph = sess.graph
+  with graph.as_default():
+    input_tensor = model_info['resized_input_tensor_name']
+    in_image = sess.graph.get_tensor_by_name(input_tensor)
+    inputs = {'image': tf.saved_model.utils.build_tensor_info(in_image)}
+
+    out_classes = sess.graph.get_tensor_by_name('final_result:0')
+    outputs = {
+        'prediction': tf.saved_model.utils.build_tensor_info(out_classes)
+    }
+
+    signature = tf.saved_model.signature_def_utils.build_signature_def(
+        inputs=inputs,
+        outputs=outputs,
+        method_name=tf.saved_model.signature_constants.PREDICT_METHOD_NAME)
+    legacy_init_op = tf.group(tf.tables_initializer(), name='legacy_init_op')
+
+    builder = tf.saved_model.builder.SavedModelBuilder(saved_model_dir)
+    builder.add_meta_graph_and_variables(
+        sess, [tf.saved_model.tag_constants.SERVING],
+        signature_def_map={
+            tf.saved_model.signature_constants.
+            DEFAULT_SERVING_SIGNATURE_DEF_KEY:
+                signature
+        },
+        legacy_init_op=legacy_init_op)
+    builder.save()
+</pre>
+<p>Check out <a href="https://github.com/nheidloff/watson-deep-learning-javascript" rel="noopener" target="_blank">README.md</a> how to trigger the training and how to download the model.</p>
+<p><strong>Usage of the Model in a Web Application</strong></p>
+<p>Once the training is done, you can download the <a href="https://github.com/nheidloff/watson-deep-learning-javascript/tree/master/saved-model/training-qBnjUqImR/model" rel="noopener" target="_blank">saved model</a>. Before the model can be used in a web application, it needs to be converted into a web-friendly format converted by the <a href="https://github.com/tensorflow/tfjs-converter" rel="noopener" target="_blank">TensorFlow.js converter</a>. Since I&#8217;ve had some issues to run the converter on my Mac, I&#8217;ve created a little Docker image to do this. Again, check out the README.md for details.</p>
+<p>The converted model needs to be copied into the <a href="https://github.com/nheidloff/watson-deep-learning-javascript/tree/master/emoji-scavenger-hunt/dist" rel="noopener" target="_blank">dist</a> directory of the web application. Before running predictions the model is <a href="https://github.com/nheidloff/watson-deep-learning-javascript/blob/master/emoji-scavenger-hunt/src/js/mobilenet.ts#L26-L42">loaded</a>, in this case from the files that are part of the web application. Alternatively the model can also be <a href="https://js.tensorflow.org/api/0.11.6/#loadModel" rel="noopener" target="_blank">loaded</a> from remote URLs and stored in the browser.</p>
+<pre class="brush: jscript; title: ; notranslate">
+const MODEL_FILE_URL = '/model/tensorflowjs_model.pb';
+const WEIGHT_MANIFEST_FILE_URL = '/model/weights_manifest.json';
+
+export class MobileNet {
+  model: FrozenModel;
+  async load() {
+    this.model = await loadFrozenModel(
+      MODEL_FILE_URL,
+      WEIGHT_MANIFEST_FILE_URL
+    );
+  }
+</pre>
+<p>In order to run the predictions, the <a href="https://github.com/tensorflow/tfjs-converter#step-2-loading-and-running-in-the-browser" rel="noopener" target="_blank">execute</a> function of the model is invoked:</p>
+<pre class="brush: jscript; title: ; notranslate">
+import {loadFrozenModel, FrozenModel} from '@tensorflow/tfjs-converter';
+...
+model: FrozenModel;
+...
+const OUTPUT_NODE_NAME = 'final_result';
+...
+predict(input: tfc.Tensor): tfc.Tensor1D {
+    const preprocessedInput = tfc.div(tfc.sub(input.asType('float32'), PREPROCESS_DIVISOR), PREPROCESS_DIVISOR);
+    const reshapedInput = preprocessedInput.reshape([1, ...preprocessedInput.shape]);
+    const dict: TensorMap = {};
+    dict[INPUT_NODE_NAME] = reshapedInput;
+    return this.model.execute(dict, OUTPUT_NODE_NAME) as tfc.Tensor1D;
+  }
+</pre>
+<p>If you want to run this example yourself, get the code from <a href="https://github.com/nheidloff/watson-deep-learning-javascript" rel="noopener" target="_blank">GitHub</a> and get a free <a href="https://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud account</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/tensorflowjs-ibm-watson-web-browsers-dl">Training TensorFlow.js Models with IBM Watson</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><wfw:commentRss>http://heidloff.net/article/tensorflowjs-ibm-watson-web-browsers-dl/feed/</wfw:commentRss><slash:comments>0</slash:comments><post-id xmlns="com-wordpress:feed-additions:1">2994</post-id></item></channel></rss>

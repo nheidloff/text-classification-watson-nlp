@@ -1,0 +1,7 @@
+Deploying Angular, React and Vue Apps on Kubernetes.
+I’ve open sourced some sample code that shows how to deploy Angular, React and Vue web applications to Kubernetes on the IBM Cloud.
+Get the code from GitHub.
+In order to serve the web applications, nginx is used.
+Check out nginx.conf for a simple sample configuration.
+The file also shows how to access other domains […]
+The post Deploying Angular, React and Vue Apps on Kubernetes [http://heidloff.net/article/angular-react-vue-kubernetes] appeared first on Niklas Heidloff [http://heidloff.net].

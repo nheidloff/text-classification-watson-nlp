@@ -1,0 +1,53 @@
+page5-elem0,Tekton without Tekton in DevSecOps Pipelines.
+page5-elem0,IBM provides a DevSecOps reference implementation which is especially useful for regulated industries to adhere to policies.
+page5-elem0,This article describes how we have implemented the CI and CD pipelines for our SaaS reference architecture.
+page5-elem0,This article is part of a mini series.
+page5-elem0,Read the previous articles to understand the benefits of the DevSecOps reference implementation and how to use the CI/CD pipelines from a consumer perspective.
+page5-elem0,In those articles I explain the DevSecOps reference implementation via a concrete sample scenario which is a SaaS reference architecture [https://github.com/IBM/multi-tenancy] that shows how our clients and partners can build software as a service.
+page5-elem0,* DevSecOps for SaaS Reference Architecture on OpenShift [http://heidloff.net/article/devsecops-saas-reference-architecture-openshift/]
+page5-elem0,* Shift-Left Continuous Integration with DevSecOps Pipelines [http://heidloff.net/article/shift-left-continuous-integration-devsecops-pipelines/]
+page5-elem0,* Change Evidence and Issue Management with DevSecOps [http://heidloff.net/article/change-evidence-issue-management-devsecops/]
+page5-elem0,* Continuous Delivery with DevSecOps Reference Architecture [http://heidloff.net/article/continuous-delivery-ibm-devsecops-reference-architecture/]
+page5-elem0,* This article: Tekton without Tekton in DevSecOps Pipelines [http://heidloff.net/article/tekton-without-tekton-devsecops-pipelines/]
+page5-elem0,The DevSecOps reference implementation uses internally Tekton [https://tekton.dev/] which is a Kubernetes-native CI/CD technology with several benefits like the big community lots of reusable tasks multi-cloud support and more.
+page5-elem0,One challenge I’ve experienced with Tekton is that it is sometimes not as easy and convenient as I had hoped.
+page5-elem0,A good example is how parameters are passed around.
+page5-elem0,To support clean encapsulations and allow reuse of assets Tekton assets provide interfaces which describe exactly the input and output of assets like tasks.
+page5-elem0,While this concept makes a lot of sense it can add complexity (some people might say unnecessary work) when developing pipelines.
+page5-elem0,For example to pass a property to a task it might involve multiple stages: from initial definition to pipeline to pipeline run to task and then to task run.
+page5-elem0,In my case this often caused issues since I forgot steps and the debugging was time consuming.
+page5-elem0,This is why I use the article title ‘Tekton without Tekton’.
+page5-elem0,The DevSecOps reference implementation comes with its own programming model to make it easier to build pipelines.
+page5-elem0,For common tasks like vulnerability checks secret detections and building images out of the box functionality is provided.
+page5-elem0,In other words no code has to be written.
+page5-elem0,Instead tasks can be reused and customized either declaratively or programmatically.
+page5-elem0,Rather than writing Tekton tasks scripts can be invoked.
+page5-elem0,The .pipeline-config.yaml [https://github.com/IBM/multi-tenancy/blob/2692acce6588f12011ce4b52e7dccb425b219530/.pipeline-config.yaml] file defines which scripts to invoke in which stages of the CI/CD pipelines.
+page5-elem0,For each stage different base images can be chosen.
+page5-elem0,For example the ‘deploy’ stage cannot be handled generically which is why custom specific scripts need to be provided.
+page5-elem0,# Documentation: https://pages.github.ibm.com/one-pipeline/docs/custom-scripts.html
+page5-elem0,version: '1'
+page5-elem0,setup:
+page5-elem0,image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
+page5-elem0,script: |
+page5-elem0,#!/usr/bin/env bash
+page5-elem0,source cd-scripts/setup.sh
+page5-elem0,deploy:
+page5-elem0,image: icr.io/continuous-delivery/pipeline/pipeline-base-image:2.12@sha256:ff4053b0bca784d6d105fee1d008cfb20db206011453071e86b69ca3fde706a4
+page5-elem0,script: |
+page5-elem0,#!/usr/bin/env bash
+page5-elem0,if [[ "$PIPELINE_DEBUG" == 1 ]]; then
+page5-elem0,trap env EXIT
+page5-elem0,env
+page5-elem0,set -x
+page5-elem0,fi
+page5-elem0,source cd-scripts/deploy_setup.sh
+page5-elem0,source cd-scripts/deploy.sh
+page5-elem0,I especially like the tools that provide various convenience functionality.
+page5-elem0,For example this is how you can use global variables (see documentation [https://cloud.ibm.com/docs/devsecops?topic=devsecops-devsecops-pipelinectl]).
+page5-elem0,Define variable [https://github.com/IBM/multi-tenancy/blob/2692acce6588f12011ce4b52e7dccb425b219530/cd-scripts/deploy_setup.sh#L154]:
+page5-elem0,set_env PLATFORM_NAME "${PLATFORM_NAME}"
+page5-elem0,Read variable: [https://github.com/IBM/multi-tenancy/blob/2692acce6588f12011ce4b52e7dccb425b219530/cd-scripts/deploy.sh#L5]
+page5-elem0,PLATFORM_NAME="$(get_env PLATFORM_NAME)"
+page5-elem0,Check out the IBM Toolchains documentation [https://cloud.ibm.com/docs/devsecops?topic=devsecops-tutorial-cd-devsecops] and the SaaS reference architecture [https://github.com/IBM/multi-tenancy] to find out more.
+page5-elem0,The post Tekton without Tekton in DevSecOps Pipelines [http://heidloff.net/article/tekton-without-tekton-devsecops-pipelines/] appeared first on Niklas Heidloff [http://heidloff.net].

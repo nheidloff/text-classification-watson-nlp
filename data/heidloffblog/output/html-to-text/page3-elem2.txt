@@ -1,0 +1,15 @@
+Automation for embedded IBM Watson Deployments.
+
+Last week IBM announced [https://newsroom.ibm.com/2022-10-25-IBM-Helps-Ecosystem-Partners-Accelerate-AI-Adoption-by-Making-it-Easier-to-Embed-and-Scale-AI-Across-Their-Business] the general availability of Watson NLP and Watson Speech. You can now run these services via containers everywhere.
+
+I’ve created a short video [https://youtu.be/8lbVRAvJgy4] that describes how complete solutions can be deployed and how automation via Terraform and Argo CD can be used.
+
+
+
+To find out more about these capabilities, check out these resources:
+
+ * Watson Automation Repo [https://github.com/IBM/watson-automation]
+ * TechZone Accelerator Toolkit [https://operate.cloudnativetoolkit.dev/]
+ * Watson NLP [https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home]
+
+The post Automation for embedded IBM Watson Deployments [http://heidloff.net/article/automation-for-ibm-watson-deployments/] appeared first on Niklas Heidloff [http://heidloff.net].

@@ -1,0 +1,34 @@
+page5-elem2,Change Evidence and Issue Management with DevSecOps.
+page5-elem2,IBM provides a DevSecOps reference implementation which is especially useful for regulated industries to adhere to policies.
+page5-elem2,This article describes the CI pipeline which provides in addition to the usual CI functionality change evidence and issue management capabilities.
+page5-elem2,This article is part of a mini series:
+page5-elem2,* DevSecOps for SaaS Reference Architecture on OpenShift [http://heidloff.net/article/devsecops-saas-reference-architecture-openshift/]
+page5-elem2,* Shift-Left Continuous Integration with DevSecOps Pipelines [http://heidloff.net/article/shift-left-continuous-integration-devsecops-pipelines/]
+page5-elem2,* This article: Change Evidence and Issue Management with DevSecOps [http://heidloff.net/article/change-evidence-issue-management-devsecops/]
+page5-elem2,* Continuous Delivery with DevSecOps Reference Architecture [http://heidloff.net/article/continuous-delivery-ibm-devsecops-reference-architecture/]
+page5-elem2,* Tekton without Tekton in DevSecOps Pipelines [http://heidloff.net/article/tekton-without-tekton-devsecops-pipelines/]
+page5-elem2,The CI pipeline template that is part of IBM’s DevSecOps reference implementation builds and pushes images and runs various security and code tests.
+page5-elem2,Only if all checks pass the application can be deployed to production via the CD pipelines.
+page5-elem2,This assures that new versions can be deployed at any time based on business (not technical) decisions.
+page5-elem2,Functionality of the (second) CI pipeline:
+page5-elem2,* Build and push images
+page5-elem2,* Run various security checks (secret detection image vulnerabilities compliance)
+page5-elem2,* Run various code tests (unit tests acceptance tests)
+page5-elem2,* Deploy services to integration/testing Kubernetes namespaces or OpenShift projects
+page5-elem2,* Manage changes evidence and issues
+page5-elem2,I’ve documented [https://github.com/IBM/multi-tenancy-documentation/blob/main/documentation/kubernetes-via-ibm-kubernetes-service-and-ibm-openshift/ci-pipeline.md] all steps of the pipeline on GitHub.
+page5-elem2,Let’s take a look at the most important steps.
+page5-elem2,The CI pipeline is triggered automatically after the pull request has been merged (see previous article [http://heidloff.net/article/shift-left-continuous-integration-devsecops-pipelines/]).
+page5-elem2,The CI pipeline reads both global and tenant specific configuration from a Git repo.
+page5-elem2,In the CI pipeline the tenant configuration is not from an actual tenant but a dummy/test tenant used to run the CI tests.
+page5-elem2,The image is built and pushed.
+page5-elem2,Next various security vulnerability and compliance checks are run.
+page5-elem2,Then the container is deployed to an integration/testing Kubernetes namespace or OpenShift project to run more tests.
+page5-elem2,The status can be monitored in IBM DevOps Insights.
+page5-elem2,The latest successful version is stored in the inventory repo.
+page5-elem2,Evidence is collected in the evidence repo.
+page5-elem2,If the pipeline run has been successful no issues are created in the compliance issues repo.
+page5-elem2,After a successful run of the CI pipeline the CD pipeline can be run.
+page5-elem2,I’ll blog about this soon.
+page5-elem2,Check out the IBM Toolchains documentation [https://cloud.ibm.com/docs/devsecops?topic=devsecops-tutorial-cd-devsecops] and the SaaS reference architecture [https://github.com/IBM/multi-tenancy] to find out more.
+page5-elem2,The post Change Evidence and Issue Management with DevSecOps [http://heidloff.net/article/change-evidence-issue-management-devsecops/] appeared first on Niklas Heidloff [http://heidloff.net].

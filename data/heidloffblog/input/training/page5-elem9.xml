@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 5 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=5" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Thu, 24 Nov 2022 10:47:53 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>Deploying Operators with the Operator Lifecycle Manager</title><link>http://heidloff.net/article/deploying-operators-operator-lifecycle-manager-olm/</link><pubDate>Wed, 23 Mar 2022 15:25:00 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=4862</guid><description><![CDATA[<p>Kubernetes operators automate the deployment and operations of Kubernetes based software. This article describes the Operator Lifecycle Manager which provides a declarative way to install, manage, and upgrade operators on a cluster. I&#8217;m working on an operator sample implemented in Go that shows typical operator patterns. There are instructions how to run the operator: Run [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/deploying-operators-operator-lifecycle-manager-olm/">Deploying Operators with the Operator Lifecycle Manager</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p><em>Kubernetes operators automate the deployment and operations of Kubernetes based software. This article describes the Operator Lifecycle Manager which provides a declarative way to install, manage, and upgrade operators on a cluster.</em><span id="more-4862"></span></p>
+<p>I&#8217;m working on an <a href="https://github.com/nheidloff/operator-sample-go" rel="noopener noreferrer" target="_blank">operator sample</a> implemented in Go that shows typical operator patterns. There are instructions how to run the operator:</p>
+<ol>
+<li><a href="https://github.com/nheidloff/operator-sample-go/blob/main/operator-application/SetupLocal.md" rel="noopener noreferrer" target="_blank">Run and debug the operator locally</a></li>
+<li><a href="https://github.com/nheidloff/operator-sample-go/blob/main/operator-application/SetupManualDeployment.md" rel="noopener noreferrer" target="_blank">Deploy the operator manually to Kubernetes</a></li>
+<li><a href="https://github.com/nheidloff/operator-sample-go/blob/main/operator-application/SetupDeploymentViaOLM.md" rel="noopener noreferrer" target="_blank"><a href="https://github.com/nheidloff/operator-sample-go/blob/main/operator-application/README.md#setup-and-deployment-via-operator-lifecycle-manager" rel="noopener noreferrer" target="_blank">Deploy the operator via Operator Lifecycle Manager</a> (focus of this article)</a></li>
+</ol>
+<p>There is a really good video <a href="https://www.youtube.com/watch?v=5PorcMTYZTo" rel="noopener noreferrer" target="_blank">Intro to the Operator Lifecycle Manager</a> describing OLM. Watch it first before reading on.</p>
+<p>The <a href="https://sdk.operatorframework.io/" rel="noopener noreferrer" target="_blank">Operator SDK</a> and the <a href="https://operatorframework.io/" rel="noopener noreferrer" target="_blank">Operator Framework</a> make it pretty simple to build and deploy operators. Without repeating everything from the video here are the necessary commands and highlights that you need to know. Note that you can also deploy operators via the OLM without using the operator-sdk CLI by using kubectl and yaml files instead. See the bottom of this article.</p>
+<p>First the OLM needs to be installed.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ operator-sdk olm install latest
+$ kubectl get all -n olm
+</pre>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/03/Screenshot-2022-03-21-at-16.20.13.png" alt="" width="2590" height="1822" class="alignnone size-full wp-image-4868" srcset="http://heidloff.net/wp-content/uploads/2022/03/Screenshot-2022-03-21-at-16.20.13.png 2590w, http://heidloff.net/wp-content/uploads/2022/03/Screenshot-2022-03-21-at-16.20.13-300x211.png 300w, http://heidloff.net/wp-content/uploads/2022/03/Screenshot-2022-03-21-at-16.20.13-768x540.png 768w, http://heidloff.net/wp-content/uploads/2022/03/Screenshot-2022-03-21-at-16.20.13-1024x720.png 1024w, http://heidloff.net/wp-content/uploads/2022/03/Screenshot-2022-03-21-at-16.20.13-350x245.png 350w" sizes="(max-width: 2590px) 100vw, 2590px" /></p>
+<p>Next the bundle is created, the bundle image is built and pushed and then the operator is run.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ export REGISTRY='docker.io'
+$ export ORG='nheidloff'
+$ export IMAGE='application-controller:v11'
+$ make bundle IMG=&quot;$REGISTRY/$ORG/$IMAGE&quot;
+</pre>
+<pre class="brush: plain; title: ; notranslate">
+$ export BUNDLEIMAGE=&quot;application-controller-bundle:v11&quot;
+$ make bundle-build BUNDLE_IMG=&quot;$REGISTRY/$ORG/$BUNDLEIMAGE&quot;
+$ docker push &quot;$REGISTRY/$ORG/$BUNDLEIMAGE&quot;
+$ operator-sdk run bundle &quot;$REGISTRY/$ORG/$BUNDLEIMAGE&quot; -n operators
+</pre>
+<p>The key artifact that is created, is the <a href="https://github.com/nheidloff/operator-sample-go/blob/ca204e86e23fe166168af0eb61eac281e1f8de85/operator-application/bundle/manifests/operator-application.clusterserviceversion.yaml" rel="noopener noreferrer" target="_blank">cluster service version</a> (CSV) which contains all metadata describing the operator, or more precisely, one version of the operator.</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+...
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - displayName: Application
+      kind: Application
+      name: applications.application.sample.ibm.com
+      version: v1alpha1
+...
+      clusterPermissions:
+      - rules:
+        - apiGroups:
+          - application.sample.ibm.com
+          resources:
+          - applications
+          verbs:
+          - create
+...
+      deployments:
+      - name: operator-application-controller-manager
+        spec:
+          replicas: 1
+...
+                image: docker.io/nheidloff/application-controller:v10
+...
+  installModes:
+  - supported: true
+    type: AllNamespaces
+  version: 0.0.1
+</pre>
+<p>Additionally <a href="https://github.com/nheidloff/operator-sample-go/blob/ca204e86e23fe166168af0eb61eac281e1f8de85/operator-application/bundle/metadata/annotations.yaml" rel="noopener noreferrer" target="_blank">annotations.yaml</a> is created with defaults that can be overwritten.</p>
+<pre class="brush: plain; title: ; notranslate">
+annotations:
+  # Core bundle annotations.
+  operators.operatorframework.io.bundle.mediatype.v1: registry+v1
+  operators.operatorframework.io.bundle.manifests.v1: manifests/
+  operators.operatorframework.io.bundle.metadata.v1: metadata/
+  operators.operatorframework.io.bundle.package.v1: operator-application
+  operators.operatorframework.io.bundle.channels.v1: alpha
+  operators.operatorframework.io.metrics.builder: operator-sdk-v1.18.0
+  operators.operatorframework.io.metrics.mediatype.v1: metrics+v1
+  operators.operatorframework.io.metrics.project_layout: go.kubebuilder.io/v3
+</pre>
+<p>Let&#8217;s take a look which Kubernetes resources have been created as result of &#8216;operator-sdk run bundle&#8217;. The CatalogSource contains a link to the bundle image. A catalog is a repository of metadata that the OLM uses to discover and install operators and their dependencies.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl get catalogsource -n operators
+NAME                           DISPLAY                TYPE   PUBLISHER      AGE
+operator-application-catalog   operator-application   grpc   operator-sdk   3d1h
+$ kubectl get catalogsource  operator-application-catalog -n operators -oyaml
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  annotations:
+    operators.operatorframework.io/index-image: quay.io/operator-framework/opm:latest
+    operators.operatorframework.io/injected-bundles: '[{&quot;imageTag&quot;:&quot;docker.io/nheidloff/application-controller-bundle:v11&quot;,&quot;mode&quot;:&quot;semver&quot;}]'
+    operators.operatorframework.io/registry-pod-name: docker-io-nheidloff-application-controller-bundle-v11
+...
+</pre>
+<p>Additionally the CSV resource is created which contains the information above plus some state information:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl get csv -n operators
+NAME                          DISPLAY                VERSION   REPLACES   PHASE
+operator-application.v0.0.1   operator-application   0.0.1                Succeeded
+$ kubectl get csv operator-application.v0.0.1 -n operators -oyaml
+</pre>
+<p>The subscription resource is the glue between the catalog and the CSV:</p>
+<pre class="brush: plain; title: ; notranslate">
+kubectl get subscriptions -n operators 
+NAME                              PACKAGE                SOURCE                         CHANNEL
+operator-application-v0-0-1-sub   operator-application   operator-application-catalog   alpha
+$kubectl get subscriptions operator-application-v0-0-1-sub -n operators -oyaml 
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  creationTimestamp: &quot;2022-03-21T15:57:40Z&quot;
+  generation: 1
+  labels:
+    operators.coreos.com/operator-application.operators: &quot;&quot;
+  name: operator-application-v0-0-1-sub
+  namespace: operators
+spec:
+  channel: alpha
+  installPlanApproval: Manual
+  name: operator-application
+  source: operator-application-catalog
+  sourceNamespace: operators
+  startingCSV: operator-application.v0.0.1
+</pre>
+<p>This is the created install plan:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl get installplans -n operators
+$ kubectl get installplans install-xxxxx -n operators -oyaml
+apiVersion: operators.coreos.com/v1alpha1
+kind: InstallPlan
+metadata:
+...
+  name: install-2gxl7
+  namespace: operators
+  ownerReferences:
+  - apiVersion: operators.coreos.com/v1alpha1
+    kind: Subscription
+    name: operator-database-v0-0-1-sub
+...spec:
+  approval: Manual
+  approved: true
+  clusterServiceVersionNames:
+  - operator-database.v0.0.1
+  - operator-application.v0.0.1
+  generation: 1
+</pre>
+<p>Last, but not least the operator resource is created.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl config set-context --current --namespace=test1
+$ kubectl get operators -n operators
+NAME                             AGE
+operator-application.operators   3d2h
+$ kubectl get operators operator-application.operators -n operators -oyaml
+apiVersion: operators.coreos.com/v1
+kind: Operator
+metadata:
+...
+      manager: olm
+      operation: Update
+      subresource: status
+      time: '2022-03-18T12:48:10Z'
+  name: operator-application.operators
+...
+status:
+  components:
+    labelSelector:
+      matchExpressions:
+        - key: operators.coreos.com/operator-application.operators
+          operator: Exists
+      ...
+      - apiVersion: operators.coreos.com/v1alpha1
+        conditions:
+          - lastTransitionTime: '2022-03-18T12:48:58Z'
+            lastUpdateTime: '2022-03-18T12:48:58Z'
+            message: install strategy completed with no errors
+            reason: InstallSucceeded
+            status: 'True'
+            type: Succeeded
+        kind: ClusterServiceVersion
+        name: operator-application.v0.0.1
+        namespace: operators
+...
+</pre>
+<p><strong>Deployment with kubectl</strong></p>
+<p>You can also deploy operators via OLM using kubectl.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl apply -f olm/catalogsource.yaml
+$ kubectl apply -f olm/subscription.yaml 
+$ kubectl get installplans -n operators
+$ kubectl -n operators patch installplan install-xxxxx -p '{&quot;spec&quot;:{&quot;approved&quot;:true}}' --type merge
+</pre>
+<p>This creates the same resources as above.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl get all -n operators
+$ kubectl get catalogsource operator-application-catalog -n operators -oyaml
+$ kubectl get subscriptions operator-application-v0-0-1-sub -n operators -oyaml
+$ kubectl get csv operator-application.v0.0.1 -n operators -oyaml
+$ kubectl get installplans -n operators
+$ kubectl get installplans install-xxxxx -n operators -oyaml
+$ kubectl get operators operator-application.operators -n operators -oyaml
+</pre>
+<p>The real value of the OLM is the management of different versions via a subscription model. I&#8217;d like to blog about this soon as well as other operator based topics. Check out the <a href="https://github.com/nheidloff/operator-sample-go" rel="noopener noreferrer" target="_blank">repo</a> and keep an eye on my blog. </p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/deploying-operators-operator-lifecycle-manager-olm/">Deploying Operators with the Operator Lifecycle Manager</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><post-id xmlns="com-wordpress:feed-additions:1">4862</post-id></item></channel></rss>

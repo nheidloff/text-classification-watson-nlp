@@ -1,0 +1,5 @@
+Building VR Applications with Unity and IBM Watson.
+
+I’ve continued to play with Unity and the IBM Watson SDK, which allows using cognitive services like speech recognition in Unity projects. With this technology you can not only build games, but also other exciting scenarios. I’ve changed my Augmented Reality sample slightly to run it as a Virtual Reality app that can be experienced […]
+
+The post Building VR Applications with Unity and IBM Watson [http://heidloff.net/article/vr-virtual-reality-unity-ibm-watson] appeared first on Niklas Heidloff [http://heidloff.net].

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 22 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=22" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Fri, 25 Nov 2022 07:22:15 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>A/B Testing with Kubernetes and Istio</title><link>http://heidloff.net/article/ab-testing-kubernetes-istio</link><comments>http://heidloff.net/article/ab-testing-kubernetes-istio#respond</comments><pubDate>Tue, 13 Feb 2018 13:37:16 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=2796</guid><description><![CDATA[<p>Last week I gave a presentation &#8220;When to use Serverless? When to use Kubernetes?&#8221; One of the weaknesses of Serverless platforms is that you currently cannot do things like A/B testing well since there is no notion of versions. A/B testing allows running multiple variants of functionality in parallel, so that through analytics of user [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/ab-testing-kubernetes-istio">A/B Testing with Kubernetes and Istio</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p>Last week I gave a presentation &#8220;<a href="http://heidloff.net/article/when-to-use-serverless-kubernetes" rel="noopener" target="_blank">When to use Serverless? When to use Kubernetes?</a>&#8221; One of the weaknesses of Serverless platforms is that you currently cannot do things like A/B testing well since there is no notion of versions.<span id="more-2796"></span></p>
+<p><a href="https://en.wikipedia.org/wiki/A/B_testing" rel="noopener" target="_blank">A/B testing</a> allows running multiple variants of functionality in parallel, so that through analytics of user behavior the better variant can be determined. Similarly with &#8216;dark launches&#8217; new features can be made available to only certain users to test features in production environments before these features will be released to the masses.</p>
+<p>These traffic flow management capabilities are one of the advantages of <a href="https://kubernetes.io" rel="noopener" target="_blank">Kubernetes</a> and <a href="https://istio.io/" rel="noopener" target="_blank">Istio</a>. Istio is an open platform to manage microservices. </p>
+<p>Some of my colleagues have <a href="https://github.com/IBM/microservices-traffic-management-using-istio" rel="noopener" target="_blank">documented</a> how to do traffic flow management with Istio for the <a href="https://istio.io/docs/guides/bookinfo.html" rel="noopener" target="_blank">Book Info</a> sample that is part of the <a href="https://istio.io/docs/concepts/what-is-istio/overview.html" rel="noopener" target="_blank">Istio documentation</a>. The current documentation is for Istio 0.1.6 and doesn&#8217;t work for the later version 0.5.0 which I use. I&#8217;ve sent a <a href="https://github.com/IBM/microservices-traffic-management-using-istio/pull/60" rel="noopener" target="_blank">pull request</a>, since some URLs have changed.</p>
+<p>The diagram shows the architecture of the book info sample app. Books have reviews and can have ratings. The application has three versions of the review service. The gray components on the left hand side are the Istio components. When the sample application is deployed, further Istio components, the Envoy containers, are automatically added to each pod. These Envoy components are proxies (also called side cars) through which containers communicate with each other which is the basis for Istio&#8217;s traffic management capabilities.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/02/istio-sample-architecture.png"><img src="http://heidloff.net/wp-content/uploads/2018/02/istio-sample-architecture.png" alt="istio-sample-architecture" width="1924" height="1056" class="alignnone size-full wp-image-2795" srcset="http://heidloff.net/wp-content/uploads/2018/02/istio-sample-architecture.png 1924w, http://heidloff.net/wp-content/uploads/2018/02/istio-sample-architecture-300x165.png 300w, http://heidloff.net/wp-content/uploads/2018/02/istio-sample-architecture-1024x562.png 1024w" sizes="(max-width: 1924px) 100vw, 1924px" /></a></p>
+<p>Check out the <a href="https://github.com/istio/istio/blob/9f670724fb6c5f7de818204c63e155c6d6c0706a/samples/bookinfo/kube/bookinfo.yaml#L88-L156" rel="noopener" target="_blank">bookinfo.yaml</a> file how to define and deploy the three versions of the review service.</p>
+<p>In order to route traffic to version 1 for 50% of the invocations and to version 3 for the other half, this <a href="https://github.com/istio/istio/blob/9f670724fb6c5f7de818204c63e155c6d6c0706a/samples/bookinfo/kube/route-rule-reviews-50-v3.yaml" rel="noopener" target="_blank">route rule</a> can be used.</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: config.istio.io/v1alpha2
+kind: RouteRule
+metadata:
+  name: reviews-default
+spec:
+  destination:
+    name: reviews
+  precedence: 1
+  route:
+  - labels:
+      version: v1
+    weight: 50
+  - labels:
+      version: v3
+    weight: 50
+</pre>
+<p>In order to expose version 2 to only users with the name &#8216;Jason&#8217;, a <a href="https://github.com/istio/istio/blob/9f670724fb6c5f7de818204c63e155c6d6c0706a/samples/bookinfo/kube/route-rule-reviews-test-v2.yaml" rel="noopener" target="_blank">regular expression</a> can be used.</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: config.istio.io/v1alpha2
+kind: RouteRule
+metadata:
+  name: reviews-test-v2
+spec:
+  destination:
+    name: reviews
+  precedence: 2
+  match:
+    request:
+      headers:
+        cookie:
+          regex: &quot;^(.*?;)?(user=jason)(;.*)?$&quot;
+  route:
+  - labels:
+      version: v2
+</pre>
+<p>To learn more about traffic management in Istio, check out the <a href="https://istio.io/docs/tasks/traffic-management/" rel="noopener" target="_blank">documentation</a>. If you want to try out Kubernetes, you can get an account on the <a href="http://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/ab-testing-kubernetes-istio">A/B Testing with Kubernetes and Istio</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><wfw:commentRss>http://heidloff.net/article/ab-testing-kubernetes-istio/feed/</wfw:commentRss><slash:comments>0</slash:comments><post-id xmlns="com-wordpress:feed-additions:1">2796</post-id></item></channel></rss>

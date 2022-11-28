@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Thu, 24 Nov 2022 10:47:53 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>Deploying custom Watson NLP Models with Terraform</title><link>http://heidloff.net/article/deploying-custom-watson-nlp-models-with-terraform/</link><pubDate>Thu, 17 Nov 2022 14:51:15 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=5388</guid><description><![CDATA[<p>IBM Watson NLP (Natural Language Understanding) and Watson Speech containers can be run locally, on-premises or Kubernetes and OpenShift clusters. Via REST and gRCP APIs AI can easily be embedded in applications. This post describes how custom Watson NLP models can be deployed with TechZone Deployer, an opinionated deployment and operations toolkit based on Terraform [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/deploying-custom-watson-nlp-models-with-terraform/">Deploying custom Watson NLP Models with Terraform</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p><em>IBM Watson NLP (Natural Language Understanding) and Watson Speech containers can be run locally, on-premises or Kubernetes and OpenShift clusters. Via REST and gRCP APIs AI can easily be embedded in applications. This post describes how custom Watson NLP models can be deployed with TechZone Deployer, an opinionated deployment and operations toolkit based on Terraform and ArgoCD.</em><span id="more-5388"></span></p>
+<p><em>Watson NLP</em></p>
+<p>To set some context, check out the landing page <a href="https://www.ibm.com/products/ibm-watson-natural-language-processing" rel="noopener noreferrer" target="_blank">IBM Watson NLP Library for Embed</a>. The Watson NLP containers can be run on different container platforms, they provide REST and gRCP interfaces, they can be extended with custom models and they can easily be embedded in solutions. While this offering is new, the underlaying functionality has been used and optimized for a long time in IBM offerings like the IBM Watson Assistant and NLU (Natural Language Understanding) SaaS services and IBM Cloud Pak for Data.</p>
+<p><em>TechZone Deployer</em></p>
+<p>With TechZone Deployer (also known as TechZone Accelerator Toolkit, TechZone Automation, Software Everywhere, Cloud Native Toolkit) IBM software, open source projects and custom applications can easily be deployed to various clouds. Check out my earlier blog that introduces the toolkit: <a href="http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/" rel="noopener noreferrer" target="_blank">Introducing IBM’s Toolkit to handle Everything as Code</a>. The toolkit leverages Terraform and GitOps and is based on best practices from IBM projects with partners and clients. With the toolkit both infrastructure like Kubernetes clusters as well as Kubernetes resources within clusters can be deployed. Infrastructure resources are deployed via Terraform, resources within clusters via Argo CD.</p>
+<p><strong>Automatic Deployments of the Watson NLP Runtime and Models</strong></p>
+<p>Based on TechZone Deployer my team has created an <a href="https://github.com/IBM/watson-automation" rel="noopener noreferrer" target="_blank">asset to deploy 1. OpenShift clusters, 2. Watson NLP and 3. custom applications</a> in these clusters in <a href="http://heidloff.net/article/setting-up-openshift-and-applications-in-one-hour/" rel="noopener noreferrer" target="_blank">one hour</a>. Watch the short video <a href="https://www.youtube.com/watch?v=8lbVRAvJgy4" rel="noopener noreferrer" target="_blank">Automation for IBM Watson Deployments</a> for an introduction.</p>
+<p>The usage of TechZone Deployer is very easy:</p>
+<ul>
+<li>Install CLI</li>
+<li>Define which modules to deploy from a <a href="https://modules.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">module catalog</a></li>
+<li>Configure modules in variables.yaml and credentials.properties files</li>
+<li>Use CLI to create Terraform modules</li>
+<li>Launch local tools container and apply Terraform modules</li>
+</ul>
+<p>This sample Watson NLP configuration uses one predefined model hosted in the IBM Cloud Pak registry.</p>
+<pre class="brush: plain; title: ; notranslate">
+- name: terraform_gitops_watson_nlp_runtime_image
+  value: watson-nlp-runtime:1.0.18
+- name: terraform_gitops_watson_nlp_runtime_registry
+  value: watson
+- name: terraform_gitops_watson_nlp_accept_license
+  value: false
+- name: terraform_gitops_watson_nlp_imagePullSecrets
+  value:
+    - ibm-entitlement-key
+- name: terraform_gitops_watson_nlp_models
+  value:
+    - registry: watson
+      image: watson-nlp_syntax_izumo_lang_en_stock:1.0.7
+- name: terraform_gitops_watson_nlp_registries
+  value:
+    - name: watson
+      url: cp.icr.io/cp/ai
+- name: terraform_gitops_watson_nlp_registryUserNames
+  value:
+    - registry: watson
+      userName: cp
+</pre>
+<p><strong>Deployments of multiple Models</strong></p>
+<p>It&#8217;s also possible to deploy in addition to the Watson NLP runtime multiple models, both predefined models as well as custom models. </p>
+<p>At a minimum you need the Watson NLP runtime image. The NLP runtime container runs in the Watson NLP pod at runtime.</p>
+<p>Additionally you can have 1 to N &#8216;model images&#8217; which run as Kubernetes init containers. They are triggered when pods are created. Their purpose is to put the model artifacts on disk so that the Watson NLP runtime container can access them. Once they have done this, these containers terminate.</p>
+<p>Images reside in registries which are typically protected. Pull secrets need to be provided to access them. <a href="https://github.com/bitnami-labs/sealed-secrets" rel="noopener noreferrer" target="_blank">Sealed Secrets for Kubernetes</a> are used to protect the secrets.</p>
+<p>There can be multiple registries (N >= 1) and multiple secrets (M >= 0). Registries can use secrets, but don&#8217;t have to (N > M). There needs to be one registry to access the NLP runtime image which is stored in a protected registry.</p>
+<p>The configuration is done in two files:</p>
+<ul>
+<li>variables.yaml</li>
+<li>credentials.yaml</li>
+</ul>
+<p>Pull secrets have to contain the following information:</p>
+<ul>
+<li>Secret name: Defined in the &#8220;imagePullSecrets&#8221; array in variables.yaml.</li>
+<li>Registry URL: Defined in the &#8220;registries&#8221; array in variables.yaml.</li>
+<li>Registry user name: Defined in the &#8220;registryUserNames&#8221; array in variables.yaml. the &#8220;registry&#8221; name needs to map to the same name under registries.</li>
+<li>Registry password: Defined in &#8220;TF_VAR_terraform-gitops-watson-nlp_registry_credentials&#8221; in credentials.properties. This variable can include a comma delimited list of registry passwords/tokens. For multiple secrets the order needs to be the same one as in variables.yaml for &#8220;registryUserNames&#8221;.</li>
+</ul>
+<p>The screenshot shows the deployed containers.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-17-at-15.50.31.png" alt="" width="2894" height="1398" class="alignnone size-full wp-image-5392" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-17-at-15.50.31.png 2894w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-17-at-15.50.31-300x145.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-17-at-15.50.31-768x371.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-17-at-15.50.31-1024x495.png 1024w" sizes="(max-width: 2894px) 100vw, 2894px" /></p>
+<p>To find out more about Watson NLP and TechZone Deployer, check out these resources:</p>
+<ul>
+<li><a href="https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home" rel="noopener noreferrer" target="_blank">IBM Watson NLP Documentation</a></li>
+<li><a href="https://www.ibm.com/account/reg/us-en/signup?formid=urx-51726" rel="noopener noreferrer" target="_blank">IBM Watson NLP Trial</a></li>
+<li><a href="https://github.com/IBM/watson-automation" rel="noopener noreferrer" target="_blank">Automation for Watson NLP Deployments</a></li>
+<li><a href="https://operate.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">TechZone Accelerator Toolkit Documentation</a></li>
+<li><a href="https://operate.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">TechZone Accelerator Toolkit Modules</a></li>
+</ul>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/deploying-custom-watson-nlp-models-with-terraform/">Deploying custom Watson NLP Models with Terraform</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><post-id xmlns="com-wordpress:feed-additions:1">5388</post-id></item></channel></rss>

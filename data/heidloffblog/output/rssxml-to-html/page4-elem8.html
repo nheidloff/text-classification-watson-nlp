@@ -1,0 +1,156 @@
+Building Databases on Kubernetes with Quarkus. <p><em>While there are plenty of examples how to write stateless applications on Kubernetes, there are relative few simple samples explaining how to write stateful applications. This article describes how to write a simple database system with Quarkus.</em><span id="more-5001"></span></p>
+<p>The complete code of this article can be found in the <a href="https://github.com/IBM/operator-sample-go/tree/8ce338d65d2cc9f8db437e3aa635f94a45156922/database-service" rel="noopener noreferrer" target="_blank">ibm/operator-sample-go</a> repo.</p>
+<p>My previous article <a href="http://heidloff.net/article/how-to-build-your-own-database-on-kubernetes/" rel="noopener noreferrer" target="_blank">How to build your own Database on Kubernetes</a> explains the concepts how stateful workloads can be run on Kubernetes. Before reading on, make sure you understand StatefulSets. To recap, here are the main components.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/04/statefulsets1.png" alt="" width="1104" height="678" class="alignnone size-full wp-image-4993" srcset="http://heidloff.net/wp-content/uploads/2022/04/statefulsets1.png 1104w, http://heidloff.net/wp-content/uploads/2022/04/statefulsets1-300x184.png 300w, http://heidloff.net/wp-content/uploads/2022/04/statefulsets1-768x472.png 768w, http://heidloff.net/wp-content/uploads/2022/04/statefulsets1-1024x629.png 1024w" sizes="(max-width: 1104px) 100vw, 1104px" /></p>
+<p>Let&#8217;s look at the <a href="https://github.com/IBM/operator-sample-go/blob/8ce338d65d2cc9f8db437e3aa635f94a45156922/database-service/kubernetes/statefulset.yaml" rel="noopener noreferrer" target="_blank">StatefulSet definition</a> first:</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: database-cluster
+  namespace: database
+  labels:
+    app: database-cluster
+spec:
+  serviceName: database-service
+  replicas: 3
+  selector:
+    matchLabels:
+      app: database-cluster
+  template:
+    metadata:
+      labels:
+        app: database-cluster
+    spec:
+      securityContext:
+        fsGroup: 2000
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: database-container
+        image: nheidloff/database-service:v1.0.22
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8089
+          name: api
+        volumeMounts:
+        - name: data-volume
+          mountPath: /data
+        env:
+          - name: DATA_DIRECTORY
+            value: /data/
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.name
+          - name: NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+  volumeClaimTemplates:
+  - metadata:
+      name: data-volume
+    spec:
+      accessModes: [ &quot;ReadWriteOnce&quot; ]
+      storageClassName: ibmc-vpc-block-5iops-tier
+      resources:
+        requests:
+          storage: 1Mi
+</pre>
+<p>Notes about the stateful set:</p>
+<ul>
+<li>There are three replicas: One lead and two followers.</li>
+<li>A storage class is used to provision volumes automatically.</li>
+<li>Each pod/container has its own volume.</li>
+<li>The volume is mounted into the container.</li>
+<li>To allow containers to read metadata like their pod names, environment variables are used.</li>
+<li>The security context is set to &#8220;fsGroup: 2000&#8221; which allows file access from the Quarkus image.</li>
+</ul>
+<p>To access the pods, a <a href="https://github.com/IBM/operator-sample-go/blob/8ce338d65d2cc9f8db437e3aa635f94a45156922/database-service/kubernetes/service.yaml" rel="noopener noreferrer" target="_blank">service is defined</a>. For example the leader can be invoked via &#8220;http://database-cluster-0.database-service.database:8089/persons&#8221;.</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: database-service
+  name: database-service
+  namespace: database
+spec:
+  clusterIP: None
+  ports:
+  - port: 8089
+  selector:
+    app: database-cluster
+</pre>
+<p>The database service uses a single <a href="https://github.com/IBM/operator-sample-go/blob/8ce338d65d2cc9f8db437e3aa635f94a45156922/database-service/data.json" rel="noopener noreferrer" target="_blank">JSON file</a> for storage. For the leader the file is created when the leader is initialized. Followers <a href="https://github.com/IBM/operator-sample-go/blob/8ce338d65d2cc9f8db437e3aa635f94a45156922/database-service/src/main/java/heidloff/net/database/DataSynchronization.java#L18" rel="noopener noreferrer" target="_blank">synchronize</a> the data from the leader when they are initialized.</p>
+<pre class="brush: plain; title: ; notranslate">
+public static Response synchronizeDataFromLeader(LeaderUtils leaderUtils, PersonResource personResource) {
+    System.out.println(&quot;LeaderUtils.synchronizeDataFromLeader()&quot;);
+    String leaderAddress = &quot;http://database-cluster-0.database-service.database:8089/persons&quot;;
+    int httpStatus = 200; 
+    if (leaderUtils.isLeader() == true) {
+        httpStatus = 501; // Not Implemented
+    } else {
+        Set&lt;Person&gt; persons = null;
+        try {
+            // Note: This follower should update from the previous follower (or leader)
+            // For simplification purposes updates are only read from the leader
+            URL apiUrl = new URL(leaderAddress);
+            System.out.println(&quot;Leader found. URL: &quot; + leaderAddress);
+            RemoteDatabaseService customRestClient = RestClientBuilder.newBuilder().baseUrl(apiUrl).
+                register(ExceptionMapper.class).build(RemoteDatabaseService.class);
+            persons = customRestClient.getAll();                
+        } catch (Exception e) {
+            System.out.println(&quot;/persons could not be invoked&quot;);
+            httpStatus = 503; // Service Unavailable
+        }
+        if (persons != null) {
+            try {
+                personResource.updateAllPersons(persons);    
+            } catch (RuntimeException e) {
+                System.out.println(&quot;Data could not be written&quot;);
+                httpStatus = 503; // Service Unavailable
+            }                
+        }
+    }
+    return Response.status(httpStatus).build();    
+}
+</pre>
+<p>Write operations are only allowed on the leader. When they are executed on the leader, the followers need to be notified to update their state (see <a href="https://github.com/IBM/operator-sample-go/blob/8ce338d65d2cc9f8db437e3aa635f94a45156922/database-service/src/main/java/heidloff/net/database/DataSynchronization.java#L52" rel="noopener noreferrer" target="_blank">code</a>).</p>
+<pre class="brush: plain; title: ; notranslate">
+public static void notifyFollowers() {
+    KubernetesClient client = new DefaultKubernetesClient();        
+    String serviceName = &quot;database-service&quot;;
+    String namespace = System.getenv(&quot;NAMESPACE&quot;);     
+    PodList podList = client.pods().inNamespace(namespace).list();
+    podList.getItems().forEach(pod -&gt; {
+        if (pod.getMetadata().getName().endsWith(&quot;-0&quot;) == false) {
+            String followerAddress =  pod.getMetadata().getName() + &quot;.&quot; + serviceName + &quot;.&quot; + namespace + &quot;:8089&quot;;
+            System.out.println(&quot;Follower found: &quot; + pod.getMetadata().getName() + &quot; - &quot; + followerAddress);
+            try {
+                URL apiUrl = new URL(&quot;http://&quot; + followerAddress + &quot;/api/onleaderupdated&quot;);
+                RemoteDatabaseService customRestClient = RestClientBuilder.newBuilder().
+                register(ExceptionMapper.class).baseUrl(apiUrl).build(RemoteDatabaseService.class);
+                customRestClient.onLeaderUpdated();              
+            } catch (Exception e) { 
+                System.out.println(&quot;/onleaderupdated could not be invoked&quot;);
+            }
+        }
+    });
+}
+</pre>
+<p>The next question is how the leader is determined. In this <a href="https://github.com/IBM/operator-sample-go/blob/8ce338d65d2cc9f8db437e3aa635f94a45156922/database-service/src/main/java/heidloff/net/database/LeaderUtils.java#L88" rel="noopener noreferrer" target="_blank">sample</a> a simple mechanism is used which is to check whether the container&#8217;s pod name ends with &#8220;-0&#8221;.</p>
+<pre class="brush: plain; title: ; notranslate">
+public void electLeader() {     
+    String podName = System.getenv(&quot;POD_NAME&quot;);
+    if ((podName != null) &amp;&amp; (podName.endsWith(&quot;-0&quot;))) {
+        setLeader(true);
+    }
+}
+</pre>
+<p>The state of all pods is stored on the volumes too (<a href="https://github.com/IBM/operator-sample-go/blob/8ce338d65d2cc9f8db437e3aa635f94a45156922/database-service/podstate.json" rel="noopener noreferrer" target="_blank">podstate.json</a>) so that the new pods can continue with the state previous pod instances left off.</p>
+<p>To simulate a real database system, the database application has <a href="https://github.com/IBM/operator-sample-go/blob/8ce338d65d2cc9f8db437e3aa635f94a45156922/database-service/src/main/java/heidloff/net/database/API.java" rel="noopener noreferrer" target="_blank">SQL-like APIs</a> to execute statements and queries.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/04/Screenshot-2022-04-07-at-08.18.07.png" alt="" width="1958" height="956" class="alignnone size-full wp-image-5010" srcset="http://heidloff.net/wp-content/uploads/2022/04/Screenshot-2022-04-07-at-08.18.07.png 1958w, http://heidloff.net/wp-content/uploads/2022/04/Screenshot-2022-04-07-at-08.18.07-300x146.png 300w, http://heidloff.net/wp-content/uploads/2022/04/Screenshot-2022-04-07-at-08.18.07-768x375.png 768w, http://heidloff.net/wp-content/uploads/2022/04/Screenshot-2022-04-07-at-08.18.07-1024x500.png 1024w" sizes="(max-width: 1958px) 100vw, 1958px" /></p>
+<p>To learn more, check out the complete <a href="https://github.com/IBM/operator-sample-go/tree/8ce338d65d2cc9f8db437e3aa635f94a45156922/database-service" rel="noopener noreferrer" target="_blank">source code</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/quarkus/building-databases-kubernetes-quarkus/">Building Databases on Kubernetes with Quarkus</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>

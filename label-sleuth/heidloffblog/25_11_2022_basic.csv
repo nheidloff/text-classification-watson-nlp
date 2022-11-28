@@ -1,0 +1,677 @@
+workspace_id,category_name,document_id,dataset,text,uri,element_metadata,label,label_type
+heidloff_net,WatsonEmbed,page6_elem0,heidloff_net,TensorFlow Object Detection is a powerful technology to recognize different objects in images including their positions.,heidloff_net-page6_elem0-1,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem1,heidloff_net,* NLP [https://www.ibm.com/docs/en/watson-libraries?topic=models-catalog],heidloff_net-page1_elem1-12,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,The NLP containers also provides a gRCP interface [https://github.com/IBM/watson-automation#grpc].,heidloff_net-page2_elem1-69,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,Serving Watson NLP on Kubernetes with KServe ModelMesh.,heidloff_net-page1_elem6-0,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem5,heidloff_net,"$ curl ""http://localhost:1080/text-to-speech/api/v1/voices""",heidloff_net-page2_elem5-32,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem9,heidloff_net,It’s also possible to deploy in addition to the Watson NLP runtime multiple models both predefined models as well as custom models.,heidloff_net-page1_elem9-49,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,To set some context check out the landing page IBM Watson NLP Library for Embed [https://www.ibm.com/products/ibm-watson-natural-language-processing].,heidloff_net-page2_elem1-4,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem0,heidloff_net,FROM ${EMOTION_MODEL} as model2,heidloff_net-page1_elem0-47,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem7,heidloff_net,* IBM Watson NLP Documentation [https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home],heidloff_net-page1_elem7-63,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,syntax_model = watson_nlp.load(watson_nlp.download('syntax_izumo_en_stock')),heidloff_net-page1_elem5-58,{},True,Standard
+heidloff_net,WatsonEmbed,page4_elem7,heidloff_net,repo: ibmcos-repo,heidloff_net-page4_elem7-30,{},False,Standard
+heidloff_net,WatsonEmbed,page5_elem5,heidloff_net,title: Movies,heidloff_net-page5_elem5-57,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,To invoke Watson NLP from local code or via commands forward the port.,heidloff_net-page1_elem6-60,{},True,Standard
+heidloff_net,WatsonEmbed,page5_elem6,heidloff_net,if len(reconciler.ObjectMeta.Name) > validationutils.DNS1035LabelMaxLength-24 {,heidloff_net-page5_elem6-52,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem5,heidloff_net,* Entitlement key [https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726],heidloff_net-page2_elem5-65,{},False,Standard
+heidloff_net,WatsonEmbed,page6_elem5,heidloff_net,The post Deploying TensorFlow Models on Edge Devices [http://heidloff.net/article/tensorflow-lite-ibm-watson-ios] appeared first on Niklas Heidloff [http://heidloff.net].,heidloff_net-page6_elem5-3,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,Running IBM Watson NLP in Minikube.,heidloff_net-page2_elem1-0,{},True,Standard
+heidloff_net,WatsonEmbed,page8_elem9,heidloff_net,Presentation how to create Alexa Skills with IBM Watson.,heidloff_net-page8_elem9-0,{},False,Standard
+heidloff_net,WatsonEmbed,page3_elem3,heidloff_net,value: bx2.4x16,heidloff_net-page3_elem3-48,{},False,Standard
+heidloff_net,WatsonEmbed,page4_elem8,heidloff_net,- name: NAMESPACE,heidloff_net-page4_elem8-47,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,"transcript: ""ibm watson speech to text can easily be embedded in applications""",heidloff_net-page1_elem2-66,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,I’ve used the settings below which is more than required but I wanted to leave space for other applications.,heidloff_net-page1_elem8-14,{},False,Standard
+heidloff_net,WatsonEmbed,page8_elem5,heidloff_net,I blogged about a sample scenario to predict whether people would have survived the Titanic accident based on their age ticket […],heidloff_net-page8_elem5-3,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem7,heidloff_net,The Watson NLP containers can be run on different container platforms they provide REST and gRCP interfaces they can be extended with custom models and they can easily be embedded in solutions.,heidloff_net-page1_elem7-5,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem1,heidloff_net,"text: ""It is so easy to embed Watson NLP in applications.""",heidloff_net-page1_elem1-107,{},True,Standard
+heidloff_net,WatsonEmbed,page8_elem3,heidloff_net,In order to serve the web applications nginx is used.,heidloff_net-page8_elem3-3,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,* Automation for Watson NLP Deployments [https://github.com/IBM/watson-automation],heidloff_net-page1_elem8-70,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem0,heidloff_net,Standalone containers: One pod with one container including the NLP runtime and the models,heidloff_net-page1_elem0-19,{},True,Standard
+heidloff_net,WatsonEmbed,page8_elem7,heidloff_net,The post Developing Serverless Functions with TypeScript [http://heidloff.net/article/serverless-functions-typescript-openwhisk] appeared first on Niklas Heidloff [http://heidloff.net].,heidloff_net-page8_elem7-5,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Repo: Samples [https://github.com/ibm-build-lab/Watson-NLP/tree/main/MLOps],heidloff_net-page1_elem3-33,{},True,Standard
+heidloff_net,WatsonEmbed,page6_elem4,heidloff_net,While developers only have to provide the data and […],heidloff_net-page6_elem4-4,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem4,heidloff_net,* ibmcloud CLI documentation [https://cloud.ibm.com/docs/codeengine?topic=codeengine-cli#cli-secret-create],heidloff_net-page1_elem4-36,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem7,heidloff_net,Via REST and gRCP APIs AI can easily be embedded in applications.,heidloff_net-page1_elem7-2,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,- name: watson-stt-en-us-telephony,heidloff_net-page1_elem2-33,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,* Running IBM Watson Text to Speech in Containers [http://heidloff.net/article/running-ibm-watson-text-to-speech-in-containers/],heidloff_net-page1_elem2-78,{},True,Standard
+heidloff_net,WatsonEmbed,page8_elem9,heidloff_net,Last week there was a webinar Create Alexa skills with Watson Conversation where I was supposed to present.,heidloff_net-page8_elem9-1,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem6,heidloff_net,"$ curl -X POST ""http://localhost:8080/v1/watson.runtime.nlp.v1/NlpService/SyntaxPredict"" \",heidloff_net-page2_elem6-47,{},True,Standard
+heidloff_net,WatsonEmbed,page6_elem4,heidloff_net,The post Building Models with AutoML in IBM Watson Studio [http://heidloff.net/article/automl-ibm-watson-studio] appeared first on Niklas Heidloff [http://heidloff.net].,heidloff_net-page6_elem4-5,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem7,heidloff_net,> Build your applications with enterprise-grade speech technology: IBM Watson Speech Libraries for Embed are a set of containerized text-to-speech and speech-to-text libraries designed to offer our IBM partners greater flexibility to infuse the best of IBM Research technology into their solutions.,heidloff_net-page2_elem7-4,{},True,Standard
+heidloff_net,WatsonEmbed,page6_elem9,heidloff_net,With this technology you can not only build games but also other exciting scenarios.,heidloff_net-page6_elem9-2,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,This post describes how to run Watson NLP locally in Minikube.,heidloff_net-page2_elem1-3,{},True,Standard
+heidloff_net,WatsonEmbed,page4_elem3,heidloff_net,containers:,heidloff_net-page4_elem3-57,{},False,Standard
+heidloff_net,WatsonEmbed,page4_elem9,heidloff_net,$ kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/persons,heidloff_net-page4_elem9-55,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,* IBM Watson NLP Model catalog [https://www.ibm.com/docs/en/watson-libraries?topic=models-catalog],heidloff_net-page1_elem5-79,{},True,Standard
+heidloff_net,WatsonEmbed,page7_elem1,heidloff_net,Some of my colleagues: Andrea Overthun Fernando Cejas Miriam Oglesby Niklas Heidloff Jonas Jacobi Joe Sepi Crane-Messina Christine Mayer Jonas […],heidloff_net-page7_elem1-4,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem9,heidloff_net,image: watson-nlp_syntax_izumo_lang_en_stock:1.0.7,heidloff_net-page1_elem9-39,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem5,heidloff_net,Running IBM Watson Text to Speech in Containers.,heidloff_net-page2_elem5-0,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,* Model catalog [https://www.ibm.com/docs/en/watson-libraries?topic=models-catalog],heidloff_net-page2_elem1-72,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Deploying Watson NLP to IBM Code Engine [http://heidloff.net/article/deploying-watson-nlp-to-ibm-code-engine/],heidloff_net-page1_elem3-22,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem4,heidloff_net,We are now making the same capabilities available to our partners providing them a simpler path to create AI-powered solutions.,heidloff_net-page3_elem4-6,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem9,heidloff_net,Deploying TechZone Toolkit Modules on existing Clusters.,heidloff_net-page2_elem9-0,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,Next Minikube needs to be started with more memory and disk size than the Minikube defaults.,heidloff_net-page1_elem8-13,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,ensemble-classification-wf-en-emotion-stock-predictor   grpc://modelmesh-serving.ibmid-6620037hpc-669mq7e2:8033,heidloff_net-page1_elem6-57,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem5,heidloff_net,* SaaS API docs [https://cloud.ibm.com/apidocs/text-to-speech],heidloff_net-page2_elem5-63,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem9,heidloff_net,* IBM Watson NLP Trial [https://www.ibm.com/account/reg/us-en/signup?formid=urx-51726],heidloff_net-page1_elem9-76,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem9,heidloff_net,* Automation for Watson NLP Deployments [https://github.com/IBM/watson-automation],heidloff_net-page1_elem9-77,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem9,heidloff_net,Check out my earlier blog that introduces the toolkit: Introducing IBM’s Toolkit to handle Everything as Code [http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/].,heidloff_net-page2_elem9-3,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem4,heidloff_net,-t my-watson-nlp-runtime:latest,heidloff_net-page1_elem4-20,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem9,heidloff_net,To find out more about Watson NLP and TechZone Deployer check out these resources:,heidloff_net-page1_elem9-74,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Watson Speech To Text Analysis Notebook [https://github.com/ibm-build-lab/Watson-Speech/blob/main/Speech%20To%20%20Text/Speech%20To%20Text%20Analysis.ipynb],heidloff_net-page1_elem3-52,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem1,heidloff_net,"text: ""It is so easy to embed Watson NLP in applications.",heidloff_net-page1_elem1-93,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem3,heidloff_net,- name: ibm-ocp-vpc,heidloff_net-page3_elem3-14,{},False,Standard
+heidloff_net,WatsonEmbed,page8_elem5,heidloff_net,Accessing Machine Learning Models via REST APIs.,heidloff_net-page8_elem5-0,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem3,heidloff_net,For example Assistant users don’t use intents anymore but actions.,heidloff_net-page2_elem3-12,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,* Watson Speech To Text Model Catalog [https://www.ibm.com/docs/en/watson-libraries?topic=wtsleh-models-catalog],heidloff_net-page1_elem2-70,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,$ brew install minikube,heidloff_net-page1_elem2-17,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,Running IBM Watson Speech To Text in Minikube.,heidloff_net-page1_elem2-0,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem1,heidloff_net,- name: ibm-ocp-vpc,heidloff_net-page3_elem1-13,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem7,heidloff_net,To run Watson NLP two components are needed:,heidloff_net-page1_elem7-13,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,syntax-izumo-en-stock-predictor                         grpc://modelmesh-serving.ibmid-6620037hpc-669mq7e2:8033,heidloff_net-page1_elem6-59,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem6,heidloff_net,* Automation for Watson NLP Deployments [https://github.com/IBM/watson-automation],heidloff_net-page2_elem6-61,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,alternatives: [,heidloff_net-page1_elem2-65,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem5,heidloff_net,IBM Watson NLP (Natural Language Understanding) and Watson Speech containers can be run locally on-premises or Kubernetes and OpenShift clusters.,heidloff_net-page2_elem5-1,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem0,heidloff_net,"SCRIPT_DIR=$(cd $(dirname ""$0""); pwd -P)",heidloff_net-page2_elem0-61,{},False,Standard
+heidloff_net,WatsonEmbed,page3_elem9,heidloff_net,New Era of Software Development: Operations Automation.,heidloff_net-page3_elem9-0,{},False,Standard
+heidloff_net,WatsonEmbed,page6_elem0,heidloff_net,Training TensorFlow Object Detection Models.,heidloff_net-page6_elem0-0,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem7,heidloff_net,There are multiple options how to run and deploy Watson NLP:,heidloff_net-page1_elem7-7,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem7,heidloff_net,Each init container contains either predefined [https://www.ibm.com/docs/en/watson-libraries?topic=models-catalog] or custom models.,heidloff_net-page1_elem7-22,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem6,heidloff_net,Terraform is a popular tool to set up infrastructure declaratively.,heidloff_net-page3_elem6-1,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem0,heidloff_net,To find out more about Watson NLP and Watson for Embed in general check out these resources:,heidloff_net-page1_elem0-65,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem1,heidloff_net,Handling of Versions of TechZone Toolkit Modules.,heidloff_net-page3_elem1-0,{},False,Standard
+heidloff_net,WatsonEmbed,page8_elem4,heidloff_net,The post Slides: When to use Serverless?,heidloff_net-page8_elem4-6,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,To set some context check out the landing page IBM Watson Speech Libraries for Embed [https://www.ibm.com/products/watson-speech-embed-libraries].,heidloff_net-page1_elem2-4,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem1,heidloff_net,"text: ""It is so easy to embed Watson NLP in applications.",heidloff_net-page1_elem1-97,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem7,heidloff_net,How to run STT locally via Docker,heidloff_net-page2_elem7-16,{},True,Standard
+heidloff_net,WatsonEmbed,page8_elem3,heidloff_net,Deploying Angular React and Vue Apps on Kubernetes.,heidloff_net-page8_elem3-0,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem1,heidloff_net,Invoke Watson NLP via REST:,heidloff_net-page1_elem1-57,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem7,heidloff_net,To run STT as container the container image needs to be built first.,heidloff_net-page2_elem7-17,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,The post Training IBM Watson NLP Models [http://heidloff.net/article/training-ibm-watson-nlp-models/] appeared first on Niklas Heidloff [http://heidloff.net].,heidloff_net-page1_elem5-85,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem5,heidloff_net,To start the container invoke this command in a terminal:,heidloff_net-page3_elem5-51,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem2,heidloff_net,Check out my earlier blog that introduces the toolkit: Introducing IBM’s Toolkit to handle Everything as Code [http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/].,heidloff_net-page2_elem2-3,{},False,Standard
+heidloff_net,WatsonEmbed,page6_elem8,heidloff_net,Training TensorFlow.js Models with IBM Watson.,heidloff_net-page6_elem8-0,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem0,heidloff_net,$ pip install watson-embed-model-packager,heidloff_net-page1_elem0-60,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem0,heidloff_net,Check out my earlier blog that introduces the toolkit: Introducing IBM’s Toolkit to handle Everything as Code [http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/].,heidloff_net-page2_elem0-3,{},False,Standard
+heidloff_net,WatsonEmbed,page5_elem7,heidloff_net,Configuring Webhooks for Kubernetes Operators.,heidloff_net-page5_elem7-0,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem6,heidloff_net,--rm -it \,heidloff_net-page2_elem6-36,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem2,heidloff_net,Understanding TechZone Toolkit GitOps Modules.,heidloff_net-page2_elem2-0,{},False,Standard
+heidloff_net,WatsonEmbed,page7_elem3,heidloff_net,Developing Polyglot Applications with OpenWhisk.,heidloff_net-page7_elem3-0,{},False,Standard
+heidloff_net,WatsonEmbed,page6_elem5,heidloff_net,Deploying TensorFlow Models on Edge Devices.,heidloff_net-page6_elem5-0,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem9,heidloff_net,export TF_VAR_gitops_repo_token=___your-github-token____,heidloff_net-page2_elem9-40,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem0,heidloff_net,componentName: watson-nlp,heidloff_net-page2_elem0-23,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,name: watson-nlp-runtime,heidloff_net-page1_elem6-94,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem0,heidloff_net,"ARG WATSON_RUNTIME_BASE=""cp.icr.io/cp/ai/watson-nlp-runtime:1.0.18""",heidloff_net-page1_elem0-28,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem6,heidloff_net,To set some context here is the description of IBM Watson NLP Library for Embed [https://www.ibm.com/products/ibm-watson-natural-language-processing].,heidloff_net-page2_elem6-3,{},True,Standard
+heidloff_net,WatsonEmbed,page8_elem9,heidloff_net,Here are some […],heidloff_net-page8_elem9-4,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,limits:,heidloff_net-page1_elem6-96,{},False,Standard
+heidloff_net,WatsonEmbed,page3_elem8,heidloff_net,* Terraform explained in 15 mins [https://www.youtube.com/watch?v=l5k1ai_GBDE],heidloff_net-page3_elem8-12,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem8,heidloff_net,Here is an example flow of commands that show how to install the CLI how to run the container and how to run Terraform.,heidloff_net-page2_elem8-8,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Model Catalog [https://www.ibm.com/docs/en/watson-libraries?topic=wtsleh-models-catalog],heidloff_net-page1_elem3-61,{},True,Standard
+heidloff_net,WatsonEmbed,page8_elem4,heidloff_net,Use Serverless if you have the following needs: Variable […],heidloff_net-page8_elem4-5,{},False,Standard
+heidloff_net,WatsonEmbed,page5_elem5,heidloff_net,Converting Custom Resource Versions in Operators.,heidloff_net-page5_elem5-0,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,Next Minikube needs to be started with more memory and disk size than the Minikube defaults.,heidloff_net-page1_elem2-13,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,Watson NLP comes with many predefined models [https://www.ibm.com/docs/en/watson-libraries?topic=models-catalog] that can either be re-used without any modifications or that can be customized and extended.,heidloff_net-page1_elem5-10,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,My post Running IBM Watson NLP locally in Containers [http://heidloff.net/article/running-ibm-watson-nlp-locally-in-containers/] explained how to run Watson NLP locally in Docker.,heidloff_net-page2_elem1-9,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem4,heidloff_net,Containers are a great technology to help running AI services everywhere.,heidloff_net-page3_elem4-9,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem6,heidloff_net,To find out more about Watson NLP check out these resources:,heidloff_net-page2_elem6-56,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,Via REST and gRCP APIs AI can easily be embedded in applications.,heidloff_net-page1_elem5-2,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem1,heidloff_net,* Watson NLP [https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home],heidloff_net-page3_elem1-93,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,* Trial [https://www.ibm.com/products/ibm-watson-natural-language-processing],heidloff_net-page2_elem1-73,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem0,heidloff_net,IBM Watson NLP (Natural Language Understanding) and Watson Speech containers can be run locally on-premises or Kubernetes and OpenShift clusters.,heidloff_net-page1_elem0-1,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem1,heidloff_net,$ cat <<EOF >>Dockerfile,heidloff_net-page1_elem1-46,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem7,heidloff_net,containers:,heidloff_net-page1_elem7-32,{},False,Standard
+heidloff_net,WatsonEmbed,page5_elem1,heidloff_net,Continuous Delivery with DevSecOps Reference Architecture.,heidloff_net-page5_elem1-0,{},False,Standard
+heidloff_net,WatsonEmbed,page6_elem8,heidloff_net,Recently Google introduced TensorFlow.js which is a JavaScript library for training and deploying machine learning models in browsers and on Node.js.,heidloff_net-page6_elem8-1,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem5,heidloff_net,> The Watson TTS library converts written text into natural-sounding voice in a variety of languages for real-time speech synthesis.,heidloff_net-page2_elem5-7,{},True,Standard
+heidloff_net,WatsonEmbed,page6_elem2,heidloff_net,The open source version […],heidloff_net-page6_elem2-4,{},False,Standard
+heidloff_net,WatsonEmbed,page7_elem0,heidloff_net,The post Building AR Applications with Unity and IBM Watson [http://heidloff.net/article/ar-applications-unity-ibm-watson] appeared first on Niklas Heidloff [http://heidloff.net].,heidloff_net-page7_elem0-4,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem1,heidloff_net,$ docker cp watson-runtime-protos:/app/protos/.,heidloff_net-page1_elem1-80,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem0,heidloff_net,* IBM Watson NLP Trial [https://www.ibm.com/account/reg/us-en/signup?formid=urx-51726],heidloff_net-page1_elem0-68,{},True,Standard
+heidloff_net,WatsonEmbed,page4_elem8,heidloff_net,apiVersion: v1,heidloff_net-page4_elem8-70,{},False,Standard
+heidloff_net,WatsonEmbed,page3_elem4,heidloff_net,--docker-password=<your IBM Entitlement Key> \,heidloff_net-page3_elem4-23,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem3,heidloff_net,Over the last years Watson Assistant has successfully been used by many IBM clients and partners.,heidloff_net-page2_elem3-3,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,To find out more about Watson Speech To Speech and Watson for Embed in general check out these resources:,heidloff_net-page1_elem2-68,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,Training Watson NLP Models,heidloff_net-page1_elem5-9,{},True,Standard
+heidloff_net,WatsonEmbed,page8_elem9,heidloff_net,You can watch the recording read the pattern documentation and read the slides.,heidloff_net-page8_elem9-3,{},False,Standard
+heidloff_net,WatsonEmbed,page7_elem2,heidloff_net,Below are some pictures.,heidloff_net-page7_elem2-3,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem0,heidloff_net,This article provides an overview how to develop your own GitOps modules to deploy resources to Kubernetes via Helm.,heidloff_net-page2_elem0-2,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Running IBM Watson NLP in Minikube [http://heidloff.net/article/running-ibm-watson-nlp-in-minikube/],heidloff_net-page1_elem3-20,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem7,heidloff_net,* IBM Watson NLP Trial [https://www.ibm.com/account/reg/us-en/signup?formid=urx-51726],heidloff_net-page1_elem7-64,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,The Watson NLP containers can be run on different container platforms they provide REST and gRCP interfaces they can be extended with custom models and they can easily be embedded in solutions.,heidloff_net-page1_elem6-5,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,Training IBM Watson NLP Models.,heidloff_net-page1_elem5-0,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem4,heidloff_net,--image private.icr.io/watson-nlp-demo/my-watson-nlp-runtime:latest \,heidloff_net-page1_elem4-44,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem0,heidloff_net,- name: ibm-ocp-vpc,heidloff_net-page3_elem0-13,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem5,heidloff_net,To run STT as container the container image needs to be built first.,heidloff_net-page2_elem5-14,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,- name: watson-tts-en-us-allisonv3voice,heidloff_net-page1_elem8-33,{},True,Standard
+heidloff_net,WatsonEmbed,page8_elem8,heidloff_net,Below are some pictures.,heidloff_net-page8_elem8-3,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem7,heidloff_net,The Watson NLP pod contains the NLP runtime container and potentially multiple init containers.,heidloff_net-page1_elem7-21,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,$ kubectl get pods --watch,heidloff_net-page1_elem8-31,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem1,heidloff_net,"Name: ""cp.icr.io/cp/ai/watson-nlp-runtime""",heidloff_net-page1_elem1-20,{},True,Standard
+heidloff_net,WatsonEmbed,page5_elem0,heidloff_net,# Documentation: https://pages.github.ibm.com/one-pipeline/docs/custom-scripts.html,heidloff_net-page5_elem0-27,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,from watson_nlp.blocks.classification.svm import SVM,heidloff_net-page1_elem5-26,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem6,heidloff_net,> Enhance your applications with best-in-class Natural Language AI: Introducing IBM Watson NLP Library for Embed a containerized library designed to empower IBM partners with greater flexibility to infuse powerful natural language AI into their solutions.,heidloff_net-page2_elem6-4,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem2,heidloff_net,Let’s look how the toolkit works for a concrete sample [https://github.com/ibm/watson-automation] where Watson NLP is deployed to OpenShift via GitOps.,heidloff_net-page2_elem2-11,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem7,heidloff_net,This post describes different options how to run and deploy Watson NLP.,heidloff_net-page1_elem7-3,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem0,heidloff_net,With the TechZone Accelerator Toolkit IBM software open source projects and custom applications can easily be deployed to various clouds.,heidloff_net-page2_elem0-1,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,To train custom models Watson Studio needs to be used at this point.,heidloff_net-page1_elem5-14,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem9,heidloff_net,With the TechZone Accelerator Toolkit IBM software open source projects and custom applications can easily be deployed to various clouds.,heidloff_net-page2_elem9-1,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem0,heidloff_net,Predefined Watson NLP models are available in the IBM image registry as init container images.,heidloff_net-page1_elem0-39,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,bucket: $BUCKET,heidloff_net-page1_elem6-53,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem9,heidloff_net,To set some context check out the landing page IBM Watson NLP Library for Embed [https://www.ibm.com/products/ibm-watson-natural-language-processing].,heidloff_net-page1_elem9-5,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,The Watson NLP containers can be run on different container platforms they provide REST and gRCP interfaces they can be extended with custom models and they can easily be embedded in solutions.,heidloff_net-page1_elem5-5,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem5,heidloff_net,"$ curl ""http://localhost:1080/text-to-speech/api/v1/synthesize"" \",heidloff_net-page2_elem5-26,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,* Watson Speech To Text Documentation [https://www.ibm.com/docs/en/watson-libraries?topic=watson-speech-text-library-embed-home],heidloff_net-page1_elem2-69,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* IBM Digital Self-Serve Co-Create Experience for Embeddable AI [https://dsce.ibm.com/],heidloff_net-page1_elem3-7,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem4,heidloff_net,> For years IBM Research has invested in developing AI capabilities which are embedded in IBM software offerings.,heidloff_net-page3_elem4-5,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,Clone a repo with the Kubernetes yaml files to deploy Watson Speech To Text.,heidloff_net-page1_elem2-28,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,--docker-password=<your IBM Entitlement Key> \,heidloff_net-page2_elem1-30,{},False,Standard
+heidloff_net,WatsonEmbed,page3_elem8,heidloff_net,Setting up IBM Software with Terraform.,heidloff_net-page3_elem8-0,{},False,Standard
+heidloff_net,WatsonEmbed,page7_elem1,heidloff_net,Below are some pictures.,heidloff_net-page7_elem1-3,{},False,Standard
+heidloff_net,WatsonEmbed,page7_elem6,heidloff_net,Get the code from GitHub.,heidloff_net-page7_elem6-3,{},False,Standard
+heidloff_net,WatsonEmbed,page4_elem8,heidloff_net,Building Databases on Kubernetes with Quarkus.,heidloff_net-page4_elem8-0,{},False,Standard
+heidloff_net,WatsonEmbed,page6_elem8,heidloff_net,I like especially the ability to run predictions in browsers.,heidloff_net-page6_elem8-2,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem0,heidloff_net,FROM ${WATSON_RUNTIME_BASE} as release,heidloff_net-page1_elem0-49,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,The video Exploring ML Model Serving with KServe [https://www.youtube.com/watch?v=FX6naJLaq2Y] provides a good introduction and overview.,heidloff_net-page1_elem6-26,{},False,Standard
+heidloff_net,WatsonEmbed,page6_elem5,heidloff_net,This new functionality allows building exciting AI scenarios on edge devices and the […],heidloff_net-page6_elem5-2,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem0,heidloff_net,My post Training IBM Watson NLP Models [http://heidloff.net/article/training-ibm-watson-nlp-models/] explains how to train Watson NLP based models with notebooks in Watson Studio.,heidloff_net-page1_elem0-10,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,The container images are stored in an IBM container registry that is accessed via an IBM Entitlement Key [https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726].,heidloff_net-page1_elem8-8,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem7,heidloff_net,To find out more about Watson NLP and Watson for Embed in general check out these resources:,heidloff_net-page1_elem7-62,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem2,heidloff_net,* Watson NLP [https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home],heidloff_net-page3_elem2-7,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem4,heidloff_net,You can now run some of the Watson services via containers everywhere.,heidloff_net-page3_elem4-2,{},True,Standard
+heidloff_net,WatsonEmbed,page6_elem1,heidloff_net,For software development there are many methodologies patterns and techniques to build deploy and run applications.,heidloff_net-page6_elem1-1,{},False,Standard
+heidloff_net,WatsonEmbed,page8_elem3,heidloff_net,The file also shows how to access other domains […],heidloff_net-page8_elem3-5,{},False,Standard
+heidloff_net,WatsonEmbed,page7_elem0,heidloff_net,Building AR Applications with Unity and IBM Watson.,heidloff_net-page7_elem0-0,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,* Automation for Watson NLP Deployments [https://github.com/IBM/watson-automation],heidloff_net-page2_elem1-75,{},True,Standard
+heidloff_net,WatsonEmbed,page5_elem8,heidloff_net,$ kubectl logs catalog-operator-b4dfcff47-55plr -n olm,heidloff_net-page5_elem8-36,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem5,heidloff_net,The post Running IBM Watson Text to Speech in Containers [http://heidloff.net/article/running-ibm-watson-text-to-speech-in-containers/] appeared first on Niklas Heidloff [http://heidloff.net].,heidloff_net-page2_elem5-66,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* IBM’s announcement regarding its embeddable AI software portfolio [https://newsroom.ibm.com/2022-10-25-IBM-Helps-Ecosystem-Partners-Accelerate-AI-Adoption-by-Making-it-Easier-to-Embed-and-Scale-AI-Across-Their-Business],heidloff_net-page1_elem3-5,{},True,Standard
+heidloff_net,WatsonEmbed,page6_elem4,heidloff_net,Building machine learning models however often requires a lot of expertise and time.,heidloff_net-page6_elem4-2,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem0,heidloff_net,Helm is a popular package manager for Kubernetes.,heidloff_net-page2_elem0-8,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Entitlement Key [https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726],heidloff_net-page1_elem3-44,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,* IBM Watson NLP Documentation [https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home],heidloff_net-page1_elem6-111,{},True,Standard
+heidloff_net,WatsonEmbed,page8_elem2,heidloff_net,Data Flows in Serverless Cloud-Native Applications.,heidloff_net-page8_elem2-0,{},False,Standard
+heidloff_net,WatsonEmbed,page8_elem7,heidloff_net,Developing Serverless Functions with TypeScript.,heidloff_net-page8_elem7-0,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem6,heidloff_net,The NLP containers also provides a gRCP interface [https://github.com/IBM/watson-automation#grpc].,heidloff_net-page2_elem6-55,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,$ kubectl port-forward svc/ibm-watson-tts-embed 1080,heidloff_net-page1_elem8-57,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Setting up OpenShift and Applications in one Hour [http://heidloff.net/article/setting-up-openshift-and-applications-in-one-hour/],heidloff_net-page1_elem3-29,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem7,heidloff_net,- name: watson-nlp-runtime,heidloff_net-page1_elem7-33,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem4,heidloff_net,With the TechZone Accelerator Toolkit IBM software open source projects and custom applications can easily be deployed to various clouds.,heidloff_net-page2_elem4-1,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,Via REST and gRCP APIs AI can easily be embedded in applications.,heidloff_net-page1_elem6-2,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem5,heidloff_net,FROM cp.icr.io/cp/ai/watson-tts-en-us-michaelv3voice:1.0.0 AS en-us-voice,heidloff_net-page2_elem5-38,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem4,heidloff_net,* Automation for Watson NLP deployments [https://github.com/IBM/watson-automation/],heidloff_net-page3_elem4-15,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem9,heidloff_net,Automatic Deployments of the Watson NLP Runtime and Models,heidloff_net-page1_elem9-14,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,containers:,heidloff_net-page1_elem6-82,{},False,Standard
+heidloff_net,WatsonEmbed,page8_elem3,heidloff_net,I’ve open sourced some sample code that shows how to deploy Angular React and Vue web applications to Kubernetes on the IBM Cloud.,heidloff_net-page8_elem3-1,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem9,heidloff_net,Watson NLP,heidloff_net-page1_elem9-4,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,While this offering is new the underlaying functionality has been used and optimized for a long time in IBM offerings like the IBM Watson Assistant and NLU (Natural Language Understanding) SaaS services and IBM Cloud Pak for Data.,heidloff_net-page1_elem6-6,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem5,heidloff_net,There is a sample [https://github.com/ibm-build-lab/Watson-Speech/tree/main/single-container-tts] that describes how to run TTS with two speech models locally [https://www.ibm.com/docs/en/watson-libraries?topic=rc-run-docker-run].,heidloff_net-page2_elem5-16,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem5,heidloff_net,* Model catalog [https://www.ibm.com/docs/en/watson-libraries?topic=home-models-catalog],heidloff_net-page2_elem5-62,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem7,heidloff_net,--docker-password=<your IBM Entitlement Key> \,heidloff_net-page1_elem7-46,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem5,heidloff_net,The Watson Text to Speech library is available as containers providing REST and WebSockets interfaces.,heidloff_net-page2_elem5-9,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem9,heidloff_net,- name: terraform_gitops_watson_nlp_models,heidloff_net-page1_elem9-36,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem4,heidloff_net,To set some context check out the landing page IBM Watson NLP Library for Embed [https://www.ibm.com/products/ibm-watson-natural-language-processing].,heidloff_net-page1_elem4-4,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,# rename to the identifiers expected by Watson NLP,heidloff_net-page1_elem5-42,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,from watson_nlp.workflows.classification import Ensemble,heidloff_net-page1_elem5-64,{},True,Standard
+heidloff_net,WatsonEmbed,page7_elem2,heidloff_net,Last week my colleagues and I attended JAX which is a developer conference with 2000 attendees with a focus on Java and enterprise technologies.,heidloff_net-page7_elem2-1,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,The Watson NLP containers can be run on different container platforms they provide REST and gRCP interfaces they can be extended with custom models and they can easily be embedded in solutions.,heidloff_net-page2_elem1-5,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,from watson_core.toolkit.quality_evaluation import QualityEvaluator EvalTypes,heidloff_net-page1_elem5-28,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Documentation [https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home],heidloff_net-page1_elem3-15,{},True,Standard
+heidloff_net,WatsonEmbed,page6_elem3,heidloff_net,Fortunately over the last years several models have been developed and shared that can be reused and sometimes extended.,heidloff_net-page6_elem3-2,{},False,Standard
+heidloff_net,WatsonEmbed,page8_elem5,heidloff_net,Watson Machine Learning can be used by data scientists to create models which can be managed and deployed on the IBM Cloud.,heidloff_net-page8_elem5-1,{},False,Standard
+heidloff_net,WatsonEmbed,page4_elem6,heidloff_net,Access to Kubernetes,heidloff_net-page4_elem6-32,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,| jar x,heidloff_net-page1_elem6-68,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,$ brew install minikube,heidloff_net-page1_elem8-17,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem7,heidloff_net,To see and run other REST APIs the Swagger (OpenAPI) user interface can be opened: http://localhost:8080/swagger.,heidloff_net-page1_elem7-61,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Entitlement key [https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726],heidloff_net-page1_elem3-14,{},False,Standard
+heidloff_net,WatsonEmbed,page6_elem4,heidloff_net,This article describes a technique called AutoML which can be used by developers to build models without having to be data scientists.,heidloff_net-page6_elem4-3,{},False,Standard
+heidloff_net,WatsonEmbed,page6_elem4,heidloff_net,Building Models with AutoML in IBM Watson Studio.,heidloff_net-page6_elem4-0,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem2,heidloff_net,Read my blog Deploying Kubernetes Resources via GitOps [http://heidloff.net/article/deploying-kubernetes-resources-via-gitops/] for an introduction to GitOps.,heidloff_net-page2_elem2-10,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,To invoke Watson NLP via REST you need to find out the IP address and port.,heidloff_net-page2_elem1-60,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* IBM’s Embeddable AI [https://www.ibm.com/partnerworld/program/embeddableai],heidloff_net-page1_elem3-4,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem9,heidloff_net,- name: ibm-ocp-vpc,heidloff_net-page2_elem9-18,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,To find out more about Watson NLP and Watson for Embed in general check out these resources:,heidloff_net-page1_elem5-77,{},True,Standard
+heidloff_net,WatsonEmbed,page4_elem5,heidloff_net,* Autopilot and Self-Healing,heidloff_net-page4_elem5-9,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem7,heidloff_net,"$ curl -X POST ""http://localhost:8080/v1/watson.runtime.nlp.v1/NlpService/SyntaxPredict"" \",heidloff_net-page1_elem7-55,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem1,heidloff_net,protos,heidloff_net-page1_elem1-81,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,from watson_nlp.workflows.classification import Ensemble,heidloff_net-page1_elem5-27,{},True,Standard
+heidloff_net,WatsonEmbed,page7_elem2,heidloff_net,My colleagues and I presented and demonstrated the IBM Cloud and the IBM Code developer site.,heidloff_net-page7_elem2-2,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem2,heidloff_net,- name: gitops_repo_host,heidloff_net-page2_elem2-29,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem7,heidloff_net,IBM Watson NLP (Natural Language Understanding) and Watson Speech containers can be run locally on-premises or Kubernetes and OpenShift clusters.,heidloff_net-page1_elem7-1,{},True,Standard
+heidloff_net,WatsonEmbed,page5_elem2,heidloff_net,Change Evidence and Issue Management with DevSecOps.,heidloff_net-page5_elem2-0,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem9,heidloff_net,Check out my earlier blog that introduces the toolkit: Introducing IBM’s Toolkit to handle Everything as Code [http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/].,heidloff_net-page1_elem9-10,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,value: info,heidloff_net-page1_elem6-87,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,* Watson Text To Speech SaaS API docs [https://cloud.ibm.com/apidocs/text-to-speech],heidloff_net-page1_elem8-67,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem6,heidloff_net,"-d "" { \""rawDocument\"": { \""text\"": \""It is so easy to embed Watson NLP in applications.",heidloff_net-page2_elem6-51,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Building custom IBM Watson NLP Images [http://heidloff.net/article/building-custom-ibm-watson-nlp-images-models/],heidloff_net-page1_elem3-27,{},True,Standard
+heidloff_net,WatsonEmbed,page4_elem7,heidloff_net,- name: NAMESPACE,heidloff_net-page4_elem7-53,{},False,Standard
+heidloff_net,WatsonEmbed,page3_elem0,heidloff_net,* Watson NLP [https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home],heidloff_net-page3_elem0-59,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem0,heidloff_net,Building custom IBM Watson NLP Images.,heidloff_net-page1_elem0-0,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,* IBM Watson NLP Trial [https://www.ibm.com/account/reg/us-en/signup?formid=urx-51726],heidloff_net-page1_elem6-112,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,* Running IBM Watson Speech to Text in Containers [http://heidloff.net/article/running-ibm-watson-speech-to-text-in-containers/],heidloff_net-page2_elem1-77,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,- cp model/* /models/pool2,heidloff_net-page1_elem2-38,{},False,Standard
+heidloff_net,WatsonEmbed,page7_elem0,heidloff_net,I’ve extended an Augmented Reality application from my colleague Amara Keller which allows iOS users to […],heidloff_net-page7_elem0-3,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Understanding IBM Watson Containers [http://heidloff.net/article/understanding-ibm-watson-containers/],heidloff_net-page1_elem3-21,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem4,heidloff_net,$ cd terraform-gitops-watson-nlp/chart/watson-nlp,heidloff_net-page3_elem4-29,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Automation for embedded IBM Watson Deployments [http://heidloff.net/article/automation-for-ibm-watson-deployments/],heidloff_net-page1_elem3-28,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,- registry: watson,heidloff_net-page2_elem1-50,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,image: cp.icr.io/cp/ai/watson-nlp-runtime:1.0.20,heidloff_net-page1_elem6-92,{},True,Standard
+heidloff_net,WatsonEmbed,page7_elem6,heidloff_net,Developing protected Serverless Web Applications.,heidloff_net-page7_elem6-0,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,My post Running IBM Watson Text to Speech in Containers [http://heidloff.net/article/running-ibm-watson-text-to-speech-in-containers/] explained how to run Watson TTS locally in Docker.,heidloff_net-page1_elem8-10,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem7,heidloff_net,$ kubectl get pods --watch,heidloff_net-page1_elem7-51,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem3,heidloff_net,The new Watson Assistant uses a more natural way to define conversations.,heidloff_net-page2_elem3-10,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,How to run NLP locally in Minikube,heidloff_net-page2_elem1-8,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem9,heidloff_net,Custom logic synchronizes the ‘to be state’ with the ‘as is state’.,heidloff_net-page3_elem9-19,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem7,heidloff_net,Now available as embeddable AI partners gain greater capabilities to build voice transcription and voice synthesis applications more quickly and deploy them in any hybrid multi-cloud environment.,heidloff_net-page2_elem7-5,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem9,heidloff_net,* Watson NLP [https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home],heidloff_net-page2_elem9-48,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,First you need to install Minikube for example via brew on MacOS.,heidloff_net-page2_elem1-11,{},False,Standard
+heidloff_net,WatsonEmbed,page5_elem6,heidloff_net,Initialization and Validation Webhooks in Operators.,heidloff_net-page5_elem6-0,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,* Automation for Watson NLP Deployments [https://github.com/IBM/watson-automation],heidloff_net-page1_elem6-113,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem1,heidloff_net,Understanding IBM Watson Containers.,heidloff_net-page1_elem1-0,{},True,Standard
+heidloff_net,WatsonEmbed,page7_elem3,heidloff_net,Get the code from GitHub.,heidloff_net-page7_elem3-3,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,"$ curl ""http://localhost:1080/text-to-speech/api/v1/synthesize"" \",heidloff_net-page1_elem8-59,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem0,heidloff_net,To set some context check out the landing page IBM Watson NLP Library for Embed [https://www.ibm.com/products/ibm-watson-natural-language-processing].,heidloff_net-page1_elem0-4,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem4,heidloff_net,While this offering is new the underlaying functionality has been used and optimized for a long time in IBM offerings like the IBM Watson Assistant and NLU (Natural Language Understanding) SaaS services and IBM Cloud Pak for Data.,heidloff_net-page1_elem4-6,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,* Running IBM Watson NLP in Minikube [http://heidloff.net/article/running-ibm-watson-nlp-in-minikube/],heidloff_net-page1_elem5-84,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem5,heidloff_net,This post describes how to run Watson Text to Speech locally.,heidloff_net-page2_elem5-3,{},True,Standard
+heidloff_net,WatsonEmbed,page6_elem1,heidloff_net,DevOps is the state of the art methodology which describes a software engineering culture with a holistic view of software development and operation.,heidloff_net-page6_elem1-2,{},False,Standard
+heidloff_net,WatsonEmbed,page4_elem9,heidloff_net,$ kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/persons,heidloff_net-page4_elem9-65,{},False,Standard
+heidloff_net,WatsonEmbed,page7_elem5,heidloff_net,Developing Polyglot Serverless Applications.,heidloff_net-page7_elem5-0,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,* Running IBM Watson NLP locally in Containers [http://heidloff.net/article/running-ibm-watson-nlp-locally-in-containers/],heidloff_net-page1_elem6-114,{},True,Standard
+heidloff_net,WatsonEmbed,page5_elem7,heidloff_net,apiVersion: v1,heidloff_net-page5_elem7-81,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,Next Minikube needs to be started with more memory and disk size than the Minikube defaults.,heidloff_net-page2_elem1-12,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem6,heidloff_net,IBM announced the general availability of Watson NLP (Natural Language Understanding) and Watson Speech containers which can be run locally on-premises or Kubernetes and OpenShift clusters.,heidloff_net-page2_elem6-1,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem6,heidloff_net,Running IBM Watson NLP locally in Containers.,heidloff_net-page2_elem6-0,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem4,heidloff_net,Over the last months I have worked on a new initiate from IBM called Embeddable AI.,heidloff_net-page3_elem4-1,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem6,heidloff_net,Watson NLP is built on top of the best AI open source software.,heidloff_net-page2_elem6-10,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem5,heidloff_net,FROM cp.icr.io/cp/ai/watson-tts-runtime:1.0.0 AS runtime,heidloff_net-page2_elem5-41,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,I’ve used the settings below which is more than required but I wanted to leave space for other applications.,heidloff_net-page2_elem1-13,{},False,Standard
+heidloff_net,WatsonEmbed,page4_elem4,heidloff_net,countReconcileLaunched.Inc(),heidloff_net-page4_elem4-63,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Serving Watson NLP on Kubernetes with KServe ModelMesh [http://heidloff.net/article/serving-watson-nlp-on-kubernetes-with-kserve-modelmesh/],heidloff_net-page1_elem3-32,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem0,heidloff_net,* IBM Watson NLP Model catalog [https://www.ibm.com/docs/en/watson-libraries?topic=models-catalog],heidloff_net-page1_elem0-67,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,--docker-password=<your IBM Entitlement Key> \,heidloff_net-page1_elem2-25,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Running IBM Watson Text To Speech in Minikube [http://heidloff.net/article/running-ibm-watson-text-to-speech-in-minikube/],heidloff_net-page1_elem3-59,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem4,heidloff_net,Watch the short video [https://www.ibm.com/partnerworld/program/embeddableai] on the Embeddable AI home page for an introduction or this interview with Rob Thomas.,heidloff_net-page3_elem4-3,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem5,heidloff_net,- name: ibm-ocp-vpc,heidloff_net-page3_elem5-14,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,For example if you use Docker Desktop go to Preferences-Resources and define your settings.,heidloff_net-page2_elem1-15,{},False,Standard
+heidloff_net,WatsonEmbed,page4_elem4,heidloff_net,github.com/prometheus/client_golang/prometheus,heidloff_net-page4_elem4-56,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem4,heidloff_net,$ cat <<EOF >>Dockerfile,heidloff_net-page1_elem4-15,{},False,Standard
+heidloff_net,WatsonEmbed,page7_elem1,heidloff_net,Last week my colleagues and I attended We Are Developers in Vienna a developer conference with 8000 attendees.,heidloff_net-page7_elem1-1,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem0,heidloff_net,There are three ways to build deploy Watson NLP and models.,heidloff_net-page1_elem0-17,{},True,Standard
+heidloff_net,WatsonEmbed,page7_elem1,heidloff_net,The post Pictures from We Are Developers in Vienna [http://heidloff.net/article/pictures-wearedevs2018] appeared first on Niklas Heidloff [http://heidloff.net].,heidloff_net-page7_elem1-5,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem6,heidloff_net,* Entitlement key [https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726],heidloff_net-page2_elem6-60,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,* Running IBM Watson NLP locally in Containers [http://heidloff.net/article/running-ibm-watson-nlp-locally-in-containers/],heidloff_net-page1_elem5-83,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem4,heidloff_net,> Why embeddable AI?,heidloff_net-page3_elem4-4,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem4,heidloff_net,* Running IBM Watson NLP in Minikube [http://heidloff.net/article/running-ibm-watson-nlp-in-minikube/],heidloff_net-page1_elem4-61,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,This post describes how to run Watson Speech To Text locally in Minikube.,heidloff_net-page1_elem2-3,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem1,heidloff_net,In addition to the runtime container ‘cp.icr.io/cp/ai/watson-nlp-runtime’ IBM provides out of the box models which are stored in images that are run as init containers.,heidloff_net-page1_elem1-11,{},True,Standard
+heidloff_net,WatsonEmbed,page6_elem8,heidloff_net,TensorFlow.js even allows the training of models in browsers […],heidloff_net-page6_elem8-4,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Running IBM Watson NLP locally in Containers [http://heidloff.net/article/running-ibm-watson-nlp-locally-in-containers/],heidloff_net-page1_elem3-19,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,"-d "" { \""rawDocument\"": { \""text\"": \""It is so easy to embed Watson NLP in applications.",heidloff_net-page2_elem1-67,{},True,Standard
+heidloff_net,WatsonEmbed,page8_elem9,heidloff_net,The post Presentation how to create Alexa Skills with IBM Watson [http://heidloff.net/article/presentation-alexa-skills-watson] appeared first on Niklas Heidloff [http://heidloff.net].,heidloff_net-page8_elem9-5,{},False,Standard
+heidloff_net,WatsonEmbed,page3_elem5,heidloff_net,In the running container invoke these commands:,heidloff_net-page3_elem5-53,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem7,heidloff_net,* Watson NLP runtime: Executes the core functionality and provides REST and gRPC interfaces.,heidloff_net-page1_elem7-14,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,The Watson Speech To Text library is available as containers providing REST and WebSockets interfaces.,heidloff_net-page1_elem2-5,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,The instructions below describe how to deploy Watson Speech To Text locally to Minikube via kubectl and yaml files.,heidloff_net-page1_elem2-11,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem5,heidloff_net,How to run TTS locally via Docker,heidloff_net-page2_elem5-13,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,How to run TTS locally via Minikube,heidloff_net-page1_elem8-9,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,registry: watson,heidloff_net-page2_elem1-47,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,The instructions below describe how to deploy Watson Text To Speech locally to Minikube via kubectl and yaml files.,heidloff_net-page1_elem8-11,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,The post Running IBM Watson NLP in Minikube [http://heidloff.net/article/running-ibm-watson-nlp-in-minikube/] appeared first on Niklas Heidloff [http://heidloff.net].,heidloff_net-page2_elem1-79,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,Apply the following sample to create a simple serving runtime for Watson NLP models:,heidloff_net-page1_elem6-76,{},True,Standard
+heidloff_net,WatsonEmbed,page6_elem3,heidloff_net,This allows developers adding AI to applications without having to be data scientists.,heidloff_net-page6_elem3-3,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,* Documentation [https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home],heidloff_net-page2_elem1-71,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,First the Watson NLP library needs to be imported which is part of Watson Studio.,heidloff_net-page1_elem5-20,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem1,heidloff_net,FROM cp.icr.io/cp/ai/watson-nlp-runtime:1.0.18,heidloff_net-page1_elem1-47,{},True,Standard
+heidloff_net,WatsonEmbed,page6_elem5,heidloff_net,While it has been possible to deploy TensorFlow models to mobile and embedded devices via TensorFlow for Mobile for some time Google released an experimental version of TensorFlow Lite as an evolution of TensorFlow for Mobile at the end of last year.,heidloff_net-page6_elem5-1,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem9,heidloff_net,- name: terraform_gitops_watson_nlp_imagePullSecrets,heidloff_net-page1_elem9-33,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem5,heidloff_net,$ ls -la,heidloff_net-page2_elem5-31,{},False,Standard
+heidloff_net,WatsonEmbed,page3_elem4,heidloff_net,IBM announces Embeddable AI.,heidloff_net-page3_elem4-0,{},True,Standard
+heidloff_net,WatsonEmbed,page6_elem3,heidloff_net,Reusing Open Source Models in AI Applications.,heidloff_net-page6_elem3-0,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,One way to deploy Watson NLP is to deploy the Watson runtime container plus one init container per model.,heidloff_net-page1_elem5-11,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Entitlement Key [https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726],heidloff_net-page1_elem3-57,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem4,heidloff_net,The post Deploying Watson NLP to IBM Code Engine [http://heidloff.net/article/deploying-watson-nlp-to-ibm-code-engine/] appeared first on Niklas Heidloff [http://heidloff.net].,heidloff_net-page1_elem4-62,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,My post Running IBM Watson Speech to Text in Containers [http://heidloff.net/article/running-ibm-watson-speech-to-text-in-containers/] explained how to run Watson STT locally in Docker.,heidloff_net-page1_elem2-10,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem5,heidloff_net,To set some context here are the descriptions of IBM Watson Speech Libraries for Embed [https://www.ibm.com/products/watson-speech-embed-libraries] and the Watson Text to Speech (TTS) library.,heidloff_net-page2_elem5-4,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem9,heidloff_net,- name: terraform_gitops_watson_nlp_registries,heidloff_net-page1_elem9-40,{},True,Standard
+heidloff_net,WatsonEmbed,page7_elem9,heidloff_net,Get the code from GitHub.,heidloff_net-page7_elem9-3,{},False,Standard
+heidloff_net,WatsonEmbed,page4_elem9,heidloff_net,How to build your own Database on Kubernetes.,heidloff_net-page4_elem9-0,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,componentName: watson-nlp,heidloff_net-page2_elem1-38,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem9,heidloff_net,* IBM Watson NLP Documentation [https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home],heidloff_net-page1_elem9-75,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem3,heidloff_net,Based on the feedback from clients the IBM development and design team has created a brand new experience.,heidloff_net-page2_elem3-4,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,To set some context check out the landing page IBM Watson NLP Library for Embed [https://www.ibm.com/products/ibm-watson-natural-language-processing].,heidloff_net-page1_elem5-4,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem1,heidloff_net,To find out more about Watson NLP Watson Speech To Text Watson Text To Speech and Watson for Embed in general check out the resources in my post Guide to IBM Watson Libraries [http://heidloff.net/article/the-ultimate-guide-to-ibm-watson-libraries/].,heidloff_net-page1_elem1-113,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem0,heidloff_net,Interface Descriptions of TechZone Toolkit Modules.,heidloff_net-page3_elem0-0,{},False,Standard
+heidloff_net,WatsonEmbed,page8_elem6,heidloff_net,A/B testing allows running multiple variants of functionality in parallel so that through analytics of user […],heidloff_net-page8_elem6-4,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,* Running IBM Watson Text to Speech in Containers [http://heidloff.net/article/running-ibm-watson-text-to-speech-in-containers/],heidloff_net-page2_elem1-78,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem4,heidloff_net,There are many resources that explain the Embeddable AI [https://github.com/IBM/watson-automation/tree/8973caa7f1a4eac6831ffa087c8a5ad1a9195728#resources] offering.,heidloff_net-page3_elem4-10,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,grpcEndpoint: port:8085,heidloff_net-page1_elem6-103,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem9,heidloff_net,The NLP runtime container runs in the Watson NLP pod at runtime.,heidloff_net-page1_elem9-51,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,$ kubectl port-forward svc/ibm-watson-tts-embed 1080,heidloff_net-page1_elem2-57,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,* Watson Text To Speech Model Catalog [https://www.ibm.com/docs/en/watson-libraries?topic=home-models-catalog],heidloff_net-page1_elem8-66,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem5,heidloff_net,COPY --chown=watson:0 --from=en-us-voice model/* /models/pool2/,heidloff_net-page2_elem5-52,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem0,heidloff_net,The Watson NLP containers can be run on different container platforms they provide REST and gRCP interfaces they can be extended with custom models and they can easily be embedded in solutions.,heidloff_net-page1_elem0-5,{},True,Standard
+heidloff_net,WatsonEmbed,page5_elem4,heidloff_net,Manager,heidloff_net-page5_elem4-38,{},False,Standard
+heidloff_net,WatsonEmbed,page4_elem8,heidloff_net,fsGroup: 2000,heidloff_net-page4_elem8-27,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem4,heidloff_net,Check out my earlier blog that introduces the toolkit: Introducing IBM’s Toolkit to handle Everything as Code [http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/].,heidloff_net-page2_elem4-3,{},False,Standard
+heidloff_net,WatsonEmbed,page3_elem0,heidloff_net,With the TechZone Accelerator Toolkit IBM software open source projects and custom applications can easily be deployed to various clouds.,heidloff_net-page3_elem0-1,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem0,heidloff_net,While this offering is new the underlaying functionality has been used and optimized for a long time in IBM offerings like the IBM Watson Assistant and NLU (Natural Language Understanding) SaaS services and IBM Cloud Pak for Data.,heidloff_net-page1_elem0-6,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem4,heidloff_net,$ ibmcloud ce project select --name watson-nlp-demo,heidloff_net-page1_elem4-33,{},False,Standard
+heidloff_net,WatsonEmbed,page3_elem2,heidloff_net,Last week IBM announced [https://newsroom.ibm.com/2022-10-25-IBM-Helps-Ecosystem-Partners-Accelerate-AI-Adoption-by-Making-it-Easier-to-Embed-and-Scale-AI-Across-Their-Business] the general availability of Watson NLP and Watson Speech.,heidloff_net-page3_elem2-1,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem4,heidloff_net,To try it a trial [https://www.ibm.com/products/ibm-watson-natural-language-processing] is available.,heidloff_net-page1_elem4-7,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem4,heidloff_net,Here are some of the resources that help you getting started.,heidloff_net-page3_elem4-11,{},False,Standard
+heidloff_net,WatsonEmbed,page6_elem9,heidloff_net,I’ve continued to play with Unity and the IBM Watson SDK which allows using cognitive services like speech recognition in Unity projects.,heidloff_net-page6_elem9-1,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem0,heidloff_net,* IBM Watson NLP Entitlement Key [https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726],heidloff_net-page1_elem0-69,{},True,Standard
+heidloff_net,WatsonEmbed,page7_elem0,heidloff_net,Over the last days I’ve enjoyed playing with Unity and the IBM Watson SDK which allows using cognitive services like speech recognition in Unity projects.,heidloff_net-page7_elem0-1,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,limits:,heidloff_net-page1_elem8-43,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,* Entitlement key [https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726],heidloff_net-page1_elem8-69,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,Clone a repo with the Kubernetes yaml files to deploy Watson Text To Speech.,heidloff_net-page1_elem8-28,{},True,Standard
+heidloff_net,WatsonEmbed,page8_elem4,heidloff_net,Many developers want to know whether they should use Serverless or Kubernetes to build cloud-native applications.,heidloff_net-page8_elem4-2,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,* Watson Text To Speech Documentation [https://www.ibm.com/docs/en/watson-libraries?topic=watson-text-speech-library-embed-home],heidloff_net-page1_elem8-65,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,name: watson-nlp,heidloff_net-page1_elem6-109,{},True,Standard
+heidloff_net,WatsonEmbed,page7_elem0,heidloff_net,With this technology you can not only build games but also other exciting scenarios.,heidloff_net-page7_elem0-2,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem0,heidloff_net,registry: watson,heidloff_net-page2_elem0-32,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem7,heidloff_net,FROM cp.icr.io/cp/ai/watson-stt-generic-models:1.0.0 as catalog,heidloff_net-page2_elem7-35,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Running IBM Watson Text To Speech in Minikube [http://heidloff.net/article/running-ibm-watson-text-to-speech-in-minikube/],heidloff_net-page1_elem3-46,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,* Entitlement key [https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726],heidloff_net-page1_elem2-74,{},False,Standard
+heidloff_net,WatsonEmbed,page8_elem7,heidloff_net,One of the coolest capabilities of Apache OpenWhisk is the ability to develop functions with Docker.,heidloff_net-page8_elem7-1,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem0,heidloff_net,"ARG WATSON_RUNTIME_BASE=""cp.icr.io/cp/ai/watson-nlp-runtime:1.0.18""",heidloff_net-page1_elem0-42,{},True,Standard
+heidloff_net,WatsonEmbed,page4_elem7,heidloff_net,repo: ibmcos-repo,heidloff_net-page4_elem7-26,{},False,Standard
+heidloff_net,WatsonEmbed,page8_elem5,heidloff_net,Developers can access these models from applications for example to run predictions.,heidloff_net-page8_elem5-2,{},False,Standard
+heidloff_net,WatsonEmbed,page8_elem4,heidloff_net,I blogged about when to use Serverless and when to use Kubernetes.,heidloff_net-page8_elem4-4,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,While this offering is new the underlaying functionality has been used and optimized for a long time in IBM offerings like the IBM Watson Assistant and NLU (Natural Language Understanding) SaaS services and IBM Cloud Pak for Data.,heidloff_net-page1_elem5-6,{},False,Standard
+heidloff_net,WatsonEmbed,page8_elem6,heidloff_net,One of the weaknesses of Serverless platforms is that you currently cannot do things like A/B testing well since there is no notion of versions.,heidloff_net-page8_elem6-3,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem7,heidloff_net,Read the post Building custom IBM Watson NLP Images [http://heidloff.net/article/building-custom-ibm-watson-nlp-images-models/] for details.,heidloff_net-page1_elem7-18,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem3,heidloff_net,The old ‘dialog’ experience was replaced with a more intuitive concept which is more goal oriented.,heidloff_net-page2_elem3-11,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem5,heidloff_net,FROM cp.icr.io/cp/ai/watson-tts-generic-models:1.0.0 AS catalog,heidloff_net-page2_elem5-36,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem7,heidloff_net,* Model catalog [https://www.ibm.com/docs/en/watson-libraries?topic=wtsleh-models-catalog],heidloff_net-page2_elem7-61,{},True,Standard
+heidloff_net,WatsonEmbed,page7_elem9,heidloff_net,Developing OpenWhisk Functions with Kotlin in IntelliJ.,heidloff_net-page7_elem9-0,{},False,Standard
+heidloff_net,WatsonEmbed,page3_elem5,heidloff_net,$ iascable build -i bom.yaml,heidloff_net-page3_elem5-48,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,* Provides performant standardized inference protocol across ML frameworks.,heidloff_net-page1_elem6-19,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,This post describes how to deploy and run Watson NLP and Watson NLP models on Kubernetes via the highly scalable model inference platform KServe ModelMesh.,heidloff_net-page1_elem6-3,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Entities and Keywords Extraction [https://techzone.ibm.com/collection/watson-nlp-entities-and-keywords-extraction],heidloff_net-page1_elem3-40,{},False,Standard
+heidloff_net,WatsonEmbed,page4_elem7,heidloff_net,secretName: ibmcos-repo,heidloff_net-page4_elem7-19,{},False,Standard
+heidloff_net,WatsonEmbed,page5_elem8,heidloff_net,Defining Dependencies in Kubernetes Operators.,heidloff_net-page5_elem8-0,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,The init containers store their models in the same volume so that the runtime container can access them.,heidloff_net-page1_elem5-12,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Watson NLP Python Client [https://github.com/ibm-build-lab/Watson-NLP/blob/main/MLOps/Dash-App-gRPC-Client/readme.md],heidloff_net-page1_elem3-25,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem0,heidloff_net,Custom models can also be put in init container images.,heidloff_net-page1_elem0-56,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,I’ve used the settings below which is more than required but I wanted to leave space for other applications.,heidloff_net-page1_elem2-14,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem4,heidloff_net,Developing TechZone Toolkit Terraform Modules.,heidloff_net-page2_elem4-0,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Embed Model Builder (init Containers) [https://github.com/IBM/ibm-watson-embed-model-builder],heidloff_net-page1_elem3-24,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem8,heidloff_net,With the TechZone Accelerator Toolkit IBM software open source projects and custom applications can easily be deployed to various clouds.,heidloff_net-page2_elem8-1,{},False,Standard
+heidloff_net,WatsonEmbed,page8_elem4,heidloff_net,Slides: When to use Serverless?,heidloff_net-page8_elem4-0,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,Via REST and gRCP APIs AI can easily be embedded in applications.,heidloff_net-page2_elem1-2,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,image: watson-nlp-runtime:1.0.18,heidloff_net-page2_elem1-48,{},True,Standard
+heidloff_net,WatsonEmbed,page6_elem6,heidloff_net,In March IBM launched the Model Asset Exchange which is a place for developers to find and use open source deep learning models.,heidloff_net-page6_elem6-1,{},False,Standard
+heidloff_net,WatsonEmbed,page3_elem5,heidloff_net,value: bx2.4x16,heidloff_net-page3_elem5-42,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* TechZone: Embeddable AI [https://techzone.ibm.com/collection/embedded-ai],heidloff_net-page1_elem3-8,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem4,heidloff_net,* Watson NLP [https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home],heidloff_net-page3_elem4-12,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,* Running IBM Watson NLP locally in Containers [http://heidloff.net/article/running-ibm-watson-nlp-locally-in-containers/],heidloff_net-page1_elem2-76,{},True,Standard
+heidloff_net,WatsonEmbed,page6_elem4,heidloff_net,Many developers including myself want to use AI in their applications.,heidloff_net-page6_elem4-1,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,$ cd terraform-gitops-watson-nlp/chart/watson-nlp,heidloff_net-page2_elem1-53,{},True,Standard
+heidloff_net,WatsonEmbed,page4_elem8,heidloff_net,apiVersion: v1,heidloff_net-page4_elem8-45,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,First you need to store predefined or custom Watson NLP models on some S3 complianted cloud object storage.,heidloff_net-page1_elem6-31,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem4,heidloff_net,$ ibmcloud ce app logs --application watson-nlp-runtime,heidloff_net-page1_elem4-48,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem4,heidloff_net,* IBM Watson NLP Trial [https://www.ibm.com/account/reg/us-en/signup?formid=urx-51726],heidloff_net-page1_elem4-58,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem1,heidloff_net,EOF,heidloff_net-page1_elem1-49,{},False,Standard
+heidloff_net,WatsonEmbed,page4_elem8,heidloff_net,int httpStatus = 200;,heidloff_net-page4_elem8-89,{},False,Standard
+heidloff_net,WatsonEmbed,page7_elem1,heidloff_net,We presented and demonstrated the IBM Cloud and the IBM Code developer site.,heidloff_net-page7_elem1-2,{},False,Standard
+heidloff_net,WatsonEmbed,page3_elem8,heidloff_net,Terraform for IBM Software,heidloff_net-page3_elem8-16,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem0,heidloff_net,image: watson-nlp_syntax_izumo_lang_en_stock:1.0.5,heidloff_net-page2_elem0-36,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem7,heidloff_net,* Automation for Watson NLP Deployments [https://github.com/IBM/watson-automation],heidloff_net-page1_elem7-65,{},True,Standard
+heidloff_net,WatsonEmbed,page6_elem9,heidloff_net,Building VR Applications with Unity and IBM Watson.,heidloff_net-page6_elem9-0,{},False,Standard
+heidloff_net,WatsonEmbed,page3_elem6,heidloff_net,The Argo CD bootstrap module uses another module which creates a Git repo which is linked to ArgoCD.,heidloff_net-page3_elem6-22,{},False,Standard
+heidloff_net,WatsonEmbed,page8_elem7,heidloff_net,This allows you to develop functions in languages which are not supported out of the box by the platform.,heidloff_net-page8_elem7-2,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,* Entitlement key [https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726],heidloff_net-page2_elem1-74,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,image: cp.icr.io/cp/ai/watson-stt-en-us-telephony:1.0.0,heidloff_net-page1_elem2-34,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem0,heidloff_net,Via REST and gRCP APIs AI can easily be embedded in applications.,heidloff_net-page1_elem0-2,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,$ brew install minikube,heidloff_net-page2_elem1-16,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,To find out more about Watson NLP and Watson for Embed in general check out these resources:,heidloff_net-page1_elem6-110,{},True,Standard
+heidloff_net,WatsonEmbed,page7_elem7,heidloff_net,Pictures from JavaLand 2018.,heidloff_net-page7_elem7-0,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem4,heidloff_net,$ ibmcloud ce app events --application watson-nlp-runtime,heidloff_net-page1_elem4-49,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem9,heidloff_net,Deploying custom Watson NLP Models with Terraform.,heidloff_net-page1_elem9-0,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem7,heidloff_net,image: cp.icr.io/cp/ai/watson-nlp_syntax_izumo_lang_en_stock:1.0.7,heidloff_net-page1_elem7-25,{},True,Standard
+heidloff_net,WatsonEmbed,page4_elem9,heidloff_net,$ kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/persons,heidloff_net-page4_elem9-59,{},False,Standard
+heidloff_net,WatsonEmbed,page6_elem8,heidloff_net,The post Training TensorFlow.js Models with IBM Watson [http://heidloff.net/article/tensorflowjs-ibm-watson-web-browsers-dl] appeared first on Niklas Heidloff [http://heidloff.net].,heidloff_net-page6_elem8-5,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Training IBM Watson NLP Models [http://heidloff.net/article/training-ibm-watson-nlp-models/],heidloff_net-page1_elem3-35,{},True,Standard
+heidloff_net,WatsonEmbed,page5_elem0,heidloff_net,Tekton without Tekton in DevSecOps Pipelines.,heidloff_net-page5_elem0-0,{},False,Standard
+heidloff_net,WatsonEmbed,page8_elem9,heidloff_net,However since I couldn’t make it my colleague Mark Sturdevant jumped in on a short notice and did a great job.,heidloff_net-page8_elem9-2,{},False,Standard
+heidloff_net,WatsonEmbed,page5_elem5,heidloff_net,title: Movies,heidloff_net-page5_elem5-41,{},False,Standard
+heidloff_net,WatsonEmbed,page5_elem0,heidloff_net,deploy:,heidloff_net-page5_elem0-34,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,use_model = watson_nlp.load(watson_nlp.download('embedding_use_en_stock')),heidloff_net-page1_elem5-59,{},True,Standard
+heidloff_net,WatsonEmbed,page6_elem7,heidloff_net,Below I describe how to use this service to train models and how to optimize hyperparameters to easily find the best quality model.,heidloff_net-page6_elem7-2,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem3,heidloff_net,IBM Watson Assistant is a SaaS offering from IBM to build conversational user experiences.,heidloff_net-page2_elem3-1,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,import watson_nlp,heidloff_net-page1_elem5-22,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,image: watson-nlp_syntax_izumo_lang_en_stock:1.0.7,heidloff_net-page2_elem1-51,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem3,heidloff_net,This second version was released at the end of 2021.,heidloff_net-page2_elem3-5,{},False,Standard
+heidloff_net,WatsonEmbed,page4_elem6,heidloff_net,var databaseOperatorScheme *runtime.Scheme,heidloff_net-page4_elem6-57,{},False,Standard
+heidloff_net,WatsonEmbed,page6_elem6,heidloff_net,The post Deploying Models from IBM’s Model Exchange to Kubernetes [http://heidloff.net/article/model-asset-exchange-dl-kubernetes-tensorflow] appeared first on Niklas Heidloff [http://heidloff.net].,heidloff_net-page6_elem6-4,{},False,Standard
+heidloff_net,WatsonEmbed,page6_elem8,heidloff_net,Since running this code locally saves the remote calls to servers the performance is amazing!,heidloff_net-page6_elem8-3,{},False,Standard
+heidloff_net,WatsonEmbed,page4_elem7,heidloff_net,containers:,heidloff_net-page4_elem7-46,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,IBM Watson NLP (Natural Language Understanding) and Watson Speech containers can be run locally on-premises or Kubernetes and OpenShift clusters.,heidloff_net-page1_elem6-1,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem4,heidloff_net,First a custom image needs to be built which includes the NLP runtime and a list of models.,heidloff_net-page1_elem4-10,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem8,heidloff_net,Setting up the TechZone Accelerator Toolkit.,heidloff_net-page2_elem8-0,{},False,Standard
+heidloff_net,WatsonEmbed,page6_elem2,heidloff_net,Training AI Models on Kubernetes.,heidloff_net-page6_elem2-0,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem7,heidloff_net,* Running IBM Watson NLP locally in Containers [http://heidloff.net/article/running-ibm-watson-nlp-locally-in-containers/],heidloff_net-page1_elem7-66,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem4,heidloff_net,The post IBM announces Embeddable AI [http://heidloff.net/article/ibm-announces-embeddable-ai/] appeared first on Niklas Heidloff [http://heidloff.net].,heidloff_net-page3_elem4-33,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem3,heidloff_net,* Embeddable web chat widget,heidloff_net-page2_elem3-30,{},False,Standard
+heidloff_net,WatsonEmbed,page8_elem5,heidloff_net,The post Accessing Machine Learning Models via REST APIs [http://heidloff.net/article/machine-learning-models-rest-apis] appeared first on Niklas Heidloff [http://heidloff.net].,heidloff_net-page8_elem5-4,{},False,Standard
+heidloff_net,WatsonEmbed,page3_elem1,heidloff_net,- name: ibm-ocp-vpc,heidloff_net-page3_elem1-56,{},False,Standard
+heidloff_net,WatsonEmbed,page8_elem8,heidloff_net,When to use Kubernetes?,heidloff_net-page8_elem8-5,{},False,Standard
+heidloff_net,WatsonEmbed,page6_elem2,heidloff_net,The post Training AI Models on Kubernetes [http://heidloff.net/article/training-ai-models-kubernetes-open-source] appeared first on Niklas Heidloff [http://heidloff.net].,heidloff_net-page6_elem2-5,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem7,heidloff_net,* Running IBM Watson NLP in Minikube [http://heidloff.net/article/running-ibm-watson-nlp-in-minikube/],heidloff_net-page1_elem7-67,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem7,heidloff_net,To set some context check out the landing page IBM Watson NLP Library for Embed [https://www.ibm.com/products/ibm-watson-natural-language-processing].,heidloff_net-page1_elem7-4,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem4,heidloff_net,The Watson NLP containers can be run on different container platforms they provide REST and gRCP interfaces they can be extended with custom models and they can easily be embedded in solutions.,heidloff_net-page1_elem4-5,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem1,heidloff_net,* Text To Speech [https://www.ibm.com/docs/en/watson-libraries?topic=wtsleh-models-catalog],heidloff_net-page1_elem1-14,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,This post lists links to relevant information in the context of Embeddable AI from IBM and the three libraries.,heidloff_net-page1_elem3-2,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem6,heidloff_net,This post describes how to run Watson NLP locally.,heidloff_net-page2_elem6-2,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem9,heidloff_net,IBM Watson NLP (Natural Language Understanding) and Watson Speech containers can be run locally on-premises or Kubernetes and OpenShift clusters.,heidloff_net-page1_elem9-1,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem1,heidloff_net,$ docker create --name watson-runtime-protos cp.icr.io/cp/ai/watson-nlp-runtime:1.0.18,heidloff_net-page1_elem1-79,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,To find out more about Watson NLP check out these resources:,heidloff_net-page2_elem1-70,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,For some reason in my setup the watson-nlp-runtime image couldn’t be pulled by the Deployment resource/operator.,heidloff_net-page2_elem1-18,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,First you need to install Minikube for example via brew on MacOS.,heidloff_net-page1_elem2-12,{},False,Standard
+heidloff_net,WatsonEmbed,page8_elem4,heidloff_net,Both computing options have pros and cons and it depends on your needs which option you should choose.,heidloff_net-page8_elem4-3,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,name: watson-nlp,heidloff_net-page1_elem6-48,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem6,heidloff_net,* Documentation [https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home],heidloff_net-page2_elem6-57,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem7,heidloff_net,Deploying Kubernetes Resources via GitOps.,heidloff_net-page3_elem7-0,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem5,heidloff_net,Now available as embeddable AI partners gain greater capabilities to build voice transcription and voice synthesis applications more quickly and deploy them in any hybrid multi-cloud environment.,heidloff_net-page2_elem5-6,{},True,Standard
+heidloff_net,WatsonEmbed,page8_elem4,heidloff_net,When to use Kubernetes?.,heidloff_net-page8_elem4-1,{},False,Standard
+heidloff_net,WatsonEmbed,page4_elem8,heidloff_net,kind: Service,heidloff_net-page4_elem8-71,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,To set some context check out the landing page IBM Watson Speech Libraries for Embed [https://www.ibm.com/products/watson-speech-embed-libraries].,heidloff_net-page1_elem8-4,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem2,heidloff_net,With the TechZone Accelerator Toolkit IBM software open source projects and custom applications can easily be deployed to various clouds.,heidloff_net-page2_elem2-1,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem7,heidloff_net,Running IBM Watson Speech to Text in Containers.,heidloff_net-page2_elem7-0,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,grpcDataEndpoint: port:8085,heidloff_net-page1_elem6-102,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem9,heidloff_net,- registry: watson,heidloff_net-page1_elem9-38,{},False,Standard
+heidloff_net,WatsonEmbed,page6_elem7,heidloff_net,In March IBM announced Deep Learning as a Service (DLaaS) which is part of IBM Watson Studio.,heidloff_net-page6_elem7-1,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem5,heidloff_net,FROM cp.icr.io/cp/ai/watson-tts-fr-ca-louisev3voice:1.0.0 AS fr-ca-voice,heidloff_net-page2_elem5-39,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem9,heidloff_net,TechZone Deployer,heidloff_net-page1_elem9-8,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,To invoke Watson Speech To Text port forwarding can be used.,heidloff_net-page1_elem2-56,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem5,heidloff_net,> Build your applications with enterprise-grade speech technology: IBM Watson Speech Libraries for Embed are a set of containerized text-to-speech and speech-to-text libraries designed to offer our IBM partners greater flexibility to infuse the best of IBM Research technology into their solutions.,heidloff_net-page2_elem5-5,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem9,heidloff_net,The Watson NLP containers can be run on different container platforms they provide REST and gRCP interfaces they can be extended with custom models and they can easily be embedded in solutions.,heidloff_net-page1_elem9-6,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem1,heidloff_net,JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk,heidloff_net-page1_elem1-31,{},False,Standard
+heidloff_net,WatsonEmbed,page4_elem7,heidloff_net,- name: ibmcos-repo,heidloff_net-page4_elem7-17,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem1,heidloff_net,To try it a trial [https://www.ibm.com/products/ibm-watson-natural-language-processing] is available.,heidloff_net-page1_elem1-4,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem7,heidloff_net,To try it a trial [https://www.ibm.com/products/watson-speech-embed-libraries] is available.,heidloff_net-page2_elem7-14,{},True,Standard
+heidloff_net,WatsonEmbed,page6_elem3,heidloff_net,The post Reusing Open Source Models in AI Applications [http://heidloff.net/article/open-source-ai-models-zoo-exchange-onnx] appeared first on Niklas Heidloff [http://heidloff.net].,heidloff_net-page6_elem3-5,{},False,Standard
+heidloff_net,WatsonEmbed,page6_elem1,heidloff_net,Deploying Machine Learning Models in the Cloud.,heidloff_net-page6_elem1-0,{},False,Standard
+heidloff_net,WatsonEmbed,page6_elem2,heidloff_net,Early this year IBM announced Deep Learning as a Service within Watson Studio.,heidloff_net-page6_elem2-1,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem9,heidloff_net,Their purpose is to put the model artifacts on disk so that the Watson NLP runtime container can access them.,heidloff_net-page1_elem9-54,{},True,Standard
+heidloff_net,WatsonEmbed,page8_elem3,heidloff_net,Get the code from GitHub.,heidloff_net-page8_elem3-2,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,memory: 16Gi,heidloff_net-page1_elem6-101,{},False,Standard
+heidloff_net,WatsonEmbed,page3_elem1,heidloff_net,- name: ibm-resource-group,heidloff_net-page3_elem1-75,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem1,heidloff_net,IBM Watson NLP (Natural Language Understanding) and Watson Speech containers can be run locally on-premises or Kubernetes and OpenShift clusters.,heidloff_net-page1_elem1-1,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,This post describes how to run Watson Text To Speech locally in Minikube.,heidloff_net-page1_elem8-3,{},True,Standard
+heidloff_net,WatsonEmbed,page5_elem9,heidloff_net,$ kubectl get all -n olm,heidloff_net-page5_elem9-19,{},False,Standard
+heidloff_net,WatsonEmbed,page4_elem7,heidloff_net,"value: ""s3.eu.cloud-object-storage.appdomain.cloud""",heidloff_net-page4_elem7-62,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,IBM Watson NLP (Natural Language Understanding) and Watson Speech containers can be run locally on-premises or Kubernetes and OpenShift clusters.,heidloff_net-page1_elem5-1,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Running IBM Watson Text to Speech in Containers [http://heidloff.net/article/running-ibm-watson-text-to-speech-in-containers/],heidloff_net-page1_elem3-58,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem6,heidloff_net,While this offering is new the underlaying functionality has been used and optimized for a long time in IBM offerings like the IBM Watson Assistant and NLU (Natural Language Understanding) SaaS services and IBM Cloud Pak for Data.,heidloff_net-page2_elem6-8,{},False,Standard
+heidloff_net,WatsonEmbed,page3_elem4,heidloff_net,As a result you’ll see the deployed Watson NLP pod in OpenShift.,heidloff_net-page3_elem4-31,{},True,Standard
+heidloff_net,WatsonEmbed,page6_elem1,heidloff_net,For data science there is a lot of information how machine and deep learning models can […],heidloff_net-page6_elem1-3,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem4,heidloff_net,FROM cp.icr.io/cp/ai/watson-nlp-runtime:1.0.18,heidloff_net-page1_elem4-16,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,"value: ""500000000""",heidloff_net-page1_elem6-91,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Watson Embedded AI Runtime Client Libraries [https://github.com/IBM/ibm-watson-embed-clients],heidloff_net-page1_elem3-23,{},True,Standard
+heidloff_net,WatsonEmbed,page6_elem2,heidloff_net,The core of this service is available as open source and can be run on Kubernetes clusters.,heidloff_net-page6_elem2-2,{},False,Standard
+heidloff_net,WatsonEmbed,page6_elem1,heidloff_net,The post Deploying Machine Learning Models in the Cloud [http://heidloff.net/article/deployment-machine-learning-models-cloud] appeared first on Niklas Heidloff [http://heidloff.net].,heidloff_net-page6_elem1-4,{},False,Standard
+heidloff_net,WatsonEmbed,page7_elem2,heidloff_net,Pictures from JAX 2018.,heidloff_net-page7_elem2-0,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem7,heidloff_net,While this offering is new the underlaying functionality has been used and optimized for a long time in IBM offerings like the IBM Watson Assistant and NLU (Natural Language Understanding) SaaS services and IBM Cloud Pak for Data.,heidloff_net-page1_elem7-6,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,$ kubectl get pods --watch,heidloff_net-page1_elem2-31,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem0,heidloff_net,* Running IBM Watson NLP locally in Containers [http://heidloff.net/article/running-ibm-watson-nlp-locally-in-containers/],heidloff_net-page1_elem0-71,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem3,heidloff_net,* Integrations with phone,heidloff_net-page2_elem3-27,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,memory: 16Gi,heidloff_net-page1_elem6-98,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem4,heidloff_net,IBM Watson NLP (Natural Language Understanding) and Watson Speech containers can be run locally on-premises or Kubernetes and OpenShift clusters.,heidloff_net-page1_elem4-1,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,The Watson NLP pod contains the watson-nlp-runtime container and a simple syntax model container.,heidloff_net-page2_elem1-59,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Deploying TechZone Toolkit Modules on existing Clusters [http://heidloff.net/article/deploying-techzone-toolkit-modules-on-existing-clusters/],heidloff_net-page1_elem3-31,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,Step 1: Import Libraries,heidloff_net-page1_elem5-19,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,To deploy Watson NLP on KServe a ServingRuntime [https://www.ibm.com/docs/en/watson-libraries?topic=containers-run-kubernetes-kserve-modelmesh-serving] instance needs to be defined and applied.,heidloff_net-page1_elem6-74,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem7,heidloff_net,The container images are stored in an IBM container registry that is accessed via an IBM Entitlement Key [https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726].,heidloff_net-page2_elem7-15,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,- -c,heidloff_net-page1_elem8-37,{},False,Standard
+heidloff_net,WatsonEmbed,page6_elem3,heidloff_net,Building machine and deep learning models from scratch is often not trivial not for developers and sometimes not even for data scientists.,heidloff_net-page6_elem3-1,{},False,Standard
+heidloff_net,WatsonEmbed,page5_elem3,heidloff_net,Shift-Left Continuous Integration with DevSecOps Pipelines.,heidloff_net-page5_elem3-0,{},False,Standard
+heidloff_net,WatsonEmbed,page4_elem8,heidloff_net,containers:,heidloff_net-page4_elem8-29,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,* Running IBM Watson Speech to Text in Containers [http://heidloff.net/article/running-ibm-watson-speech-to-text-in-containers/],heidloff_net-page1_elem8-72,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem2,heidloff_net,Automation for embedded IBM Watson Deployments.,heidloff_net-page3_elem2-0,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem0,heidloff_net,* TechZone Accelerator Toolkit CLI (iascable) [https://github.com/cloud-native-toolkit/iascable],heidloff_net-page2_elem0-89,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Model Catalog [https://www.ibm.com/docs/en/watson-libraries?topic=home-models-catalog],heidloff_net-page1_elem3-48,{},True,Standard
+heidloff_net,WatsonEmbed,page4_elem4,heidloff_net,Configuration of Prometheus,heidloff_net-page4_elem4-19,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem7,heidloff_net,Running and Deploying IBM Watson NLP Containers.,heidloff_net-page1_elem7-0,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem7,heidloff_net,* Entitlement key [https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726],heidloff_net-page2_elem7-65,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* IBM Watson Speech Libraries for Embed [https://www.ibm.com/products/watson-speech-embed-libraries],heidloff_net-page1_elem3-42,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem1,heidloff_net,With the TechZone Accelerator Toolkit IBM software open source projects and custom applications can easily be deployed to various clouds.,heidloff_net-page3_elem1-1,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem0,heidloff_net,* Running IBM Watson NLP in Minikube [http://heidloff.net/article/running-ibm-watson-nlp-in-minikube/],heidloff_net-page1_elem0-72,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Repo: Automation for Watson NLP Deployments [https://github.com/IBM/watson-automation],heidloff_net-page1_elem3-30,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem4,heidloff_net,* IBM Watson NLP Documentation [https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home],heidloff_net-page1_elem4-57,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem4,heidloff_net,* Running IBM Watson NLP locally in Containers [http://heidloff.net/article/running-ibm-watson-nlp-locally-in-containers/],heidloff_net-page1_elem4-60,{},True,Standard
+heidloff_net,WatsonEmbed,page4_elem8,heidloff_net,apiVersion: v1,heidloff_net-page4_elem8-50,{},False,Standard
+heidloff_net,WatsonEmbed,page3_elem0,heidloff_net,- name: common_tags,heidloff_net-page3_elem0-45,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem4,heidloff_net,EOF,heidloff_net-page1_elem4-18,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,The Watson Text to Speech library is available as containers providing REST and WebSockets interfaces.,heidloff_net-page1_elem8-5,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem0,heidloff_net,To allow Argo CD to deploy Watson NLP via the Helm the Helm chart itself as well as the specific values.yaml file need to be put in the GitOps repo.,heidloff_net-page2_elem0-37,{},True,Standard
+heidloff_net,WatsonEmbed,page6_elem9,heidloff_net,I’ve changed my Augmented Reality sample slightly to run it as a Virtual Reality app that can be experienced […],heidloff_net-page6_elem9-3,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem7,heidloff_net,"-d "" { \""rawDocument\"": { \""text\"": \""It is so easy to embed Watson NLP in applications.",heidloff_net-page1_elem7-59,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem8,heidloff_net,$ iascable build -i bom.yaml,heidloff_net-page2_elem8-13,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem5,heidloff_net,To find out more about Watson Text to Speech check out these resources:,heidloff_net-page2_elem5-60,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem0,heidloff_net,* IBM Watson NLP Documentation [https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home],heidloff_net-page1_elem0-66,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,IBM Watson NLP (Natural Language Understanding) and Watson Speech containers can be run locally on-premises or Kubernetes and OpenShift clusters.,heidloff_net-page2_elem1-1,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem9,heidloff_net,While this offering is new the underlaying functionality has been used and optimized for a long time in IBM offerings like the IBM Watson Assistant and NLU (Natural Language Understanding) SaaS services and IBM Cloud Pak for Data.,heidloff_net-page1_elem9-7,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,--docker-password=<your IBM Entitlement Key> \,heidloff_net-page1_elem8-25,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,* Running IBM Watson NLP in Minikube [http://heidloff.net/article/running-ibm-watson-nlp-in-minikube/],heidloff_net-page1_elem6-115,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* IBM Developer: Watson Libraries [https://developer.ibm.com/articles/watson-libraries-embeddable-ai-that-works-for-you/],heidloff_net-page1_elem3-9,{},True,Standard
+heidloff_net,WatsonEmbed,page4_elem7,heidloff_net,Automatically Archiving Data with Kubernetes Operators.,heidloff_net-page4_elem7-0,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,To find out more about Watson Text To Speech and Watson for Embed in general check out these resources:,heidloff_net-page1_elem8-64,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,* Running IBM Watson NLP locally in Containers [http://heidloff.net/article/running-ibm-watson-nlp-locally-in-containers/],heidloff_net-page1_elem8-71,{},True,Standard
+heidloff_net,WatsonEmbed,page7_elem8,heidloff_net,IBM Think 2018 Highlights for Developers.,heidloff_net-page7_elem8-0,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem7,heidloff_net,* SaaS API docs [https://cloud.ibm.com/apidocs/speech-to-text],heidloff_net-page2_elem7-63,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,* Automation for Watson NLP Deployments [https://github.com/IBM/watson-automation],heidloff_net-page1_elem5-82,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem3,heidloff_net,The new Watson Assistant is awesome.,heidloff_net-page2_elem3-0,{},False,Standard
+heidloff_net,WatsonEmbed,page6_elem7,heidloff_net,Hyperparameter Optimization with IBM Watson Studio.,heidloff_net-page6_elem7-0,{},False,Standard
+heidloff_net,WatsonEmbed,page8_elem6,heidloff_net,A/B Testing with Kubernetes and Istio.,heidloff_net-page8_elem6-0,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,- cp model/* /models/pool2,heidloff_net-page1_elem8-38,{},False,Standard
+heidloff_net,WatsonEmbed,page8_elem0,heidloff_net,Developing OpenWhisk Functions with Spring Boot.,heidloff_net-page8_elem0-0,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,* IBM Watson NLP Trial [https://www.ibm.com/account/reg/us-en/signup?formid=urx-51726],heidloff_net-page1_elem5-80,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem1,heidloff_net,* Speech To Text [https://www.ibm.com/docs/en/watson-libraries?topic=home-models-catalog],heidloff_net-page1_elem1-13,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,* Watson Speech To Text SaaS Model Catalog [https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models],heidloff_net-page1_elem2-71,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem9,heidloff_net,At a minimum you need the Watson NLP runtime image.,heidloff_net-page1_elem9-50,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem0,heidloff_net,-t watson-nlp-custom-container:v1,heidloff_net-page1_elem0-35,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem1,heidloff_net,"text: ""It is so easy to embed Watson NLP in applications.",heidloff_net-page1_elem1-65,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,Guide to IBM Watson Libraries.,heidloff_net-page1_elem3-0,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem1,heidloff_net,To include out of the box models in your custom images you need to download the model files first.,heidloff_net-page1_elem1-37,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,How to run STS locally via Minikube,heidloff_net-page1_elem2-9,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem1,heidloff_net,"$ curl -X POST ""http://localhost:8080/v1/watson.runtime.nlp.v1/NlpService/SyntaxPredict"" \",heidloff_net-page1_elem1-59,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem5,heidloff_net,* Documentation [https://www.ibm.com/docs/en/watson-libraries?topic=watson-text-speech-library-embed-home],heidloff_net-page2_elem5-61,{},True,Standard
+heidloff_net,WatsonEmbed,page5_elem9,heidloff_net,Check out the repo [https://github.com/nheidloff/operator-sample-go] and keep an eye on my blog.,heidloff_net-page5_elem9-185,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,name: watson-nlp-runtime,heidloff_net-page1_elem6-80,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem4,heidloff_net,To find out more about Watson NLP and Watson for Embed in general check out these resources:,heidloff_net-page1_elem4-56,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* IBM Watson Speech Libraries for Embed [https://www.ibm.com/products/watson-speech-embed-libraries],heidloff_net-page1_elem3-55,{},True,Standard
+heidloff_net,WatsonEmbed,page6_elem2,heidloff_net,This allows developers and data scientists to train models with confidential data on-premises for example on the Kubernetes-based IBM Cloud Private.,heidloff_net-page6_elem2-3,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Model Catalog [https://www.ibm.com/docs/en/watson-libraries?topic=models-catalog],heidloff_net-page1_elem3-16,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem3,heidloff_net,I was only able to try it recently and was positively surprised how much the offering has evolved.,heidloff_net-page2_elem3-6,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem4,heidloff_net,Via REST and gRCP APIs AI can easily be embedded in applications.,heidloff_net-page1_elem4-2,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem0,heidloff_net,* Automation for Watson NLP Deployments [https://github.com/IBM/watson-automation],heidloff_net-page1_elem0-70,{},True,Standard
+heidloff_net,WatsonEmbed,page6_elem6,heidloff_net,Deploying Models from IBM’s Model Exchange to Kubernetes.,heidloff_net-page6_elem6-0,{},False,Standard
+heidloff_net,WatsonEmbed,page5_elem7,heidloff_net,#    kind: Service,heidloff_net-page5_elem7-77,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem2,heidloff_net,* TechZone Accelerator Toolkit CLI (iascable) [https://github.com/cloud-native-toolkit/iascable],heidloff_net-page2_elem2-67,{},False,Standard
+heidloff_net,WatsonEmbed,page4_elem6,heidloff_net,Accessing Kubernetes from Go Applications.,heidloff_net-page4_elem6-0,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem3,heidloff_net,There is a free lite plan [https://cloud.ibm.com/catalog/services/watson-assistant].,heidloff_net-page2_elem3-48,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,EOF,heidloff_net-page1_elem6-54,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem2,heidloff_net,- name: ibm-ocp-vpc,heidloff_net-page2_elem2-19,{},False,Standard
+heidloff_net,WatsonEmbed,page5_elem7,heidloff_net,#    kind: Service,heidloff_net-page5_elem7-70,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem4,heidloff_net,However the curated catalog doesn’t have to be used or can be used in addition to a custom catalog.,heidloff_net-page2_elem4-11,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem9,heidloff_net,This post describes how custom Watson NLP models can be deployed with TechZone Deployer an opinionated deployment and operations toolkit based on Terraform and ArgoCD.,heidloff_net-page1_elem9-3,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,Running IBM Watson Text To Speech in Minikube.,heidloff_net-page1_elem8-0,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,Deploying Watson NLP Models to KServe ModelMesh,heidloff_net-page1_elem6-27,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,Watson NLP,heidloff_net-page1_elem3-10,{},True,Standard
+heidloff_net,WatsonEmbed,page8_elem4,heidloff_net,When to use Kubernetes?,heidloff_net-page8_elem4-7,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,from watson_core.toolkit import fileio,heidloff_net-page1_elem5-25,{},True,Standard
+heidloff_net,WatsonEmbed,page6_elem3,heidloff_net,This […],heidloff_net-page6_elem3-4,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem9,heidloff_net,- registry: watson,heidloff_net-page1_elem9-46,{},False,Standard
+heidloff_net,WatsonEmbed,page5_elem9,heidloff_net,Deploying Operators with the Operator Lifecycle Manager.,heidloff_net-page5_elem9-0,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem3,heidloff_net,The first version was already good but the new(ish) version is just awesome!,heidloff_net-page2_elem3-2,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,The post Serving Watson NLP on Kubernetes with KServe ModelMesh [http://heidloff.net/article/serving-watson-nlp-on-kubernetes-with-kserve-modelmesh/] appeared first on Niklas Heidloff [http://heidloff.net].,heidloff_net-page1_elem6-116,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem4,heidloff_net,--name watson-nlp-runtime \,heidloff_net-page1_elem4-40,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,* IBM Watson NLP Documentation [https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home],heidloff_net-page1_elem5-78,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem4,heidloff_net,This post describes how to deploy and run Watson NLP on the serverless offering IBM Code Engine.,heidloff_net-page1_elem4-3,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem1,heidloff_net,Invoke Watson NLP via gRCP:,heidloff_net-page1_elem1-89,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem0,heidloff_net,image: var.runtime_image,heidloff_net-page2_elem0-50,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,sentiment-document-cnn-workflow-en-stock-predictor      grpc://modelmesh-serving.ibmid-6620037hpc-669mq7e2:8033,heidloff_net-page1_elem6-58,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,* Running IBM Watson Speech to Text in Containers [http://heidloff.net/article/running-ibm-watson-speech-to-text-in-containers/],heidloff_net-page1_elem2-77,{},True,Standard
+heidloff_net,WatsonEmbed,page6_elem0,heidloff_net,The trained Object Detection models can be run on mobile and edge devices to execute predictions really fast.,heidloff_net-page6_elem0-2,{},False,Standard
+heidloff_net,WatsonEmbed,page6_elem9,heidloff_net,The post Building VR Applications with Unity and IBM Watson [http://heidloff.net/article/vr-virtual-reality-unity-ibm-watson] appeared first on Niklas Heidloff [http://heidloff.net].,heidloff_net-page6_elem9-4,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem5,heidloff_net,The container images are stored in an IBM container registry that is accessed via an IBM Entitlement Key [https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726].,heidloff_net-page2_elem5-12,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Rob Thomas on Accelerating AI Adoption with Ecosystem Partners [https://youtu.be/V8oGXnqVZEs?t=743],heidloff_net-page1_elem3-6,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,* Automation for Watson NLP Deployments [https://github.com/IBM/watson-automation],heidloff_net-page1_elem2-75,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem6,heidloff_net,* Model catalog [https://www.ibm.com/docs/en/watson-libraries?topic=models-catalog],heidloff_net-page2_elem6-58,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Running IBM Watson Speech to Text in Containers [http://heidloff.net/article/running-ibm-watson-speech-to-text-in-containers/],heidloff_net-page1_elem3-45,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem9,heidloff_net,Via REST and gRCP APIs AI can easily be embedded in applications.,heidloff_net-page1_elem9-2,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,The container images are stored in an IBM container registry that is accessed via an IBM Entitlement Key [https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726].,heidloff_net-page1_elem2-8,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem0,heidloff_net,- registry: watson,heidloff_net-page2_elem0-35,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,IBM Watson NLP (Natural Language Understanding) and Watson Speech containers can be run locally on-premises or Kubernetes and OpenShift clusters.,heidloff_net-page1_elem8-1,{},True,Standard
+heidloff_net,WatsonEmbed,page8_elem3,heidloff_net,Check out nginx.conf for a simple sample configuration.,heidloff_net-page8_elem3-4,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem7,heidloff_net,* Documentation [https://www.ibm.com/docs/en/watson-libraries?topic=watson-text-speech-library-embed-home],heidloff_net-page2_elem7-60,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem1,heidloff_net,"-d "" { \""rawDocument\"": { \""text\"": \""It is so easy to embed Watson NLP in applications.",heidloff_net-page1_elem1-63,{},True,Standard
+heidloff_net,WatsonEmbed,page7_elem1,heidloff_net,Pictures from We Are Developers in Vienna.,heidloff_net-page7_elem1-0,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem4,heidloff_net,* TechZone Accelerator Toolkit CLI (iascable) [https://github.com/cloud-native-toolkit/iascable],heidloff_net-page2_elem4-41,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,The instructions below describe how to deploy Watson NLP locally to Minikube via the Watson NLP Helm chart [https://github.com/IBM/watson-automation/blob/90e61e05a5d0eacd268c97fc3c8b67e285c99241/documentation/NLPHelmChart.md].,heidloff_net-page2_elem1-10,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,image: cp.icr.io/cp/ai/watson-tts-en-us-allisonv3voice:1.0.0,heidloff_net-page1_elem8-34,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem4,heidloff_net,My team has implemented a Helm chart [https://github.com/IBM/watson-automation/blob/8973caa7f1a4eac6831ffa087c8a5ad1a9195728/documentation/NLPHelmChart.md] which makes it easy to deploy Watson NLP in Kubernetes environments like OpenShift.,heidloff_net-page3_elem4-17,{},True,Standard
+heidloff_net,WatsonEmbed,page5_elem6,heidloff_net,reconciler.Name allErrors),heidloff_net-page5_elem6-44,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,IBM Watson NLP (Natural Language Understanding) and Watson Speech containers can be run locally on-premises or Kubernetes and OpenShift clusters.,heidloff_net-page1_elem2-1,{},True,Standard
+heidloff_net,WatsonEmbed,page8_elem0,heidloff_net,Get the code from GitHub.,heidloff_net-page8_elem0-2,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem4,heidloff_net,Deploying Watson NLP to IBM Code Engine.,heidloff_net-page1_elem4-0,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem1,heidloff_net,Via REST and gRCP APIs AI can easily be embedded in applications.,heidloff_net-page1_elem1-2,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,* IBM Watson NLP Entitlement Key [https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726],heidloff_net-page1_elem5-81,{},True,Standard
+heidloff_net,WatsonEmbed,page3_elem0,heidloff_net,Check out my earlier blog that introduces the toolkit: Introducing IBM’s Toolkit to handle Everything as Code [http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/].,heidloff_net-page3_elem0-3,{},False,Standard
+heidloff_net,WatsonEmbed,page4_elem5,heidloff_net,Why you should build Kubernetes Operators.,heidloff_net-page4_elem5-0,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem4,heidloff_net,* Automation for Watson NLP Deployments [https://github.com/IBM/watson-automation],heidloff_net-page1_elem4-59,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem7,heidloff_net,image: cp.icr.io/cp/ai/watson-nlp-runtime:1.0.18,heidloff_net-page1_elem7-34,{},True,Standard
+heidloff_net,WatsonEmbed,page5_elem4,heidloff_net,The Kubernetes Operator Metamodel.,heidloff_net-page5_elem4-0,{},False,Standard
+heidloff_net,WatsonEmbed,page5_elem4,heidloff_net,* Operator CSV [https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/bundle/manifests/operator-application.clusterserviceversion.yaml],heidloff_net-page5_elem4-25,{},False,Standard
+heidloff_net,WatsonEmbed,page8_elem1,heidloff_net,Transforming JSON Data in Serverless Applications.,heidloff_net-page8_elem1-0,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,First you need to install Minikube for example via brew on MacOS.,heidloff_net-page1_elem8-12,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,* Running IBM Watson Text to Speech in Containers [http://heidloff.net/article/running-ibm-watson-text-to-speech-in-containers/],heidloff_net-page1_elem8-73,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem6,heidloff_net,To try it a trial [https://www.ibm.com/products/ibm-watson-natural-language-processing] is available.,heidloff_net-page2_elem6-12,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem4,heidloff_net,"-d "" { \""rawDocument\"": { \""text\"": \""It is so easy to embed Watson NLP in applications.",heidloff_net-page1_elem4-54,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,stopwords = watson_nlp.download_and_load('text_stopwords_classification_ensemble_en_stock'),heidloff_net-page1_elem5-60,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Running and Deploying IBM Watson NLP Containers [http://heidloff.net/article/running-and-deploying-ibm-watson-nlp-containers/],heidloff_net-page1_elem3-18,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem8,heidloff_net,Check out my earlier blog that introduces the toolkit: Introducing IBM’s Toolkit to handle Everything as Code [http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/].,heidloff_net-page2_elem8-3,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem6,heidloff_net,* Trial [https://www.ibm.com/products/ibm-watson-natural-language-processing],heidloff_net-page2_elem6-59,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,* Repo: Samples [https://github.com/ibm-build-lab/Watson-NLP/tree/main/ML],heidloff_net-page1_elem3-37,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,limits:,heidloff_net-page1_elem2-43,{},False,Standard
+heidloff_net,WatsonEmbed,page5_elem0,heidloff_net,For example the ‘deploy’ stage cannot be handled generically which is why custom specific scripts need to be provided.,heidloff_net-page5_elem0-26,{},False,Standard
+heidloff_net,WatsonEmbed,page8_elem7,heidloff_net,I’ve open sourced a sample that shows how to develop and debug functions with TypeScript.,heidloff_net-page8_elem7-3,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem5,heidloff_net,df_out['labels'] = df_out['labels'].map(lambda label: [label]),heidloff_net-page1_elem5-45,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem3,heidloff_net,IBM provides Watson NLP (Natural Language Understand) Watson Speech To Text and Watson Text To Speech as containers which can be embedded in cloud-native applications.,heidloff_net-page1_elem3-1,{},True,Standard
+heidloff_net,WatsonEmbed,page5_elem6,heidloff_net,"if !strings.HasPrefix(reconciler.Spec.SchemaUrl ""http"") {",heidloff_net-page5_elem6-46,{},False,Standard
+heidloff_net,WatsonEmbed,page3_elem4,heidloff_net,* Watson NLP Helm Chart [https://github.com/IBM/watson-automation/blob/8973caa7f1a4eac6831ffa087c8a5ad1a9195728/documentation/NLPHelmChart.md],heidloff_net-page3_elem4-13,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem0,heidloff_net,Developing TechZone Toolkit GitOps Modules with Helm.,heidloff_net-page2_elem0-0,{},False,Standard
+heidloff_net,WatsonEmbed,page2_elem5,heidloff_net,Offered as a containerized library developers can build applications quickly with interoperable and production scalable components to run their speech tasks anywhere.,heidloff_net-page2_elem5-8,{},True,Standard
+heidloff_net,WatsonEmbed,page6_elem7,heidloff_net,The post Hyperparameter Optimization with IBM Watson Studio [http://heidloff.net/article/hyperparameter-optimization-ibm-watson-studio] appeared first on Niklas Heidloff [http://heidloff.net].,heidloff_net-page6_elem7-4,{},False,Standard
+heidloff_net,WatsonEmbed,page3_elem3,heidloff_net,Configuring the TechZone Toolkit.,heidloff_net-page3_elem3-0,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem2,heidloff_net,- -c,heidloff_net-page1_elem2-37,{},False,Standard
+heidloff_net,WatsonEmbed,page6_elem7,heidloff_net,I’m not a data scientist but have been told that finding the right hyperparameters is […],heidloff_net-page6_elem7-3,{},False,Standard
+heidloff_net,WatsonEmbed,page1_elem8,heidloff_net,To invoke Watson Text To Speech port forwarding can be used.,heidloff_net-page1_elem8-56,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem0,heidloff_net,Init containers for models: One pod with one NLP runtime container and one init container per model,heidloff_net-page1_elem0-21,{},True,Standard
+heidloff_net,WatsonEmbed,page2_elem1,heidloff_net,* Running IBM Watson NLP locally in Containers [http://heidloff.net/article/running-ibm-watson-nlp-locally-in-containers/],heidloff_net-page2_elem1-76,{},True,Standard
+heidloff_net,WatsonEmbed,page1_elem6,heidloff_net,To set some context check out the landing page IBM Watson NLP Library for Embed [https://www.ibm.com/products/ibm-watson-natural-language-processing].,heidloff_net-page1_elem6-4,{},True,Standard
+heidloff_net,WatsonEmbed,page7_elem4,heidloff_net,Serverless and Kubernetes Demos.,heidloff_net-page7_elem4-0,{},False,Standard
+heidloff_net,WatsonEmbed,page5_elem8,heidloff_net,Check out the repo [https://github.com/nheidloff/operator-sample-go] and keep an eye on my blog.,heidloff_net-page5_elem8-43,{},False,Standard

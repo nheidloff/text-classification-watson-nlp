@@ -1,0 +1,6 @@
+page6-elem8,Training TensorFlow.js Models with IBM Watson.
+page6-elem8,Recently Google introduced TensorFlow.js which is a JavaScript library for training and deploying machine learning models in browsers and on Node.js.
+page6-elem8,I like especially the ability to run predictions in browsers.
+page6-elem8,Since running this code locally saves the remote calls to servers the performance is amazing!
+page6-elem8,TensorFlow.js even allows the training of models in browsers […]
+page6-elem8,The post Training TensorFlow.js Models with IBM Watson [http://heidloff.net/article/tensorflowjs-ibm-watson-web-browsers-dl] appeared first on Niklas Heidloff [http://heidloff.net].

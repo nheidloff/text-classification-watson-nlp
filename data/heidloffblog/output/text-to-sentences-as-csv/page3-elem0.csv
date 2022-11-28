@@ -1,0 +1,61 @@
+page3-elem0,Interface Descriptions of TechZone Toolkit Modules.
+page3-elem0,With the TechZone Accelerator Toolkit IBM software open source projects and custom applications can easily be deployed to various clouds.
+page3-elem0,This article explains how input and output variables of modules are defined.
+page3-elem0,Check out my earlier blog that introduces the toolkit: Introducing IBM’s Toolkit to handle Everything as Code [http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/].
+page3-elem0,The toolkit leverages Terrafrom and GitOps and is based on best practices from IBM projects with partners and clients.
+page3-elem0,Solutions are defined via bill of materials (BOMs) which contain lists of modules [https://modules.cloudnativetoolkit.dev/].
+page3-elem0,In the following example [https://github.com/IBM/watson-automation/blob/main/roks-new-nlp/bom.yaml] an OpenShift cluster is created in the IBM Cloud which comes with Argo CD a GitOps repo Watson NLP and a sample application based on ubi.
+page3-elem0,apiVersion: cloudnativetoolkit.dev/v1alpha1
+page3-elem0,kind: BillOfMaterial
+page3-elem0,metadata:
+page3-elem0,name: cluster-with-watson-nlp
+page3-elem0,spec:
+page3-elem0,modules:
+page3-elem0,- name: ibm-ocp-vpc
+page3-elem0,- name: argocd-bootstrap
+page3-elem0,- name: gitops-repo
+page3-elem0,- name: terraform-gitops-ubi
+page3-elem0,- name: terraform-gitops-watson-nlp
+page3-elem0,Modules have input and output variables.
+page3-elem0,Read my blog Configuring the TechZone Accelerator Toolkit [http://heidloff.net/article/configuring-the-techzone-accelerator-toolkit/] how to use input variables to configure BOMs for different scenarios.
+page3-elem0,The input variables are defined by convention in the variables.tf [https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp/blob/main/variables.tf] files of modules via Terraform and HCL.
+page3-elem0,variable "registries" {
+page3-elem0,type    = list(map(string))
+page3-elem0,default = [{
+page3-elem0,name = "watson"
+page3-elem0,url = "cp.icr.io/cp/ai"
+page3-elem0,}]
+page3-elem0,The readme [https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp#3-example-usage] files of the modules also describe how to use modules and pass in variables if you would use Terraform directly and not the toolkit which is useful for module developers to test their modules.
+page3-elem0,module "terraform_gitops_watson_nlp" {
+page3-elem0,source = "github.com/cloud-native-toolkit/terraform-gitops-watson-nlp?ref=v0.0.80"
+page3-elem0,accept_license = var.terraform_gitops_watson_nlp_accept_license
+page3-elem0,...
+page3-elem0,The output variables are defined by convention in output.tf [https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp/blob/main/outputs.tf] files.
+page3-elem0,output "namespace" {
+page3-elem0,description = "The namespace where the module will be deployed"
+page3-elem0,value       = local.namespace
+page3-elem0,depends_on  = [resource.gitops_module.setup_gitops]
+page3-elem0,Some variables are defined on a global level which is useful for common variables [https://github.com/IBM/watson-automation/blob/main/roks-new-nlp/output/cluster-with-watson-nlp/variables-template.yaml] like regions resource group names and common tags.
+page3-elem0,variables:
+page3-elem0,- name: region
+page3-elem0,description: The IBM Cloud region where the instance should be provisioned
+page3-elem0,value: xxx
+page3-elem0,- name: resource_group_name
+page3-elem0,description: The name of the IBM Cloud resource group where the resources should be provisioned
+page3-elem0,value: xxx
+page3-elem0,- name: common_tags
+page3-elem0,description: The list of tags that should be applied to all resources (does not work)
+page3-elem0,value: []
+page3-elem0,To define the values of variables for certain modules naming conventions are used.
+page3-elem0,For example to define the value of ‘runtime_image [https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp/blob/main/variables.tf#L110-L113]‘ …
+page3-elem0,variable "runtime_image" {
+page3-elem0,description = "runtime_image"
+page3-elem0,default     = "watson-nlp-runtime:1.0.15"
+page3-elem0,… the name of the module [https://github.com/IBM/watson-automation/blob/main/roks-new-nlp/output/cluster-with-watson-nlp/variables-template.yaml#L45] is used followed by ‘_’ and the variable name.
+page3-elem0,- name: terraform_gitops_watson_nlp_runtime_image
+page3-elem0,value: watson-nlp-runtime:1.0.18
+page3-elem0,To find out more about these capabilities check out the following resources:
+page3-elem0,* Watson Automation Repo [https://github.com/IBM/watson-automation]
+page3-elem0,* TechZone Accelerator Toolkit [https://operate.cloudnativetoolkit.dev/]
+page3-elem0,* Watson NLP [https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home]
+page3-elem0,The post Interface Descriptions of TechZone Toolkit Modules [http://heidloff.net/article/interface-descriptions-of-techzone-toolkit-modules/] appeared first on Niklas Heidloff [http://heidloff.net].

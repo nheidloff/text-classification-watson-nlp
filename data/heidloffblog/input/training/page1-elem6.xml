@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Thu, 24 Nov 2022 10:47:53 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>Serving Watson NLP on Kubernetes with KServe ModelMesh</title><link>http://heidloff.net/article/serving-watson-nlp-on-kubernetes-with-kserve-modelmesh/</link><pubDate>Fri, 18 Nov 2022 13:25:38 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=5414</guid><description><![CDATA[<p>IBM Watson NLP (Natural Language Understanding) and Watson Speech containers can be run locally, on-premises or Kubernetes and OpenShift clusters. Via REST and gRCP APIs AI can easily be embedded in applications. This post describes how to deploy and run Watson NLP and Watson NLP models on Kubernetes via the highly scalable model inference platform [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/serving-watson-nlp-on-kubernetes-with-kserve-modelmesh/">Serving Watson NLP on Kubernetes with KServe ModelMesh</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p><em>IBM Watson NLP (Natural Language Understanding) and Watson Speech containers can be run locally, on-premises or Kubernetes and OpenShift clusters. Via REST and gRCP APIs AI can easily be embedded in applications. This post describes how to deploy and run Watson NLP and Watson NLP models on Kubernetes via the highly scalable model inference platform KServe ModelMesh.<br />
+</em><span id="more-5414"></span></p>
+<p>To set some context, check out the landing page <a href="https://www.ibm.com/products/ibm-watson-natural-language-processing" rel="noopener noreferrer" target="_blank">IBM Watson NLP Library for Embed</a>. The Watson NLP containers can be run on different container platforms, they provide REST and gRCP interfaces, they can be extended with custom models and they can easily be embedded in solutions. While this offering is new, the underlaying functionality has been used and optimized for a long time in IBM offerings like the IBM Watson Assistant and NLU (Natural Language Understanding) SaaS services and IBM Cloud Pak for Data.</p>
+<p><strong>What is KServe ModelMesh?</strong></p>
+<p>KServe is a Kubernetes-based platform for ML model inference (predictions). It supports several standard ML model formats, including TensorFlow, PyTorch, ONNX, scikit-learn and more. Additionally it is highly scalable and dynamic. KServe ModelMesh is used for sophisticated AI scenarios where multiple models are used at the same time. For example you might have a scenario where you need various NLP models (classification, emotions, concepts, etc.), various Speech models (different qualities, voices, etc.) and all this for for different languages. In this case utting all models in one container is not an option.</p>
+<p>Let&#8217;s look at the definition from the <a href="https://kserve.github.io/website/0.9/" rel="noopener noreferrer" target="_blank">KServe</a> landing page.</p>
+<blockquote><p>ModelMesh is designed for high-scale, high-density and frequently-changing model use cases. ModelMesh intelligently loads and unloads AI models to and from memory to strike an intelligent trade-off between responsiveness to users and computational footprint.  </p></blockquote>
+<p>Why KServe?</p>
+<ul>
+<li>KServe is a standard Model Inference Platform on Kubernetes, built for highly scalable use cases.</li>
+<li>Provides performant, standardized inference protocol across ML frameworks.</li>
+<li>Support modern serverless inference workload with Autoscaling including Scale to Zero on GPU.</li>
+<li>Provides high scalability, density packing and intelligent routing using ModelMesh</li>
+<li>Simple and Pluggable production serving for production ML serving including prediction, pre/post processing, monitoring and explainability.</li>
+<li>Advanced deployments with canary rollout, experiments, ensembles and transformers.</li>
+</ul>
+<p>KServe runs on Kubernetes. It requires etcd, S3 storage and optionally Knative and Istio.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/kserve_layer.png" alt="" width="3322" height="1677" class="alignnone size-full wp-image-5415" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/kserve_layer.png 3322w, http://heidloff.net/wp-content/uploads/2022/11/kserve_layer-300x151.png 300w, http://heidloff.net/wp-content/uploads/2022/11/kserve_layer-768x388.png 768w, http://heidloff.net/wp-content/uploads/2022/11/kserve_layer-1024x517.png 1024w" sizes="(max-width: 3322px) 100vw, 3322px" /></p>
+<p>The video <a href="https://www.youtube.com/watch?v=FX6naJLaq2Y" rel="noopener noreferrer" target="_blank">Exploring ML Model Serving with KServe</a> provides a good introduction and overview.</p>
+<p><strong>Deploying Watson NLP Models to KServe ModelMesh</strong></p>
+<p>There is a <a href="https://github.com/ibm-build-lab/Watson-NLP/blob/main/MLOps/Deploy-to-KServe-ModelMesh-Serving/README.md" rel="noopener noreferrer" target="_blank">tutorial</a> that provides detailed instructions how to deploy NLP models to KServe. For IBM partners there is also a test environment available. Below are the key steps of the tutorial.</p>
+<p>First you need to store predefined or custom Watson NLP models on some S3 complianted cloud object storage. The test environment uses Minio which can be installed in your own clusters. Via the Minio CLI models can be uploaded to buckets. If you use IBM&#8217;s Cloud Object Storage, make sure to use the HMAC credentials.</p>
+<p>Next you define an instance of the custom resource definition InferenceService per model. In this definition you refer to your model in S3.</p>
+<pre class="brush: plain; title: ; notranslate">
+kubectl create -f - &lt;&lt;EOF
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  name: $NAME
+  annotations:
+    serving.kserve.io/deploymentMode: ModelMesh
+spec:
+  predictor:
+    model:
+      modelFormat:
+        name: watson-nlp
+      storage:
+        path: $PATH_TO_MODEL
+        key: $BUCKET
+        parameters:
+          bucket: $BUCKET
+EOF
+</pre>
+<p>To get the endpoints, invoke this command.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl get inferenceservice
+ensemble-classification-wf-en-emotion-stock-predictor   grpc://modelmesh-serving.ibmid-6620037hpc-669mq7e2:8033
+sentiment-document-cnn-workflow-en-stock-predictor      grpc://modelmesh-serving.ibmid-6620037hpc-669mq7e2:8033
+syntax-izumo-en-stock-predictor                         grpc://modelmesh-serving.ibmid-6620037hpc-669mq7e2:8033
+</pre>
+<p>To invoke Watson NLP from local code or via commands, forward the port.</p>
+<pre class="brush: plain; title: ; notranslate">
+kubectl port-forward service/modelmesh-serving 8085:8033
+</pre>
+<p>Next you need to get the proto files. You can download them from a repo and copy them from the runtime image.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ git clone https://github.com/IBM/ibm-watson-embed-clients
+$ cd watson_nlp/protos
+or
+$ kubectl exec deployment/modelmesh-serving-watson-nlp-runtime -c watson-nlp-runtime -- jar cM -C /app/protos . | jar x
+</pre>
+<p>The <a href="https://github.com/ibm/watson-automation#grpc" rel="noopener noreferrer" target="_blank">watson-automation</a> repo shows a little example how to invoke Watson NLP functionality via gRPC.</p>
+<p><strong>Installing KServe ModelMesh Serving</strong></p>
+<p>See the <a href="https://github.com/kserve/modelmesh-serving/blob/release-0.8/docs/install/install-script.md" rel="noopener noreferrer" target="_blank">KServe ModelMesh Serving installation instructions</a> for detailed instructions on how to install KServe with ModelMesh onto your cluster. You need to install etcd, S3, KServe and optionally Istio. Unfortunately there is no operator yet, but a script is provided.</p>
+<p>To deploy Watson NLP on KServe, a <a href="https://www.ibm.com/docs/en/watson-libraries?topic=containers-run-kubernetes-kserve-modelmesh-serving" rel="noopener noreferrer" target="_blank">ServingRuntime</a> instance needs to be defined and applied. A serving runtime is a template for a pod that can serve one or more particular model formats. Apply the following sample to create a simple serving runtime for Watson NLP models:</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: serving.kserve.io/v1alpha1
+kind: ServingRuntime
+metadata:
+  name: watson-nlp-runtime
+spec:
+  containers:
+  - env:
+      - name: ACCEPT_LICENSE
+        value: &quot;true&quot;
+      - name: LOG_LEVEL
+        value: info
+      - name: CAPACITY
+        value: &quot;1000000000&quot;
+      - name: DEFAULT_MODEL_SIZE
+        value: &quot;500000000&quot;
+    image: cp.icr.io/cp/ai/watson-nlp-runtime:1.0.20
+    imagePullPolicy: IfNotPresent
+    name: watson-nlp-runtime
+    resources:
+      limits:
+        cpu: 2
+        memory: 16Gi
+      requests:
+        cpu: 1
+        memory: 16Gi
+  grpcDataEndpoint: port:8085
+  grpcEndpoint: port:8085
+  multiModel: true
+  storageHelper:
+    disabled: false
+  supportedModelFormats:
+    - autoSelect: true
+      name: watson-nlp
+</pre>
+<p>To find out more about Watson NLP and Watson for Embed in general, check out these resources:</p>
+<ul>
+<li><a href="https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home" rel="noopener noreferrer" target="_blank">IBM Watson NLP Documentation</a></li>
+<li><a href="https://www.ibm.com/account/reg/us-en/signup?formid=urx-51726" rel="noopener noreferrer" target="_blank">IBM Watson NLP Trial</a></li>
+<li><a href="https://github.com/IBM/watson-automation" rel="noopener noreferrer" target="_blank">Automation for Watson NLP Deployments</a></li>
+<li><a href="http://heidloff.net/article/running-ibm-watson-nlp-locally-in-containers/" rel="noopener noreferrer" target="_blank">Running IBM Watson NLP locally in Containers</a></li>
+<li><a href="http://heidloff.net/article/running-ibm-watson-nlp-in-minikube/" rel="noopener noreferrer" target="_blank">Running IBM Watson NLP in Minikube</a></li>
+</ul>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/serving-watson-nlp-on-kubernetes-with-kserve-modelmesh/">Serving Watson NLP on Kubernetes with KServe ModelMesh</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><post-id xmlns="com-wordpress:feed-additions:1">5414</post-id></item></channel></rss>

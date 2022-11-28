@@ -1,0 +1,115 @@
+page1-elem1,Understanding IBM Watson Containers.
+page1-elem1,IBM Watson NLP (Natural Language Understanding) and Watson Speech containers can be run locally on-premises or Kubernetes and OpenShift clusters.
+page1-elem1,Via REST and gRCP APIs AI can easily be embedded in applications.
+page1-elem1,This post explains how to find the latest versions of containers and how to get the model files and gRPC proto files.
+page1-elem1,To try it a trial [https://www.ibm.com/products/ibm-watson-natural-language-processing] is available.
+page1-elem1,The container images are stored in an IBM container registry that is accessed via an IBM Entitlement Key [https://www.ibm.com/account/reg/signup?formid=urx-51726].
+page1-elem1,This post has three parts:
+page1-elem1,* Finding the latest Version of Images
+page1-elem1,* Accessing the Model Files
+page1-elem1,* Accessing the gRCP Proto Files
+page1-elem1,Finding the latest Version of Images
+page1-elem1,In addition to the runtime container ‘cp.icr.io/cp/ai/watson-nlp-runtime’ IBM provides out of the box models which are stored in images that are run as init containers.
+page1-elem1,* NLP [https://www.ibm.com/docs/en/watson-libraries?topic=models-catalog]
+page1-elem1,* Speech To Text [https://www.ibm.com/docs/en/watson-libraries?topic=home-models-catalog]
+page1-elem1,* Text To Speech [https://www.ibm.com/docs/en/watson-libraries?topic=wtsleh-models-catalog]
+page1-elem1,To find out the latest version even before the documentation is updated you can use Skopeo [https://github.com/containers/skopeo].
+page1-elem1,The output shows the available tags and environment variables for the model and proto directories.
+page1-elem1,$ docker login cp.icr.io --username cp --password <your-entitlement-key>
+page1-elem1,$ skopeo login cp.icr.io
+page1-elem1,$ skopeo inspect docker://cp.icr.io/cp/ai/watson-nlp-runtime:1.0.18
+page1-elem1,"Name": "cp.icr.io/cp/ai/watson-nlp-runtime"
+page1-elem1,"Digest": "sha256:0cbcbd5bde0e4691e4cb1bf7fbe306a4b2082cc553c32f0be2bd60dfac75a2a5"
+page1-elem1,"RepoTags": [
+page1-elem1,"1.0.18"
+page1-elem1,"1.0.20"
+page1-elem1,"1.0"
+page1-elem1,"1"
+page1-elem1,]
+page1-elem1,...
+page1-elem1,]
+page1-elem1,"Env": [
+page1-elem1,"JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk"
+page1-elem1,"SERVICE_PROTO_GEN_MODULE_DIR=generated"
+page1-elem1,"LOCAL_MODELS_DIR=/app/models"
+page1-elem1,...
+page1-elem1,Accessing the Model Files
+page1-elem1,Custom images can be built which only include the models you need.
+page1-elem1,To include out of the box models in your custom images you need to download the model files first.
+page1-elem1,Each model is stored in one sub-directory or as zip file.
+page1-elem1,The name of the directory or zip file is the model id.
+page1-elem1,You can get the model files by invoking these commands:
+page1-elem1,$ docker login cp.icr.io --username cp --password <your-entitlement-key>
+page1-elem1,$ mkdir models
+page1-elem1,$ docker run -it --rm -e ACCEPT_LICENSE=true -v `pwd`/models:/app/models cp.icr.io/cp/ai/watson-nlp_syntax_izumo_lang_en_stock:1.0.7
+page1-elem1,$ ls -la models
+page1-elem1,Build a custom image with the syntax model:
+page1-elem1,$ cat <<EOF >>Dockerfile
+page1-elem1,FROM cp.icr.io/cp/ai/watson-nlp-runtime:1.0.18
+page1-elem1,COPY models /app/models
+page1-elem1,EOF
+page1-elem1,$ docker build .
+page1-elem1,-t watson-nlp-with-syntax-model:latest
+page1-elem1,$ docker run --rm -it \
+page1-elem1,-e ACCEPT_LICENSE=true \
+page1-elem1,-p 8085:8085 \
+page1-elem1,-p 8080:8080 \
+page1-elem1,watson-nlp-with-syntax-model
+page1-elem1,Invoke Watson NLP via REST:
+page1-elem1,$ open http://localhost:8080/swagger/
+page1-elem1,$ curl -X POST "http://localhost:8080/v1/watson.runtime.nlp.v1/NlpService/SyntaxPredict" \
+page1-elem1,-H "accept: application/json" \
+page1-elem1,-H "grpc-metadata-mm-model-id: syntax_izumo_lang_en_stock" \
+page1-elem1,-H "content-type: application/json" \
+page1-elem1,-d " { \"rawDocument\": { \"text\": \"It is so easy to embed Watson NLP in applications.
+page1-elem1,Very cool.\" }}"
+page1-elem1,"text": "It is so easy to embed Watson NLP in applications.
+page1-elem1,Very cool."
+page1-elem1,"producerId": { "name": "Izumo Text Processing" "version": "0.0.1" }
+page1-elem1,...
+page1-elem1,"sentences": [
+page1-elem1,"span": {
+page1-elem1,"begin": 0 "end": 50 "text": "It is so easy to embed Watson NLP in applications."
+page1-elem1,}
+page1-elem1,{ "span": { "begin": 51 "end": 61 "text": "Very cool."
+page1-elem1,} }
+page1-elem1,Accessing the gRCP Proto Files
+page1-elem1,To invoke the gRCP APIs the proto files are needed which you can get from GitHub [https://github.com/IBM/ibm-watson-embed-clients/tree/main/watson_nlp/protos].
+page1-elem1,To make sure you always use the right version you can also ‘download’ them from the runtime image.
+page1-elem1,$ mkdir protos
+page1-elem1,$ docker create --name watson-runtime-protos cp.icr.io/cp/ai/watson-nlp-runtime:1.0.18
+page1-elem1,$ docker cp watson-runtime-protos:/app/protos/.
+page1-elem1,protos
+page1-elem1,$ docker rm watson-runtime-protos
+page1-elem1,Start the container:
+page1-elem1,$ docker run --rm -it \
+page1-elem1,-e ACCEPT_LICENSE=true \
+page1-elem1,-p 8085:8085 \
+page1-elem1,-p 8080:8080 \
+page1-elem1,watson-nlp-with-syntax-model
+page1-elem1,Invoke Watson NLP via gRCP:
+page1-elem1,$ cd protos
+page1-elem1,$ grpcurl -plaintext -proto common-service.proto -d '{
+page1-elem1,"raw_document": {
+page1-elem1,"text": "It is so easy to embed Watson NLP in applications.
+page1-elem1,Very cool"}
+page1-elem1,"parsers": ["token"]
+page1-elem1,}' -H 'mm-model-id: syntax_izumo_lang_en_stock' localhost:8085 watson.runtime.nlp.v1.NlpService.SyntaxPredict
+page1-elem1,"text": "It is so easy to embed Watson NLP in applications.
+page1-elem1,Very cool"
+page1-elem1,"producerId": {
+page1-elem1,"name": "Izumo Text Processing"
+page1-elem1,"version": "0.0.1"
+page1-elem1,}
+page1-elem1,...
+page1-elem1,"sentences": [
+page1-elem1,"span": {
+page1-elem1,"end": 50
+page1-elem1,"text": "It is so easy to embed Watson NLP in applications."
+page1-elem1,}
+page1-elem1,"span": {
+page1-elem1,"begin": 51
+page1-elem1,"end": 60
+page1-elem1,"text": "Very cool"
+page1-elem1,To find out more about Watson NLP Watson Speech To Text Watson Text To Speech and Watson for Embed in general check out the resources in my post Guide to IBM Watson Libraries [http://heidloff.net/article/the-ultimate-guide-to-ibm-watson-libraries/].
+page1-elem1,The post Understanding IBM Watson Containers [http://heidloff.net/article/understanding-ibm-watson-containers/] appeared first on Niklas Heidloff [http://heidloff.net].

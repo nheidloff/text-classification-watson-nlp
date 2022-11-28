@@ -1,0 +1,6 @@
+page8-elem6,A/B Testing with Kubernetes and Istio.
+page8-elem6,Last week I gave a presentation “When to use Serverless?
+page8-elem6,When to use Kubernetes?”
+page8-elem6,One of the weaknesses of Serverless platforms is that you currently cannot do things like A/B testing well since there is no notion of versions.
+page8-elem6,A/B testing allows running multiple variants of functionality in parallel so that through analytics of user […]
+page8-elem6,The post A/B Testing with Kubernetes and Istio [http://heidloff.net/article/ab-testing-kubernetes-istio] appeared first on Niklas Heidloff [http://heidloff.net].

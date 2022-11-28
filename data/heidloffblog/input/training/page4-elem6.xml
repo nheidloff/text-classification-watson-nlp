@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 4 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=4" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Thu, 24 Nov 2022 10:47:53 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>Accessing Kubernetes from Go Applications</title><link>http://heidloff.net/article/accessing-kubernetes-from-go-applications/</link><pubDate>Mon, 11 Apr 2022 05:07:34 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=5022</guid><description><![CDATA[<p>When developing auto-pilot capabilities in Kubernetes operators, often CronJobs and Jobs are used to automate operations. This article describes how to implement such jobs with Golang. The complete source code from this article is available in the ibm/operator-sample-go repo. My previous article Automatically Archiving Data with Kubernetes Operators describes an auto pilot sample scenario to [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/accessing-kubernetes-from-go-applications/">Accessing Kubernetes from Go Applications</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p><em>When developing auto-pilot capabilities in Kubernetes operators, often CronJobs and Jobs are used to automate operations. This article describes how to implement such jobs with Golang.</em><span id="more-5022"></span></p>
+<p>The complete source code from this article is available in the <a href="https://github.com/IBM/operator-sample-go/tree/main/operator-database-backup" rel="noopener noreferrer" target="_blank">ibm/operator-sample-go</a> repo.</p>
+<p>My previous article <a href="http://heidloff.net/article/automatically-archiving-data-kubernetes-operators/" rel="noopener noreferrer" target="_blank">Automatically Archiving Data with Kubernetes Operators</a> describes an auto pilot sample scenario to back up data on a scheduled basis. The <a href="https://github.com/IBM/operator-sample-go/blob/0b46e5ee18b892293ce2ff2eb565ea9500de298b/operator-database-backup/backup/backup.go" rel="noopener noreferrer" target="_blank">code</a> of the backup job is pretty straight forward. I&#8217;ve implemented a Go image with the following functionality.</p>
+<ul>
+<li>Get the database backup resource from Kubernetes</li>
+<li>Validate input environment variables</li>
+<li>Read data from the database system</li>
+<li>Write data to object storage</li>
+<li>Write status as conditions in database backup resource</li>
+</ul>
+<p><strong>Dockerfile</strong></p>
+<p>To package up the Go application, I&#8217;ve defined the following <a href="https://github.com/IBM/operator-sample-go/blob/64dac7d036ce81b9ceba3e1dd2dd1f1c83cd2968/operator-database-backup/Dockerfile" rel="noopener noreferrer" target="_blank">Dockerfile</a>. Some notes:</p>
+<ul>
+<li>Uses two stages, one for build and one for runtime</li>
+<li>The Go dependencies are downloaded first to cache them in an image layer</li>
+<li>With the parameter &#8216;GOOS=linux&#8217; the application is built for Linux</li>
+<li>Uses Red Hat&#8217;s UBI image, for example in order to also run on OpenShift</li>
+<li>The compiled &#8216;app&#8217; file is a program that ends after it&#8217;s done (not a web server)</li>
+</ul>
+<pre class="brush: plain; title: ; notranslate">
+FROM golang:1.18.0 AS builder
+WORKDIR /app
+COPY go.mod ./
+COPY go.sum ./
+RUN go mod download
+COPY main.go ./
+COPY backup ./backup/
+RUN CGO_ENABLED=0 GOOS=linux go build -a -o app .
+
+FROM registry.access.redhat.com/ubi8/ubi-micro:8.5-833
+WORKDIR /
+COPY --from=builder /app /
+CMD [&quot;./app&quot;]
+</pre>
+<p><strong>Access to Kubernetes</strong></p>
+<p>Jobs that execute work on behalf of operators usually have to access Kubernetes built-in and custom resources. For example jobs need to store the output of the jobs in the &#8216;status.conditions&#8217; field of custom resources. Operators built with the Operator SDK provide convenience functionality to get an instance of the Kubernetes client to access resources in clusters. Go applications that are not operators can use the same library, but the initialization is slightly different.</p>
+<p>Let&#8217;s take a look at the <a href="https://github.com/IBM/operator-sample-go/blob/64dac7d036ce81b9ceba3e1dd2dd1f1c83cd2968/operator-database-backup/backup/backup_resource.go" rel="noopener noreferrer" target="_blank">code</a>.</p>
+<pre class="brush: plain; title: ; notranslate">
+import (
+	databaseoperatorv1alpha1 &quot;github.com/ibm/operator-sample-go/operator-database/api/v1alpha1&quot;
+	&quot;k8s.io/apimachinery/pkg/runtime&quot;
+	&quot;k8s.io/apimachinery/pkg/runtime/schema&quot;
+	&quot;k8s.io/client-go/rest&quot;
+	&quot;k8s.io/client-go/tools/clientcmd&quot;
+	&quot;sigs.k8s.io/controller-runtime/pkg/client&quot;
+	&quot;sigs.k8s.io/controller-runtime/pkg/scheme&quot;
+)
+func getBackupResource() error {
+	config, err := rest.InClusterConfig()
+	if err != nil {
+		kubeconfig := filepath.Join(
+			os.Getenv(&quot;HOME&quot;), &quot;.kube&quot;, &quot;config&quot;,
+		)
+		fmt.Println(&quot;Using kubeconfig file: &quot;, kubeconfig)
+		config, err = clientcmd.BuildConfigFromFlags(&quot;&quot;, kubeconfig)
+		if err != nil {
+			return err
+		}
+	}
+	var GroupVersion = schema.GroupVersion{Group: &quot;database.sample.third.party&quot;, Version: &quot;v1alpha1&quot;}
+	var SchemeBuilder = &amp;scheme.Builder{GroupVersion: GroupVersion}
+	var databaseOperatorScheme *runtime.Scheme
+	databaseOperatorScheme, err = SchemeBuilder.Build()
+  ...  
+	err = databaseoperatorv1alpha1.AddToScheme(databaseOperatorScheme)
+  ...
+	kubernetesClient, err = client.New(config, client.Options{Scheme: databaseOperatorScheme})
+  ...
+	databaseBackupResource = &amp;databaseoperatorv1alpha1.DatabaseBackup{}
+	err = kubernetesClient.Get(applicationContext, types.NamespacedName{Name: backupResourceName, Namespace: namespace}, databaseBackupResource)
+  ...
+	return nil
+}
+</pre>
+<p>To get an instance of the controller-runtime client, a rest.Config object is needed. When running in clusters, this config can be read via the API rest.InClusterConfig(). When running locally, the config can be read from the local file $Home/.kube/config.</p>
+<p>If you want to access resource definitions defined by a controller (other image and other Go package), you can <a href="http://heidloff.net/article/importing-go-modules-kubernetes-operators/" rel="noopener noreferrer" target="_blank">import</a> them. In the example above the custom resource definition &#8216;DatabaseBackup&#8217; from the &#8216;operator-database&#8217; project is used to access database backup resources.</p>
+<p>To learn more about operator patterns and best practices, check out the repo <a href="https://github.com/IBM/operator-sample-go" rel="noopener noreferrer" target="_blank">operator-sample-go</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/accessing-kubernetes-from-go-applications/">Accessing Kubernetes from Go Applications</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><post-id xmlns="com-wordpress:feed-additions:1">5022</post-id></item></channel></rss>

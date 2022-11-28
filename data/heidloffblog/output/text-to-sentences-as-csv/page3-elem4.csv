@@ -1,0 +1,34 @@
+page3-elem4,IBM announces Embeddable AI.
+page3-elem4,Over the last months I have worked on a new initiate from IBM called Embeddable AI.
+page3-elem4,You can now run some of the Watson services via containers everywhere.
+page3-elem4,Watch the short video [https://www.ibm.com/partnerworld/program/embeddableai] on the Embeddable AI home page for an introduction or this interview with Rob Thomas.
+page3-elem4,> Why embeddable AI?
+page3-elem4,> For years IBM Research has invested in developing AI capabilities which are embedded in IBM software offerings.
+page3-elem4,We are now making the same capabilities available to our partners providing them a simpler path to create AI-powered solutions.
+page3-elem4,While it is easy to consume software as a service certain workloads need to be run on premises.
+page3-elem4,A good example are AI applications where data must not leave certain countries.
+page3-elem4,Containers are a great technology to help running AI services everywhere.
+page3-elem4,There are many resources that explain the Embeddable AI [https://github.com/IBM/watson-automation/tree/8973caa7f1a4eac6831ffa087c8a5ad1a9195728#resources] offering.
+page3-elem4,Here are some of the resources that help you getting started.
+page3-elem4,* Watson NLP [https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home]
+page3-elem4,* Watson NLP Helm Chart [https://github.com/IBM/watson-automation/blob/8973caa7f1a4eac6831ffa087c8a5ad1a9195728/documentation/NLPHelmChart.md]
+page3-elem4,* Watson Speech [https://www.ibm.com/products/watson-speech-embed-libraries]
+page3-elem4,* Automation for Watson NLP deployments [https://github.com/IBM/watson-automation/]
+page3-elem4,* IBM entitlement API key [https://www.ibm.com/docs/en/cloud-paks/cp-data/4.5.x?topic=information-obtaining-your-entitlement-api-key]
+page3-elem4,My team has implemented a Helm chart [https://github.com/IBM/watson-automation/blob/8973caa7f1a4eac6831ffa087c8a5ad1a9195728/documentation/NLPHelmChart.md] which makes it easy to deploy Watson NLP in Kubernetes environments like OpenShift.
+page3-elem4,$ oc login --token=sha256~xxx --server=https://xxx
+page3-elem4,$ oc new-project watson-demo
+page3-elem4,$ oc create secret docker-registry \
+page3-elem4,--docker-server=cp.icr.io \
+page3-elem4,--docker-username=cp \
+page3-elem4,--docker-password=<your IBM Entitlement Key> \
+page3-elem4,ibm-entitlement-key
+page3-elem4,$ git clone https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp
+page3-elem4,$ git clone https://github.ibm.com/isv-assets/watson-automation
+page3-elem4,$ acceptLicense: true # in values.yaml
+page3-elem4,$ cp watson-automation/helm-nlp/values.yaml terraform-gitops-watson-nlp/chart/watson-nlp/values.yaml
+page3-elem4,$ cd terraform-gitops-watson-nlp/chart/watson-nlp
+page3-elem4,$ helm install -f values.yaml watson-embedded .
+page3-elem4,As a result you’ll see the deployed Watson NLP pod in OpenShift.
+page3-elem4,To find out more about the toolkit check out the documentation [https://operate.cloudnativetoolkit.dev/] and the sample [https://github.com/IBM/watson-automation] above.
+page3-elem4,The post IBM announces Embeddable AI [http://heidloff.net/article/ibm-announces-embeddable-ai/] appeared first on Niklas Heidloff [http://heidloff.net].

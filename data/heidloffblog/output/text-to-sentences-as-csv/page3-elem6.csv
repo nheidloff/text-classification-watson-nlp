@@ -1,0 +1,34 @@
+page3-elem6,Introducing IBM’s Toolkit to handle Everything as Code.
+page3-elem6,Terraform is a popular tool to set up infrastructure declaratively.
+page3-elem6,Argo CD is a popular tool to manage Kubernetes resources via GitOps.
+page3-elem6,To set up and manage complete solutions these tools can be used together.
+page3-elem6,To run applications you need more than just your application code:
+page3-elem6,* Bare metal hardware or VMs in the cloud or on-premises
+page3-elem6,* Operating systems
+page3-elem6,* SaaS or on-premises services like databases
+page3-elem6,* Container orchestration platforms
+page3-elem6,* Compiled and optimized applications
+page3-elem6,Terraform meets Argo CD
+page3-elem6,To be able to deploy and operate applications efficiently you need automation for the complete stack.
+page3-elem6,1.
+page3-elem6,Terraform for infrastructure like Kubernetes [http://heidloff.net/article/setting-up-ibm-software-with-terraform/]
+page3-elem6,2.
+page3-elem6,Argo CD for everything within Kubernetes clusters [http://heidloff.net/article/deploying-kubernetes-resources-via-gitops/]
+page3-elem6,To automate deployments declarative approaches are often used known as ‘Infrastructure as Code [https://en.wikipedia.org/wiki/Infrastructure_as_code]‘.
+page3-elem6,> Infrastructure as code is the process of managing and provisioning computer data centers through machine-readable definition files rather than physical hardware configuration or interactive configuration tools.
+page3-elem6,However Infrastructure as Code does not handle the deployments of services and applications which is required for full solutions.
+page3-elem6,What you really need is Everything as Code.
+page3-elem6,This is why IBM has built a toolkit that combines Terraform and Argo CD.
+page3-elem6,IBM has created a Terraform module which sets up Argo CD in a Kubernetes or OpenShift cluster.
+page3-elem6,The Argo CD bootstrap module uses another module which creates a Git repo which is linked to ArgoCD.
+page3-elem6,* terraform-tools-argocd-bootstrap [https://github.com/cloud-native-toolkit/terraform-tools-argocd-bootstrap]
+page3-elem6,* terraform-tools-gitops [https://github.com/cloud-native-toolkit/terraform-tools-gitops]
+page3-elem6,In GitOps repos all resources can be defined which Argo CD deploys.
+page3-elem6,The following screenshot shows an Argo CD application which deploys IBM Watson NLP (natural language processing) via Helm.
+page3-elem6,Introducing IBM’s Toolkit
+page3-elem6,The current name of the toolkit is ‘IBM Technology Zone Accelerator Toolkit’ also known as ‘TechZone Accelerator Toolkit’ ‘Software Everywhere’ ‘TechZone Automation’ and ‘Cloud Native Toolkit’.
+page3-elem6,With the toolkit IBM follows Red Hat’s successful model to open source projects (‘upstream projects [https://www.redhat.com/en/blog/what-open-source-upstream]‘) and to have supported versions of these open source projects.
+page3-elem6,The open source version of the toolkit is available under operate.cloudnativetoolkit.dev [https://operate.cloudnativetoolkit.dev/].
+page3-elem6,The toolkit is an opinionated framework which brings together the strengths of Terraform and Argo CD.
+page3-elem6,I’ll blog more about it but to get started check out the labs [https://operate.cloudnativetoolkit.dev/learn/iascable/lab1/] in the toolkit documentation.
+page3-elem6,The post Introducing IBM’s Toolkit to handle Everything as Code [http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/] appeared first on Niklas Heidloff [http://heidloff.net].

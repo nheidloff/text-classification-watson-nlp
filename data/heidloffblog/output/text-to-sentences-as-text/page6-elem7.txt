@@ -1,0 +1,5 @@
+Hyperparameter Optimization with IBM Watson Studio.
+In March IBM announced Deep Learning as a Service (DLaaS) which is part of IBM Watson Studio.
+Below I describe how to use this service to train models and how to optimize hyperparameters to easily find the best quality model.
+I’m not a data scientist, but have been told that finding the right hyperparameters is […]
+The post Hyperparameter Optimization with IBM Watson Studio [http://heidloff.net/article/hyperparameter-optimization-ibm-watson-studio] appeared first on Niklas Heidloff [http://heidloff.net].

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 22 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=22" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Fri, 25 Nov 2022 07:22:15 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>Slides: When to use Serverless? When to use Kubernetes?</title><link>http://heidloff.net/article/serverless-or-kubernetes</link><comments>http://heidloff.net/article/serverless-or-kubernetes#respond</comments><pubDate>Mon, 19 Feb 2018 08:56:24 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=2813</guid><description><![CDATA[<p>Many developers want to know whether they should use Serverless or Kubernetes to build cloud-native applications. Both computing options have pros and cons and it depends on your needs which option you should choose. I blogged about when to use Serverless and when to use Kubernetes. Use Serverless if you have the following needs: Variable [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/serverless-or-kubernetes">Slides: When to use Serverless? When to use Kubernetes?</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p>Many developers want to know whether they should use <a href="https://en.wikipedia.org/wiki/Serverless_computing" rel="noopener" target="_blank">Serverless</a> or <a href="https://kubernetes.io/" rel="noopener" target="_blank">Kubernetes</a> to build cloud-native applications. Both computing options have pros and cons and it depends on your needs which option you should choose.<span id="more-2813"></span></p>
+<p>I blogged about <a href="http://heidloff.net/article/when-to-use-serverless-kubernetes" rel="noopener" target="_blank">when to use Serverless and when to use Kubernetes</a>. </p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/02/kube-vs-serverless.png"><img src="http://heidloff.net/wp-content/uploads/2018/02/kube-vs-serverless.png" alt="kube-vs-serverless" width="2450" height="1370" class="alignnone size-full wp-image-2812" srcset="http://heidloff.net/wp-content/uploads/2018/02/kube-vs-serverless.png 2450w, http://heidloff.net/wp-content/uploads/2018/02/kube-vs-serverless-300x168.png 300w, http://heidloff.net/wp-content/uploads/2018/02/kube-vs-serverless-1024x573.png 1024w" sizes="(max-width: 2450px) 100vw, 2450px" /></a></p>
+<p>Use <strong>Serverless</strong> if you have the following needs:</p>
+<ul>
+<li>Variable and irregular Workloads</li>
+<li>Developer Productivity for first Time Experience</li>
+<li>Inherent Auto-Scalability</li>
+</ul>
+<p>Use <strong>Kubernetes</strong> if you have the following needs:</p>
+<ul>
+<li>Mature Deployment Options</li>
+<li>Minimal Response Latency</li>
+<li>High Performance Computing without Resource Restrictions</li>
+</ul>
+<p>Here are the slides of a session about this topic.</p>
+<p><iframe src="//www.slideshare.net/slideshow/embed_code/key/GKuMr930MPScj8" width="853" height="520" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe></p>
+<p>If you want to try out Serverless and Kubernetes, you can get a free lite account (no credit card required) on the <a href="http://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/serverless-or-kubernetes">Slides: When to use Serverless? When to use Kubernetes?</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><wfw:commentRss>http://heidloff.net/article/serverless-or-kubernetes/feed/</wfw:commentRss><slash:comments>0</slash:comments><post-id xmlns="com-wordpress:feed-additions:1">2813</post-id></item></channel></rss>

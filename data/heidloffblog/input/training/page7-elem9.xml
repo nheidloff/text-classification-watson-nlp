@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 21 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=21" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Fri, 25 Nov 2022 07:22:15 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>Developing OpenWhisk Functions with Kotlin in IntelliJ</title><link>http://heidloff.net/article/openwhisk-kotlin-intellij-docker</link><comments>http://heidloff.net/article/openwhisk-kotlin-intellij-docker#respond</comments><pubDate>Fri, 09 Mar 2018 10:22:47 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=2869</guid><description><![CDATA[<p>I&#8217;ve implemented some code that shows how Apache OpenWhisk functions can be developed with Kotlin. The Java code is built via Gradle and put into a Docker image which can be deployed to OpenWhisk cloud providers like the IBM Cloud. Get the code from GitHub. There are different approaches to write OpenWhisk functions with Kotlin. [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/openwhisk-kotlin-intellij-docker">Developing OpenWhisk Functions with Kotlin in IntelliJ</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p>I&#8217;ve implemented some code that shows how <a href="http://openwhisk.org/" rel="noopener" target="_blank">Apache OpenWhisk</a> functions can be developed with <a href="https://kotlinlang.org/" rel="noopener" target="_blank">Kotlin</a>. The Java code is built via Gradle and put into a Docker image which can be deployed to OpenWhisk cloud providers like the <a href="https://bluemix.net/" rel="noopener" target="_blank">IBM Cloud</a>.<span id="more-2869"></span></p>
+<p><a href="https://github.com/nheidloff/openwhisk-docker-kotlin" rel="noopener" target="_blank">Get the code from GitHub.</a></p>
+<p>There are different approaches to write OpenWhisk functions with Kotlin. Check out this separate <a href="https://medium.com/openwhisk/serverless-kotlin-how-to-run-a-kotlin-action-on-openwhisk-3986963f2dd0" rel="noopener" target="_blank">article</a> which describes how to generate a jar file which is directly deployed on OpenWhisk.</p>
+<p>The approach taken in my sample is slightly different. Rather than deploying a jar file to the <a href="https://github.com/apache/incubator-openwhisk-runtime-java" rel="noopener" target="_blank">OpenWhisk Java runtime</a>, a Docker image that contains the jar file is used instead. The advantage of this approach is that it allows to use different Java versions and you can develop and test the same Docker image locally which is later deployed and run in the cloud. This minimizes the chances to run into issues because of different environments.</p>
+<p>Here is a screenshot that shows the Kotlin code in IntelliJ:</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/03/kotlin-openwhisk.png"><img src="http://heidloff.net/wp-content/uploads/2018/03/kotlin-openwhisk.png" alt="kotlin-openwhisk" width="1974" height="1074" class="alignnone size-full wp-image-2868" srcset="http://heidloff.net/wp-content/uploads/2018/03/kotlin-openwhisk.png 1974w, http://heidloff.net/wp-content/uploads/2018/03/kotlin-openwhisk-300x163.png 300w, http://heidloff.net/wp-content/uploads/2018/03/kotlin-openwhisk-1024x557.png 1024w" sizes="(max-width: 1974px) 100vw, 1974px" /></a></p>
+<p>The sample function can be invoked locally via this command.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ curl --request POST \
+  --url http://localhost:8080/run \
+  --header 'Cache-Control: no-cache' \
+  --header 'Content-Type: application/json' \  
+  --data '{ &quot;value&quot;: {&quot;parameter1&quot;:&quot;Niklas&quot;,&quot;parameter2&quot;:&quot;Heidloff&quot;}}'
+</pre>
+<p>This is the response of the function:</p>
+<pre class="brush: jscript; title: ; notranslate">
+{
+   &quot;param1&quot;: &quot;value1 Niklas&quot;,
+   &quot;param2&quot;: &quot;value2&quot;
+}
+</pre>
+<p>Let&#8217;s take a look at the <a href="https://github.com/nheidloff/openwhisk-docker-kotlin/blob/master/kotlin/src/main/kotlin/main.kt" rel="noopener" target="_blank">code</a>:</p>
+<pre class="brush: java; title: ; notranslate">
+import io.javalin.Javalin
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
+data class InputObject(val parameter1: String  = &quot;&quot;, val parameter2: String  = &quot;&quot;)
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class InputBody(val value: InputObject = InputObject())
+data class OutputObject(val param1: String, val param2: String)
+
+fun main(args: Array&lt;String&gt;) {
+    val app = Javalin.create().apply {
+        port(8080)
+        exception(Exception::class.java) { e, ctx -&gt; e.printStackTrace() }
+    }.start()
+
+    app.post(&quot;/init&quot;) { ctx -&gt; ctx.status(200) }
+
+    app.post(&quot;/run&quot;) { ctx -&gt;
+        val body = ctx.bodyAsClass(InputBody::class.java)
+        val inputObject = body.value
+
+        val outputObject = OutputObject(&quot;value1 &quot; + inputObject.parameter1, &quot;value2&quot;)
+        ctx.json(outputObject)
+        ctx.status(200)
+    }
+}
+</pre>
+<p>As web framework I&#8217;ve picked <a href="https://javalin.io/" rel="noopener" target="_blank">Javalin</a> and I&#8217;ve implemented two endpoints &#8216;/init&#8217; and &#8216;/run&#8217;. The actual implementation of the function goes in the run function.</p>
+<p>The inputs and the outputs of the function are defined in data classes at the top. The mapping between classes and JSON data is done automatically by Kotlin/Jackson.</p>
+<p>I like that the code has only 27 lines. The <a href="https://github.com/nheidloff/openwhisk-debug-java" rel="noopener" target="_blank">same function that I developed with Java</a> has more than 100 lines of code.</p>
+<p>If you want to try out OpenWhisk in the cloud, you can get an account on the <a href="http://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/openwhisk-kotlin-intellij-docker">Developing OpenWhisk Functions with Kotlin in IntelliJ</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><wfw:commentRss>http://heidloff.net/article/openwhisk-kotlin-intellij-docker/feed/</wfw:commentRss><slash:comments>0</slash:comments><post-id xmlns="com-wordpress:feed-additions:1">2869</post-id></item></channel></rss>

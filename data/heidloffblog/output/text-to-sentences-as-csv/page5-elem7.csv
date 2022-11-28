@@ -1,0 +1,105 @@
+page5-elem7,Configuring Webhooks for Kubernetes Operators.
+page5-elem7,Kubernetes operators can initialize validate and convert custom resources via webhooks.
+page5-elem7,Coding the webhooks is straight forward setting them up is a lot harder.
+page5-elem7,This article summarizes the important setup steps.
+page5-elem7,There are three types of webhooks used by operators:
+page5-elem7,1.
+page5-elem7,Initialization: To set defaults when creating new resources.
+page5-elem7,This webhook is a Kubernetes admission webhook.
+page5-elem7,2.
+page5-elem7,Validation: To validate resources when created updated or deleted.
+page5-elem7,This webhook is a Kubernetes admission webhook.
+page5-elem7,3.
+page5-elem7,Conversion: To convert between different resource definition versions in all directions.
+page5-elem7,This webhook is a Kubernetes CRD conversion webhook.
+page5-elem7,As mentioned the setup of the webhooks is not trivial.
+page5-elem7,There are different pieces of documentation in various articles and blogs.
+page5-elem7,My colleague Vincent Hou has written a great mini series and helped me to get our sample [https://github.com/IBM/operator-sample-go] working.
+page5-elem7,* What is a webhook?
+page5-elem7,* Deploying the cert manager [https://book.kubebuilder.io/cronjob-tutorial/cert-manager.html]
+page5-elem7,* Deploying Admission Webhooks [https://book.kubebuilder.io/cronjob-tutorial/running-webhook.html]
+page5-elem7,* How to create conversion webhook for my operator with operator-sdk [https://vincenthou.medium.com/how-to-create-conversion-webhook-for-my-operator-with-operator-sdk-36f5ee0170de]
+page5-elem7,* How to use mutating webhook for the operator with operator-sdk [https://vincenthou.medium.com/how-to-use-mutating-webhook-for-the-operator-with-operator-sdk-f940bd98e10b]
+page5-elem7,* How to create validating webhook with operator-sdk [https://vincenthou.medium.com/how-to-create-validating-webhook-with-operator-sdk-73f9c6332609]
+page5-elem7,* Shipping an operator that includes Webhooks [https://olm.operatorframework.io/docs/advanced-tasks/adding-admission-and-conversion-webhooks/]
+page5-elem7,* Webhook Configuration [https://book.kubebuilder.io/reference/markers/webhook.html]
+page5-elem7,* Running and deploying the controller [https://book.kubebuilder.io/cronjob-tutorial/running.html]
+page5-elem7,Before you get started it’s important to understand that webhooks require another component that needs to be installed in Kubernetes.
+page5-elem7,Webhooks are invoked by the Kubernetes API server and require authentication and authorization.
+page5-elem7,That’s why components like cert-manager [https://cert-manager.io/docs/] are required to inject the credentials.
+page5-elem7,And that’s one of the reasons why running webhooks locally is very difficult (plus you need a proxy to call the local webhooks from Kubernetes).
+page5-elem7,Let’s take a look how to set up a new operator with initialization and validation webhooks.
+page5-elem7,The steps are a summary from Vincent’s article above.
+page5-elem7,Create the project api and webhook:
+page5-elem7,$ operator-sdk init --domain ibm.com --repo github.com/houshengbo/operator-sample-go/operator-application
+page5-elem7,$ operator-sdk create api --group application.sample --version v1beta1 --kind Application --resource --controller
+page5-elem7,$ operator-sdk create webhook --group application.sample --version v1beta1 --kind Application --defaulting --programmatic-validation --force
+page5-elem7,In api/v1beta1/application_webhook.go change from admissionReviewVersions=v1 to admissionReviewVersions=v1beta1.
+page5-elem7,Then change Default():
+page5-elem7,func (r *Application) Default() {
+page5-elem7,applicationlog.Info(“default” “name” r.Name)
+page5-elem7,r.Spec.Foo = “default”
+page5-elem7,Get the dependencies and create manifests:
+page5-elem7,$ go mod vendor
+page5-elem7,$ make generate
+page5-elem7,$ make manifests
+page5-elem7,In config/crd/kustomization.yaml uncomment the following lines:
+page5-elem7,#- patches/webhook_in_memcacheds.yaml
+page5-elem7,#- patches/cainjection_in_memcacheds.yaml
+page5-elem7,In config/default/kustomization.yaml uncomment the following lines:
+page5-elem7,#- ../webhook
+page5-elem7,#- ../certmanager
+page5-elem7,#- manager_webhook_patch.yaml
+page5-elem7,#- webhookcainjection_patch.yaml
+page5-elem7,In the same file uncomment all the lines below ‘vars’:
+page5-elem7,#- name: CERTIFICATE_NAMESPACE # namespace of the certificate CR
+page5-elem7,#  objref:
+page5-elem7,#    kind: Certificate
+page5-elem7,#    group: cert-manager.io
+page5-elem7,#    version: v1
+page5-elem7,#    name: serving-cert # this name should match the one in certificate.yaml
+page5-elem7,#  fieldref:
+page5-elem7,#    fieldpath: metadata.namespace
+page5-elem7,#- name: CERTIFICATE_NAME
+page5-elem7,#  objref:
+page5-elem7,#    kind: Certificate
+page5-elem7,#    group: cert-manager.io
+page5-elem7,#    version: v1
+page5-elem7,#    name: serving-cert # this name should match the one in certificate.yaml
+page5-elem7,#- name: SERVICE_NAMESPACE # namespace of the service
+page5-elem7,#  objref:
+page5-elem7,#    kind: Service
+page5-elem7,#    version: v1
+page5-elem7,#    name: webhook-service
+page5-elem7,#  fieldref:
+page5-elem7,#    fieldpath: metadata.namespace
+page5-elem7,#- name: SERVICE_NAME
+page5-elem7,#  objref:
+page5-elem7,#    kind: Service
+page5-elem7,#    version: v1
+page5-elem7,#    name: webhook-service
+page5-elem7,Change config/samples/application.sample_v1beta1_application.yaml into this:
+page5-elem7,apiVersion: v1
+page5-elem7,kind: Namespace
+page5-elem7,metadata:
+page5-elem7,name: application-sample
+page5-elem7,---
+page5-elem7,apiVersion: application.sample.ibm.com/v1beta1
+page5-elem7,kind: Application
+page5-elem7,metadata:
+page5-elem7,name: application-sample
+page5-elem7,namespace: application-sample
+page5-elem7,Deploy the operator including the webhook to Kubernetes and run it:
+page5-elem7,export REGISTRY=‘docker.io’
+page5-elem7,export ORG=‘nheidloff’
+page5-elem7,export IMAGE=‘application-controller:v1’
+page5-elem7,make docker-build docker-push IMG=“$REGISTRY/$ORG/$IMAGE”
+page5-elem7,make deploy IMG=“$REGISTRY/$ORG/$IMAGE”
+page5-elem7,kubectl logs -f deploy/operator-application-controller-manager -n operator-application-system -c manager
+page5-elem7,Create the custom resource and check whether foo is “default”:
+page5-elem7,$ kubectl apply -f config/samples/application.sample_v1beta1_application.yaml
+page5-elem7,$ kubectl get Application -n application-sample -oyaml
+page5-elem7,Check out our repo [https://github.com/IBM/operator-sample-go] that contains samples for all webhooks.
+page5-elem7,Keep an eye on my blog.
+page5-elem7,I’ll write more about other operator patterns soon.
+page5-elem7,The post Configuring Webhooks for Kubernetes Operators [http://heidloff.net/article/configuring-webhooks-kubernetes-operators/] appeared first on Niklas Heidloff [http://heidloff.net].

@@ -1,0 +1,5 @@
+Developing Polyglot Serverless Applications.
+As serverless platforms mature, more and more sophisticated cloud-native applications are built with serverless technologies.
+These applications are assembled with potentially many functions that are loosely-coupled and can be developed by different teams.
+Teams might choose different languages for the following reasons: Reuse existing code or libraries Leverage available skills in the team Implement more […]
+The post Developing Polyglot Serverless Applications [http://heidloff.net/article/polyglot-serverless-applications] appeared first on Niklas Heidloff [http://heidloff.net].

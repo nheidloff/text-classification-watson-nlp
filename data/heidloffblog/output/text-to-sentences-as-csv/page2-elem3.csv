@@ -1,0 +1,54 @@
+page2-elem3,The new Watson Assistant is awesome.
+page2-elem3,IBM Watson Assistant is a SaaS offering from IBM to build conversational user experiences.
+page2-elem3,The first version was already good but the new(ish) version is just awesome!
+page2-elem3,Over the last years Watson Assistant has successfully been used by many IBM clients and partners.
+page2-elem3,Based on the feedback from clients the IBM development and design team has created a brand new experience.
+page2-elem3,This second version was released at the end of 2021.
+page2-elem3,I was only able to try it recently and was positively surprised how much the offering has evolved.
+page2-elem3,Below are some of my highlights.
+page2-elem3,1.
+page2-elem3,Actions
+page2-elem3,The new Watson Assistant uses a more natural way to define conversations.
+page2-elem3,The old ‘dialog’ experience was replaced with a more intuitive concept which is more goal oriented.
+page2-elem3,For example Assistant users don’t use intents anymore but actions.
+page2-elem3,Intents still exist internally but users want to define actions so that end users can reach their goals.
+page2-elem3,Similarly Assistant users don’t have to define entities anymore.
+page2-elem3,Again they still exist internally but as far as users are concerned they just define types (e.g. free text) in the actions experience and the entities are created automatically.
+page2-elem3,2.
+page2-elem3,Integration of Watson Discovery
+page2-elem3,With the Assistant the most typical conversation flows are covered.
+page2-elem3,However for advanced topics Assistant can call out to other services like Watson Discovery.
+page2-elem3,This is useful if you have FAQs or other data stored in other systems that you want to expose to end users.
+page2-elem3,The following screenshot shows how Assistant can return articles from my blog.
+page2-elem3,It only takes five minutes to implement this.
+page2-elem3,3.
+page2-elem3,Much more
+page2-elem3,There are so many more cool features and improvements.
+page2-elem3,* Via REST APIs services can be queried or perform business logic
+page2-elem3,* Integrations with phone
+page2-elem3,* Integrations with chat clients and SMS
+page2-elem3,* Custom integrations
+page2-elem3,* Embeddable web chat widget
+page2-elem3,* Hand over to agent
+page2-elem3,* Free text responses
+page2-elem3,* Integrated debugger in preview chat window
+page2-elem3,* Clarifying question to identify the right action
+page2-elem3,* Change conversation topics (switch between actions)
+page2-elem3,* Built in analytics
+page2-elem3,* User authentication and secure traffic
+page2-elem3,* Private endpoints
+page2-elem3,* Different plans for different needs including isolated deployments
+page2-elem3,* High availability mechanisms
+page2-elem3,* Multiple languages
+page2-elem3,* Templates with lots of predefined reusable actions
+page2-elem3,* Production and development environments
+page2-elem3,* APIs for most common languages
+page2-elem3,* …
+page2-elem3,Getting started
+page2-elem3,To get started try it out yourselves.
+page2-elem3,There is a free lite plan [https://cloud.ibm.com/catalog/services/watson-assistant].
+page2-elem3,The first time you log in a guided tour is offered.
+page2-elem3,I’m usually not a fan of those but it worked very well for me to learn a lot in a short amout of time.
+page2-elem3,The tour is also documented in a blog series [https://cloud.ibm.com/docs/assistant?topic=assistant-getting-started].
+page2-elem3,The documentation [https://cloud.ibm.com/docs/watson-assistant?topic=watson-assistant-about] is well structured complete and easy to read.
+page2-elem3,The post The new Watson Assistant is awesome [http://heidloff.net/article/the-new-watson-assistant-is-awesome/] appeared first on Niklas Heidloff [http://heidloff.net].

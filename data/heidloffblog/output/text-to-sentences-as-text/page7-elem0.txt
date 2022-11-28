@@ -1,0 +1,5 @@
+Building AR Applications with Unity and IBM Watson.
+Over the last days I’ve enjoyed playing with Unity and the IBM Watson SDK, which allows using cognitive services like speech recognition in Unity projects.
+With this technology you can not only build games, but also other exciting scenarios.
+I’ve extended an Augmented Reality application from my colleague Amara Keller which allows iOS users to […]
+The post Building AR Applications with Unity and IBM Watson [http://heidloff.net/article/ar-applications-unity-ibm-watson] appeared first on Niklas Heidloff [http://heidloff.net].

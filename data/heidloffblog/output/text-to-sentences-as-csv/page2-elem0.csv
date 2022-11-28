@@ -1,0 +1,94 @@
+page2-elem0,Developing TechZone Toolkit GitOps Modules with Helm.
+page2-elem0,With the TechZone Accelerator Toolkit IBM software open source projects and custom applications can easily be deployed to various clouds.
+page2-elem0,This article provides an overview how to develop your own GitOps modules to deploy resources to Kubernetes via Helm.
+page2-elem0,Check out my earlier blog that introduces the toolkit: Introducing IBM’s Toolkit to handle Everything as Code [http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/].
+page2-elem0,The toolkit leverages Terrafrom and GitOps and is based on best practices from IBM projects with partners and clients.
+page2-elem0,With the toolkit both infrastructure like Kubernetes clusters as well as Kubernetes resources within clusters can be deployed.
+page2-elem0,Infrastructure resources are deployed via Terraform resources within clusters via Argo CD.
+page2-elem0,This article explains how Helm [https://helm.sh/] can be used in the TechZone Toolkit to deploy resources to Kubernetes or OpenShift clusters with Argo CD.
+page2-elem0,Helm is a popular package manager for Kubernetes.
+page2-elem0,In the context of the toolkit Helm is the preferred option to deploy Kubernetes resources.
+page2-elem0,Alternatively you could deploy Kubernetes resources directly via yaml files.
+page2-elem0,However the advantage of Helm is that it can easily be configured for different environments via its built-in templating mechanism.
+page2-elem0,Another advantage of Helm in this context is that Terraform variables can easily be mapped to Helm values which is described below.
+page2-elem0,To understand the following content I suggest to read these documents that give some background:
+page2-elem0,* Blog: Deploying Kubernetes Resources via GitOps [http://heidloff.net/article/deploying-kubernetes-resources-via-gitops/]
+page2-elem0,* Blog: Understanding TechZone Toolkit GitOps Modules [http://heidloff.net/article/understanding-techzone-toolkit-gitops-modules/]
+page2-elem0,* Red Hat blog: Continuous Delivery with Helm and Argo CD [https://cloud.redhat.com/blog/continuous-delivery-with-helm-and-argo-cd]
+page2-elem0,* Argo CD documentation: Helm [https://argo-cd.readthedocs.io/en/stable/user-guide/helm/]
+page2-elem0,* Toolkit documentation: Develop an own GitOps module [https://github.com/cloud-native-toolkit/site-operator-guide/blob/bed61cb15079cc998ec49a15454de4d671c6ad42/docs/learn/iascable/lab4/index.md]
+page2-elem0,Let’s look at a concrete example.
+page2-elem0,We developed a TechZone Toolkit GitOps module to deploy Watson NLP [https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp].
+page2-elem0,The repo of the module includes the Helm chart.
+page2-elem0,The chart expects values [https://github.com/IBM/watson-automation/blob/0ba8ec48a8c3695b717db9ca55217706e44ecb0f/helm-nlp/values.yaml] in the following format for example to define which NLP models and versions you want to deploy.
+page2-elem0,componentName: watson-nlp
+page2-elem0,acceptLicense: false
+page2-elem0,serviceType: ClusterIP
+page2-elem0,imagePullSecrets:
+page2-elem0,- ibm-entitlement-key
+page2-elem0,registries:
+page2-elem0,- name: watson
+page2-elem0,url: cp.icr.io/cp/ai
+page2-elem0,runtime:
+page2-elem0,registry: watson
+page2-elem0,image: watson-nlp-runtime:1.0.15
+page2-elem0,models:
+page2-elem0,- registry: watson
+page2-elem0,image: watson-nlp_syntax_izumo_lang_en_stock:1.0.5
+page2-elem0,To allow Argo CD to deploy Watson NLP via the Helm the Helm chart itself as well as the specific values.yaml file need to be put in the GitOps repo.
+page2-elem0,GitOps modules are just Terraform modules but follow additional conventions defined by the toolkit to access the automatically provisioned GitOps repo.
+page2-elem0,Input variables of Terraform (GitOps) modules can be defined in variables.tf [https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp/blob/4c22e5bba2023602bdd8e4a1a1634b4d024ee937/variables.tf].
+page2-elem0,To enable the toolkit to put the chart as well as the values into the Git repo the following steps are necessary.
+page2-elem0,First the Terraform input variables are converted to Helm values into JSON format in main.tf [https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp/blob/4c22e5bba2023602bdd8e4a1a1634b4d024ee937/main.tf#L7-L50].
+page2-elem0,values_content = {
+page2-elem0,"componentName" = "embedded"
+page2-elem0,"acceptLicense" = var.accept_license
+page2-elem0,"serviceType" = "ClusterIP"
+page2-elem0,"registries" = var.registries
+page2-elem0,"imagePullSecrets" = var.imagePullSecrets
+page2-elem0,"runtime" = {
+page2-elem0,"registry": var.runtime_registry
+page2-elem0,"image": var.runtime_image
+page2-elem0,"models" = var.models
+page2-elem0,layer = "services"
+page2-elem0,...
+page2-elem0,resource null_resource create_yaml {
+page2-elem0,provisioner "local-exec" {
+page2-elem0,command = "${path.module}/scripts/create-yaml.sh '${local.name}' '${local.yaml_dir}'"
+page2-elem0,environment = {
+page2-elem0,VALUES_CONTENT = yamlencode(local.values_content)
+page2-elem0,After this the chart and the values are copied into the ‘services’ payload directory via a script [https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp/blob/4c22e5bba2023602bdd8e4a1a1634b4d024ee937/scripts/create-yaml.sh].
+page2-elem0,#!/usr/bin/env bash
+page2-elem0,SCRIPT_DIR=$(cd $(dirname "$0"); pwd -P)
+page2-elem0,MODULE_DIR=$(cd "${SCRIPT_DIR}/.."
+page2-elem0,; pwd -P)
+page2-elem0,CHART_DIR=$(cd "${MODULE_DIR}/chart/watson-nlp"; pwd -P)
+page2-elem0,DEST_DIR="$2"
+page2-elem0,## Add logic here to put the yaml resource content in DEST_DIR
+page2-elem0,mkdir -p "${DEST_DIR}"
+page2-elem0,cp -R "${CHART_DIR}/"* "${DEST_DIR}"
+page2-elem0,if [[ -n "${VALUES_CONTENT}" ]]; then
+page2-elem0,echo "${VALUES_CONTENT}" > "${DEST_DIR}/values.yaml"
+page2-elem0,fi
+page2-elem0,find "${DEST_DIR}" -name "*"
+page2-elem0,echo "Files in output path"
+page2-elem0,ls -l "${DEST_DIR}"
+page2-elem0,After the toolkit module has been deployed you’ll find everything in your own GitOps repo as shown in the screenshot above.
+page2-elem0,The values.yaml file does not contain the default chart values but the input variables of your Terraform module.
+page2-elem0,To change deployments you can simply change the configuration in the GitOps repo for example to update to a later version of Watson NLP.
+page2-elem0,Argo CD will be triggered automatically to synchronize the desired state with the actual state.
+page2-elem0,Combination of Terraform and Argo CD
+page2-elem0,As you’ve seen the TechZone Toolkit uses a combination of Terraform and Argo CD.
+page2-elem0,Initially Terraform takes the lead to deploy infrastructure components like VPCs Kubernetes clusters Argo CD within clusters and GitOps repos.
+page2-elem0,After this Argo CD is triggered to deploy the initial version of resources as defined in the GitOps repos.
+page2-elem0,However after the initial deployments Argo CD takes over the lead.
+page2-elem0,To deploy newer versions of Kubernetes resources changes can simply be push to Git.
+page2-elem0,When the same Terraform modules are invoked later for example to deploy more infrastructure components the toolkit does not modify the already deployed Git repo!
+page2-elem0,To find out more about these capabilities check out the following resources:
+page2-elem0,* TechZone Accelerator Toolkit Documentation [https://operate.cloudnativetoolkit.dev/]
+page2-elem0,* TechZone Accelerator Toolkit Modules [https://operate.cloudnativetoolkit.dev/]
+page2-elem0,* TechZone Accelerator Toolkit CLI (iascable) [https://github.com/cloud-native-toolkit/iascable]
+page2-elem0,* Sample GitOps Module: UBI [https://github.com/cloud-native-toolkit/terraform-gitops-ubi]
+page2-elem0,* Sample GitOps Module: Watson NLP [https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp]
+page2-elem0,* Sample BOMs to deploy Watson NLP [https://github.com/IBM/watson-automation]
+page2-elem0,The post Developing TechZone Toolkit GitOps Modules with Helm [http://heidloff.net/article/developing-techzone-toolkit-gitops-modules-with-helm/] appeared first on Niklas Heidloff [http://heidloff.net].

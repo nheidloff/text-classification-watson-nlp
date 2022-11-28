@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 4 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=4" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Thu, 24 Nov 2022 10:47:53 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>IBM helps Partners to scale their Businesses</title><link>http://heidloff.net/article/ibm-helps-partners-to-scale-their-businesses/</link><pubDate>Tue, 14 Jun 2022 17:47:24 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=5106</guid><description><![CDATA[<p>IBM Build Labs helps IBM partners to scale their businesses and to reach new markets. I am very proud that our team has produced two reference architectures to accomplish this: Kubernetes Operators Reference Architecture Software as a Service (SaaS) Reference Architecture This short video gives you more context. If you are interested in working with [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/ibm-helps-partners-to-scale-their-businesses/">IBM helps Partners to scale their Businesses</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p>IBM Build Labs helps IBM partners to scale their businesses and to reach new markets. <span id="more-5106"></span></p>
+<p>I am very proud that our team has produced two reference architectures to accomplish this:</p>
+<ul>
+<li><a href="https://github.com/ibm/operator-sample-go" rel="noopener noreferrer" target="_blank">Kubernetes Operators Reference Architecture</a></li>
+<li><a href="https://github.com/IBM/multi-tenancy" rel="noopener noreferrer" target="_blank">Software as a Service (SaaS) Reference Architecture</a></li>
+</ul>
+<p>This short video gives you more context.</p>
+<p><iframe width="853" height="480" src="//www.youtube.com/embed/WDBn-kgkct4" frameborder="0" allowfullscreen></iframe></p>
+<p>If you are interested in working with us, reach us to me on Twitter or via the GitHub repos.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/ibm-helps-partners-to-scale-their-businesses/">IBM helps Partners to scale their Businesses</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><post-id xmlns="com-wordpress:feed-additions:1">5106</post-id></item></channel></rss>

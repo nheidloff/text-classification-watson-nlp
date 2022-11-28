@@ -1,0 +1,781 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	
+xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+>
+
+<channel>
+	<title>Page 2 &#8211; Niklas Heidloff</title>
+	<atom:link href="http://heidloff.net/feed/?paged=2" rel="self" type="application/rss+xml" />
+	<link>http://heidloff.net</link>
+	<description></description>
+	<lastBuildDate>
+	Thu, 24 Nov 2022 10:47:53 +0000	</lastBuildDate>
+	<language>en-US</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=5.1.15</generator>
+<site xmlns="com-wordpress:feed-additions:1">102773794</site>	<item>
+		<title>Developing TechZone Toolkit GitOps Modules with Helm</title>
+		<link>http://heidloff.net/article/developing-techzone-toolkit-gitops-modules-with-helm/</link>
+				<pubDate>Thu, 17 Nov 2022 00:51:05 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=5313</guid>
+				<description><![CDATA[<p>With the TechZone Accelerator Toolkit IBM software, open source projects and custom applications can easily be deployed to various clouds. This article provides an overview how to develop your own GitOps modules to deploy resources to Kubernetes via Helm. Check out my earlier blog that introduces the toolkit: Introducing IBM’s Toolkit to handle Everything as [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/developing-techzone-toolkit-gitops-modules-with-helm/">Developing TechZone Toolkit GitOps Modules with Helm</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>With the TechZone Accelerator Toolkit IBM software, open source projects and custom applications can easily be deployed to various clouds. This article provides an overview how to develop your own GitOps modules to deploy resources to Kubernetes via Helm.<br />
+</em><span id="more-5313"></span></p>
+<p>Check out my earlier blog that introduces the toolkit: <a href="http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/" rel="noopener noreferrer" target="_blank">Introducing IBM’s Toolkit to handle Everything as Code</a>. The toolkit leverages Terrafrom and GitOps and is based on best practices from IBM projects with partners and clients. With the toolkit both infrastructure like Kubernetes clusters as well as Kubernetes resources within clusters can be deployed. Infrastructure resources are deployed via Terraform, resources within clusters via Argo CD. </p>
+<p>This article explains how <a href="https://helm.sh/" rel="noopener noreferrer" target="_blank">Helm</a> can be used in the TechZone Toolkit to deploy resources to Kubernetes or OpenShift clusters with Argo CD. Helm is a popular package manager for Kubernetes. In the context of the toolkit Helm is the preferred option to deploy Kubernetes resources. Alternatively you could deploy Kubernetes resources directly via yaml files. However, the advantage of Helm is that it can easily be configured for different environments via its built-in templating mechanism. Another advantage of Helm in this context is that Terraform variables can easily be mapped to Helm values which is described below.</p>
+<p>To understand the following content, I suggest to read these documents that give some background:</p>
+<ul>
+<li>Blog: <a href="http://heidloff.net/article/deploying-kubernetes-resources-via-gitops/" rel="noopener noreferrer" target="_blank">Deploying Kubernetes Resources via GitOps</a></li>
+<li>Blog: <a href="http://heidloff.net/article/understanding-techzone-toolkit-gitops-modules/" rel="noopener noreferrer" target="_blank">Understanding TechZone Toolkit GitOps Modules</a></li>
+<li>Red Hat blog: <a href="https://cloud.redhat.com/blog/continuous-delivery-with-helm-and-argo-cd" rel="noopener noreferrer" target="_blank">Continuous Delivery with Helm and Argo CD</a></li>
+<li>Argo CD documentation: <a href="https://argo-cd.readthedocs.io/en/stable/user-guide/helm/" rel="noopener noreferrer" target="_blank">Helm</a></li>
+<li>Toolkit documentation: <a href="https://github.com/cloud-native-toolkit/site-operator-guide/blob/bed61cb15079cc998ec49a15454de4d671c6ad42/docs/learn/iascable/lab4/index.md" rel="noopener noreferrer" target="_blank">Develop an own GitOps module</a></li>
+</ul>
+<p>Let&#8217;s look at a concrete example. We developed a <a href="https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp" rel="noopener noreferrer" target="_blank">TechZone Toolkit GitOps module to deploy Watson NLP</a>. The repo of the module includes the Helm chart. The chart expects <a href="https://github.com/IBM/watson-automation/blob/0ba8ec48a8c3695b717db9ca55217706e44ecb0f/helm-nlp/values.yaml" rel="noopener noreferrer" target="_blank">values</a> in the following format, for example to define which NLP models and versions you want to deploy.</p>
+<pre class="brush: plain; title: ; notranslate">
+componentName: watson-nlp
+acceptLicense: false
+serviceType: ClusterIP
+imagePullSecrets:
+  - ibm-entitlement-key
+registries:
+  - name: watson
+    url: cp.icr.io/cp/ai
+runtime:
+  registry: watson
+  image: watson-nlp-runtime:1.0.15
+models:
+  - registry: watson
+    image: watson-nlp_syntax_izumo_lang_en_stock:1.0.5
+</pre>
+<p>To allow Argo CD to deploy Watson NLP via the Helm, the Helm chart itself as well as the specific values.yaml file need to be put in the GitOps repo.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-11.46.31.png" alt="" width="2424" height="1578" class="alignnone size-full wp-image-5324" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-11.46.31.png 2424w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-11.46.31-300x195.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-11.46.31-768x500.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-11.46.31-1024x667.png 1024w" sizes="(max-width: 2424px) 100vw, 2424px" /></p>
+<p>GitOps modules are just Terraform modules, but follow additional conventions defined by the toolkit to access the automatically provisioned GitOps repo. Input variables of Terraform (GitOps) modules can be defined in <a href="https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp/blob/4c22e5bba2023602bdd8e4a1a1634b4d024ee937/variables.tf" rel="noopener noreferrer" target="_blank">variables.tf</a>.</p>
+<p>To enable the toolkit to put the chart as well as the values into the Git repo, the following steps are necessary. First the Terraform input variables are converted to Helm values into JSON format in <a href="https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp/blob/4c22e5bba2023602bdd8e4a1a1634b4d024ee937/main.tf#L7-L50" rel="noopener noreferrer" target="_blank">main.tf</a>.</p>
+<pre class="brush: plain; title: ; notranslate">
+values_content = {
+    &quot;componentName&quot; = &quot;embedded&quot;
+    &quot;acceptLicense&quot; = var.accept_license
+    &quot;serviceType&quot; = &quot;ClusterIP&quot;
+    &quot;registries&quot; = var.registries
+    &quot;imagePullSecrets&quot; = var.imagePullSecrets
+    &quot;runtime&quot; = {
+      &quot;registry&quot;: var.runtime_registry
+      &quot;image&quot;: var.runtime_image
+    }
+    &quot;models&quot; = var.models
+  }
+  layer = &quot;services&quot;
+  ...
+}
+
+resource null_resource create_yaml {
+  provisioner &quot;local-exec&quot; {
+    command = &quot;${path.module}/scripts/create-yaml.sh '${local.name}' '${local.yaml_dir}'&quot;
+    environment = {
+      VALUES_CONTENT = yamlencode(local.values_content)
+    }
+  }
+}
+</pre>
+<p>After this the chart and the values are copied into the &#8216;services&#8217; payload directory via a <a href="https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp/blob/4c22e5bba2023602bdd8e4a1a1634b4d024ee937/scripts/create-yaml.sh" rel="noopener noreferrer" target="_blank">script</a>.</p>
+<pre class="brush: plain; title: ; notranslate">
+#!/usr/bin/env bash
+SCRIPT_DIR=$(cd $(dirname &quot;$0&quot;); pwd -P)
+MODULE_DIR=$(cd &quot;${SCRIPT_DIR}/..&quot;; pwd -P)
+CHART_DIR=$(cd &quot;${MODULE_DIR}/chart/watson-nlp&quot;; pwd -P)
+DEST_DIR=&quot;$2&quot; 
+
+## Add logic here to put the yaml resource content in DEST_DIR
+mkdir -p &quot;${DEST_DIR}&quot;
+cp -R &quot;${CHART_DIR}/&quot;* &quot;${DEST_DIR}&quot;
+
+if [[ -n &quot;${VALUES_CONTENT}&quot; ]]; then
+  echo &quot;${VALUES_CONTENT}&quot; &gt; &quot;${DEST_DIR}/values.yaml&quot;
+fi
+find &quot;${DEST_DIR}&quot; -name &quot;*&quot;
+echo &quot;Files in output path&quot;
+ls -l &quot;${DEST_DIR}&quot;
+</pre>
+<p>After the toolkit module has been deployed, you&#8217;ll find everything in your own GitOps repo as shown in the screenshot above. The values.yaml file does not contain the default chart values, but the input variables of your Terraform module.</p>
+<p>To change deployments you can simply change the configuration in the GitOps repo, for example to update to a later version of Watson NLP. Argo CD will be triggered automatically to synchronize the desired state with the actual state.</p>
+<p><strong>Combination of Terraform and Argo CD</strong></p>
+<p>As you&#8217;ve seen, the TechZone Toolkit uses a combination of Terraform and Argo CD. Initially Terraform takes the lead to deploy infrastructure components like VPCs, Kubernetes clusters, Argo CD within clusters and GitOps repos. After this Argo CD is triggered to deploy the initial version of resources as defined in the GitOps repos.</p>
+<p>However, after the initial deployments Argo CD takes over the lead. To deploy newer versions of Kubernetes resources, changes can simply be push to Git. When the same Terraform modules are invoked later, for example to deploy more infrastructure components, the toolkit does not modify the already deployed Git repo!</p>
+<p>To find out more about these capabilities, check out the following resources:</p>
+<ul>
+<li><a href="https://operate.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">TechZone Accelerator Toolkit Documentation</a></li>
+<li><a href="https://operate.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">TechZone Accelerator Toolkit Modules</a></li>
+<li><a href="https://github.com/cloud-native-toolkit/iascable" rel="noopener noreferrer" target="_blank">TechZone Accelerator Toolkit CLI (iascable)</a></li>
+<li><a href="https://github.com/cloud-native-toolkit/terraform-gitops-ubi" rel="noopener noreferrer" target="_blank">Sample GitOps Module: UBI</a></li>
+<li><a href="https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp" rel="noopener noreferrer" target="_blank">Sample GitOps Module: Watson NLP</a></li>
+<li><a href="https://github.com/IBM/watson-automation" rel="noopener noreferrer" target="_blank">Sample BOMs to deploy Watson NLP</a></li>
+</ul>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/developing-techzone-toolkit-gitops-modules-with-helm/">Developing TechZone Toolkit GitOps Modules with Helm</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">5313</post-id>	</item>
+		<item>
+		<title>Running IBM Watson NLP in Minikube</title>
+		<link>http://heidloff.net/article/running-ibm-watson-nlp-in-minikube/</link>
+				<pubDate>Wed, 16 Nov 2022 00:26:04 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=5328</guid>
+				<description><![CDATA[<p>IBM Watson NLP (Natural Language Understanding) and Watson Speech containers can be run locally, on-premises or Kubernetes and OpenShift clusters. Via REST and gRCP APIs AI can easily be embedded in applications. This post describes how to run Watson NLP locally in Minikube. To set some context, check out the landing page IBM Watson NLP [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/running-ibm-watson-nlp-in-minikube/">Running IBM Watson NLP in Minikube</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>IBM Watson NLP (Natural Language Understanding) and Watson Speech containers can be run locally, on-premises or Kubernetes and OpenShift clusters. Via REST and gRCP APIs AI can easily be embedded in applications. This post describes how to run Watson NLP locally in Minikube.</em><span id="more-5328"></span></p>
+<p>To set some context, check out the landing page <a href="https://www.ibm.com/products/ibm-watson-natural-language-processing" rel="noopener noreferrer" target="_blank">IBM Watson NLP Library for Embed</a>. The Watson NLP containers can be run on different container platforms, they provide REST and gRCP interfaces, they can be extended with custom models and they can easily be embedded in solutions.</p>
+<p>To try it, a <a href="https://www.ibm.com/account/reg/us-en/signup?formid=urx-51726" rel="noopener noreferrer" target="_blank">trial</a> is available. The container images are stored in an IBM container registry that is accessed via an <a href="https://www.ibm.com/account/reg/signup?formid=urx-51726" rel="noopener noreferrer" target="_blank">IBM Entitlement Key</a>.</p>
+<p><strong>How to run NLP locally in Minikube</strong></p>
+<p>My post <a href="http://heidloff.net/article/running-ibm-watson-nlp-locally-in-containers/" rel="noopener noreferrer" target="_blank">Running IBM Watson NLP locally in Containers</a> explained how to run Watson NLP locally in Docker. The instructions below describe how to deploy Watson NLP locally to Minikube via the <a href="https://github.com/IBM/watson-automation/blob/90e61e05a5d0eacd268c97fc3c8b67e285c99241/documentation/NLPHelmChart.md" rel="noopener noreferrer" target="_blank">Watson NLP Helm chart</a>.</p>
+<p>First you need to install Minikube, for example via brew on MacOS. Next Minikube needs to be started with more memory and disk size than the Minikube defaults. I&#8217;ve used the settings below which is more than required, but I wanted to leave space for other applications. Note that you also need to give your container runtime more resources. For example if you use Docker Desktop, go to Preferences-Resources and define your settings.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ brew install minikube 
+$ minikube start --cpus 12 --memory 16000 --disk-size 50g
+</pre>
+<p>For some reason in my setup the watson-nlp-runtime image couldn&#8217;t be pulled by the Deployment resource/operator. I guess it&#8217;s related to the big size of the image. I&#8217;ve found this workaround:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ eval $(minikube docker-env)
+$ docker login cp.icr.io --username cp --password &lt;entitlement_key&gt; 
+$ docker pull cp.icr.io/cp/ai/watson-nlp-runtime:1.0.18
+</pre>
+<p>Next the namespace and secret need to be created.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl create namespace watson-demo
+$ kubectl config set-context --current --namespace=watson-demo
+$ kubectl create secret docker-registry \
+--docker-server=cp.icr.io \
+--docker-username=cp \
+--docker-password=&lt;your IBM Entitlement Key&gt; \
+-n watson-demo \
+ibm-entitlement-key
+</pre>
+<p>After this a repo with the Helm chart and another repo with a sample <a href="https://github.com/IBM/watson-automation/blob/94f28f12a58608f7b7fe355d36f101ddf7cd8cb8/helm-nlp/values.yaml" rel="noopener noreferrer" target="_blank">values.yaml</a> file are cloned and the license needs to be accepted.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ git clone https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp
+$ git clone https://github.com/IBM/watson-automation.git
+$ code watson-automation/helm-nlp/values.yaml #change acceptLicense to true
+$ cp watson-automation/helm-nlp/values.yaml terraform-gitops-watson-nlp/chart/watson-nlp/values.yaml
+</pre>
+<pre class="brush: plain; title: ; notranslate">
+componentName: watson-nlp
+acceptLicense: true
+serviceType: ClusterIP
+imagePullSecrets:
+  - ibm-entitlement-key
+registries:
+  - name: watson
+    url: cp.icr.io/cp/ai
+runtime:
+  registry: watson
+  image: watson-nlp-runtime:1.0.18
+models:
+  - registry: watson
+    image: watson-nlp_syntax_izumo_lang_en_stock:1.0.7
+</pre>
+<p>Finally the chart can be installed.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ cd terraform-gitops-watson-nlp/chart/watson-nlp
+$ helm install -f values.yaml watson-embedded .
+$ kubectl get pods -n watson-demo --watch
+$ kubectl get deployment/watson-embedded-watson-nlp -n watson-demo
+$ kubectl get svc/watson-embedded-watson-nlp -n watson-demo
+</pre>
+<p>When you open the Kubernetes Dashboard (via &#8216;minikube dashboard&#8217;), you&#8217;ll see the deployed resources. The Watson NLP pod contains the watson-nlp-runtime container and a simple syntax model container.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-15-at-08.56.39.png" alt="" width="2866" height="1550" class="alignnone size-full wp-image-5329" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-15-at-08.56.39.png 2866w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-15-at-08.56.39-300x162.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-15-at-08.56.39-768x415.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-15-at-08.56.39-1024x554.png 1024w" sizes="(max-width: 2866px) 100vw, 2866px" /></p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-15-at-08.57.27.png" alt="" width="2846" height="1940" class="alignnone size-full wp-image-5330" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-15-at-08.57.27.png 2846w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-15-at-08.57.27-300x204.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-15-at-08.57.27-768x524.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-15-at-08.57.27-1024x698.png 1024w" sizes="(max-width: 2846px) 100vw, 2846px" /></p>
+<p>To invoke Watson NLP via REST, you need to find out the IP address and port. Alternatively you could use port forwarding.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ minikube service watson-embedded-watson-nlp -n watson-demo --url
+$ curl -X POST &quot;http://&lt;ip-and-port&gt;/v1/watson.runtime.nlp.v1/NlpService/SyntaxPredict&quot; \
+  -H &quot;accept: application/json&quot; \
+  -H &quot;grpc-metadata-mm-model-id: syntax_izumo_lang_en_stock&quot; \
+  -H &quot;content-type: application/json&quot; \
+  -d &quot; { \&quot;rawDocument\&quot;: { \&quot;text\&quot;: \&quot;It is so easy to embed Watson NLP in applications. Very cool.\&quot; }}&quot;
+</pre>
+<p>The NLP containers also provides a <a href="https://github.com/IBM/watson-automation#grpc" rel="noopener noreferrer" target="_blank">gRCP interface</a>.</p>
+<p>To find out more about Watson NLP, check out these resources:</p>
+<ul>
+<li><a href="https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home" rel="noopener noreferrer" target="_blank">Documentation</a></li>
+<li><a href="https://www.ibm.com/docs/en/watson-libraries?topic=models-catalog" rel="noopener noreferrer" target="_blank">Model catalog</a></li>
+<li><a href="https://www.ibm.com/products/ibm-watson-natural-language-processing" rel="noopener noreferrer" target="_blank">Trial</a></li>
+<li><a href="https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726" rel="noopener noreferrer" target="_blank">Entitlement key</a></li>
+<li><a href="https://github.com/IBM/watson-automation" rel="noopener noreferrer" target="_blank">Automation for Watson NLP Deployments</a></li>
+<li><a href="http://heidloff.net/article/running-ibm-watson-nlp-locally-in-containers/" rel="noopener noreferrer" target="_blank">Running IBM Watson NLP locally in Containers</a></li>
+<li><a href="http://heidloff.net/article/running-ibm-watson-speech-to-text-in-containers/" rel="noopener noreferrer" target="_blank">Running IBM Watson Speech to Text in Containers</a></li>
+<li><a href="http://heidloff.net/article/running-ibm-watson-text-to-speech-in-containers/" rel="noopener noreferrer" target="_blank">Running IBM Watson Text to Speech in Containers</a></li>
+</ul>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/running-ibm-watson-nlp-in-minikube/">Running IBM Watson NLP in Minikube</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">5328</post-id>	</item>
+		<item>
+		<title>Understanding TechZone Toolkit GitOps Modules</title>
+		<link>http://heidloff.net/article/understanding-techzone-toolkit-gitops-modules/</link>
+				<pubDate>Tue, 15 Nov 2022 00:38:51 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=5306</guid>
+				<description><![CDATA[<p>With the TechZone Accelerator Toolkit IBM software, open source projects and custom applications can easily be deployed to various clouds. This article explains how to deploy resources in Kubernetes clusters via GitOps. Check out my earlier blog that introduces the toolkit: Introducing IBM’s Toolkit to handle Everything as Code. The toolkit leverages Terrafrom and GitOps [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/understanding-techzone-toolkit-gitops-modules/">Understanding TechZone Toolkit GitOps Modules</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>With the TechZone Accelerator Toolkit IBM software, open source projects and custom applications can easily be deployed to various clouds. This article explains how to deploy resources in Kubernetes clusters via GitOps.<br />
+</em><span id="more-5306"></span></p>
+<p>Check out my earlier blog that introduces the toolkit: <a href="http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/" rel="noopener noreferrer" target="_blank">Introducing IBM’s Toolkit to handle Everything as Code</a>. The toolkit leverages Terrafrom and GitOps and is based on best practices from IBM projects with partners and clients. With the toolkit both infrastructure like Kubernetes clusters as well as Kubernetes resources within clusters can be deployed. Infrastructure resources are deployed via Terraform, resources within clusters via Argo CD. </p>
+<p>To deploy resources in Kubernetes clusters, DevOps modules are used which can be found in the <a href="https://modules.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">TechZone Module Catalog</a>. The TechZone Toolkit uses Argo CD for GitOps which is deployed automatically. Argo CD requires a Git repo to store the desired state which it continuously synchronizes with the actual state in the cluster. Read my blog <a href="http://heidloff.net/article/deploying-kubernetes-resources-via-gitops/" rel="noopener noreferrer" target="_blank">Deploying Kubernetes Resources via GitOps</a> for an introduction to GitOps.</p>
+<p>Let&#8217;s look how the toolkit works for a concrete <a href="https://github.com/ibm/watson-automation" rel="noopener noreferrer" target="_blank">sample</a> where Watson NLP is deployed to OpenShift via GitOps.</p>
+<p>First you define the modules argocd-bootstrap and gitops-repo in the BOM (bill of material).</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: cloudnativetoolkit.dev/v1alpha1
+kind: BillOfMaterial
+metadata:
+  name: cluster-with-watson-nlp
+spec:
+  modules:
+    - name: ibm-ocp-vpc
+    - name: argocd-bootstrap
+    - name: gitops-repo
+    - name: terraform-gitops-ubi
+    - name: terraform-gitops-watson-nlp
+</pre>
+<p>To configure the GitOps module, change the configuration in <a href="https://github.com/IBM/watson-automation/blob/main/roks-new-nlp/output/cluster-with-watson-nlp/variables-template.yaml#L31-L42" rel="noopener noreferrer" target="_blank">variables.yaml</a>.</p>
+<pre class="brush: plain; title: ; notranslate">
+# gitops
+- name: gitops_repo_repo
+  description: The name of the gitops repository that will be created
+  value: xxx
+- name: gitops_repo_host
+  value: github.com
+- name: gitops_repo_org
+  value: xxx
+- name: gitops_repo_username
+  value: xxx
+</pre>
+<p>After applying the Terraform modules a GitOps repo will be created with a specific <a href="https://github.com/cloud-native-toolkit/terraform-tools-gitops/tree/main/template" rel="noopener noreferrer" target="_blank">structure</a> that the toolkit expects. There are two major types of resources in these repos:</p>
+<ol>
+<li>ArgoCD configuration</li>
+<li>Application &#8216;payloads&#8217;</li>
+</ol>
+<p><em>ArgoCD configuration</em><br />
+In Argo CD, collections of kubernetes resources that are deployed together are called &#8220;applications&#8221;. Applications in ArgoCD are configured using a custom resource definition (CRD) in the cluster which means ArgoCD applications can deploy other ArgoCD applications (called the &#8216;<a href="https://argoproj.github.io/argo-cd/operator-manual/cluster-bootstrapping/#app-of-apps-pattern" rel="noopener noreferrer" target="_blank">App of Apps pattern</a>&#8216;). With this pattern, the Argo CD environment can be bootstrapped with an initial application. That initial bootstrap application can then be updated in the GitOps repository to configure other applications.</p>
+<p><em>Application &#8216;payloads&#8217;</em><br />
+The ArgoCD configuration points to other paths within the GitOps repository that contain the actual &#8220;payload&#8221; yaml to provision the applications (the deployments, config maps, etc that make up the applications).</p>
+<p>In addition to separating the Argo CD configuration from the application &#8216;payloads&#8217;, the configuration has also been divided into three different layers of the cluster configuration:</p>
+<ol>
+<li>Infrastructure: Foundational elements within the cluster, like namespaces, service accounts, role-based access control, etc. These resources are often managed by the infrastructure team and are required by the other resources.</li>
+<li>Shared services: Shared services are application components that are used across multiple applications or across the cluster. Often these are operator-based services and managed independently from the applications.</li>
+<li>Applications: The application layer contains the applications deployed to the cluster, using the infrastructure and shared service components.</li>
+</ol>
+<p>Let&#8217;s look at the Watson NLP GitOps module example. In the directory &#8216;argocd/2-services&#8217; the source of the Argo CD application is defined which resides in the same repo in the &#8216;payload/2-services&#8217; directory. Helm is used for the actual deployment of the Watson NLP resources. Helm is the preferred solution of the toolkit since it allows easy configurations for different environments based on its built-in templating mechanism.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.32.17.png" alt="" width="2420" height="1516" class="alignnone size-full wp-image-5307" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.32.17.png 2420w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.32.17-300x188.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.32.17-768x481.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.32.17-1024x641.png 1024w" sizes="(max-width: 2420px) 100vw, 2420px" /></p>
+<p>The Argo CD dashboard shows the registered applications and their synchronization states.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.55.58.png" alt="" width="3664" height="1628" class="alignnone size-full wp-image-5308" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.55.58.png 3664w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.55.58-300x133.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.55.58-768x341.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.55.58-1024x455.png 1024w" sizes="(max-width: 3664px) 100vw, 3664px" /></p>
+<p>Additionally the dashboard shows for each application which Kubernetes resources have been deployed.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.56.55.png" alt="" width="3416" height="962" class="alignnone size-full wp-image-5309" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.56.55.png 3416w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.56.55-300x84.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.56.55-768x216.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.56.55-1024x288.png 1024w" sizes="(max-width: 3416px) 100vw, 3416px" /></p>
+<p>To change deployments you can simply change the configuration in the GitOps repo, for example to update to a later version of Watson NLP. Argo CD will be triggered automatically to synchronize the desired state with the actual state.</p>
+<p>To find out more about these capabilities, check out the following resources:</p>
+<ul>
+<li><a href="https://operate.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">TechZone Accelerator Toolkit Documentation</a></li>
+<li><a href="https://operate.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">TechZone Accelerator Toolkit Modules</a></li>
+<li><a href="https://github.com/cloud-native-toolkit/iascable" rel="noopener noreferrer" target="_blank">TechZone Accelerator Toolkit CLI (iascable)</a></li>
+<li><a href="https://github.com/cloud-native-toolkit/terraform-gitops-ubi" rel="noopener noreferrer" target="_blank">Sample GitOps Module: UBI</a></li>
+<li><a href="https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp" rel="noopener noreferrer" target="_blank">Sample GitOps Module: Watson NLP</a></li>
+<li><a href="https://github.com/IBM/watson-automation" rel="noopener noreferrer" target="_blank">Sample BOMs to deploy Watson NLP</a></li>
+</ul>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/understanding-techzone-toolkit-gitops-modules/">Understanding TechZone Toolkit GitOps Modules</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">5306</post-id>	</item>
+		<item>
+		<title>The new Watson Assistant is awesome</title>
+		<link>http://heidloff.net/article/the-new-watson-assistant-is-awesome/</link>
+				<pubDate>Mon, 14 Nov 2022 08:42:31 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=5297</guid>
+				<description><![CDATA[<p>IBM Watson Assistant is a SaaS offering from IBM to build conversational user experiences. The first version was already good, but the new(ish) version is just awesome! Over the last years Watson Assistant has successfully been used by many IBM clients and partners. Based on the feedback from clients, the IBM development and design team [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/the-new-watson-assistant-is-awesome/">The new Watson Assistant is awesome</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>IBM Watson Assistant is a SaaS offering from IBM to build conversational user experiences. The first version was already good, but the new(ish) version is just awesome!</em><span id="more-5297"></span></p>
+<p>Over the last years Watson Assistant has successfully been used by many IBM clients and partners. Based on the feedback from clients, the IBM development and design team has created a brand new experience. This second version was released at the end of 2021. I was only able to try it recently and was positively surprised how much the offering has evolved. Below are some of my highlights.</p>
+<p><strong>1. Actions</strong></p>
+<p>The new Watson Assistant uses a more natural way to define conversations. The old &#8216;dialog&#8217; experience was replaced with a more intuitive concept which is more goal oriented. For example Assistant users don&#8217;t use intents anymore, but actions. Intents still exist internally, but users want to define actions so that end users can reach their goals.</p>
+<p>Similarly Assistant users don&#8217;t have to define entities anymore. Again, they still exist internally, but as far as users are concerned they just define types (e.g. free text) in the actions experience and the entities are created automatically.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-08.57.43.png" alt="" width="3026" height="1676" class="alignnone size-full wp-image-5298" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-08.57.43.png 3026w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-08.57.43-300x166.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-08.57.43-768x425.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-08.57.43-1024x567.png 1024w" sizes="(max-width: 3026px) 100vw, 3026px" /></p>
+<p><strong>2. Integration of Watson Discovery</strong></p>
+<p>With the Assistant the most typical conversation flows are covered. However, for advanced topics Assistant can call out to other services like Watson Discovery. This is useful if you have FAQs or other data stored in other systems that you want to expose to end users. </p>
+<p>The following screenshot shows how Assistant can return articles from my blog. It only takes five minutes to implement this.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-09.07.44.png" alt="" width="3034" height="1616" class="alignnone size-full wp-image-5299" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-09.07.44.png 3034w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-09.07.44-300x160.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-09.07.44-768x409.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-09.07.44-1024x545.png 1024w" sizes="(max-width: 3034px) 100vw, 3034px" /></p>
+<p><strong>3. Much more</strong></p>
+<p>There are so many more cool features and improvements.</p>
+<ul>
+<li>Via REST APIs services can be queried or perform business logic</li>
+<li>Integrations with phone</li>
+<li>Integrations with chat clients and SMS</li>
+<li>Custom integrations</li>
+<li>Embeddable web chat widget</li>
+<li>Hand over to agent</li>
+<li>Free text responses</li>
+<li>Integrated debugger in preview chat window</li>
+<li>Clarifying question to identify the right action</li>
+<li>Change conversation topics (switch between actions)</li>
+<li>Built in analytics</li>
+<li>User authentication and secure traffic</li>
+<li>Private endpoints</li>
+<li>Different plans for different needs including isolated deployments</li>
+<li>High availability mechanisms</li>
+<li>Multiple languages</li>
+<li>Templates with lots of predefined reusable actions</li>
+<li>Production and development environments</li>
+<li>APIs for most common languages</li>
+<li>&#8230;</li>
+</ul>
+<p><strong>Getting started</strong></p>
+<p>To get started, try it out yourselves. There is a <a href="https://cloud.ibm.com/catalog/services/watson-assistant" rel="noopener noreferrer" target="_blank">free lite plan</a>.</p>
+<p>The first time you log in, a guided tour is offered. I&#8217;m usually not a fan of those, but it worked very well for me to learn a lot in a short amout of time. The tour is also documented in a <a href="https://cloud.ibm.com/docs/assistant?topic=assistant-getting-started" rel="noopener noreferrer" target="_blank">blog series</a>.</p>
+<p>The <a href="https://cloud.ibm.com/docs/watson-assistant?topic=watson-assistant-about" rel="noopener noreferrer" target="_blank">documentation</a> is well structured, complete and easy to read.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/the-new-watson-assistant-is-awesome/">The new Watson Assistant is awesome</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">5297</post-id>	</item>
+		<item>
+		<title>Developing TechZone Toolkit Terraform Modules</title>
+		<link>http://heidloff.net/article/developing-techzone-toolkit-terraform-modules/</link>
+				<pubDate>Fri, 11 Nov 2022 00:03:42 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=5289</guid>
+				<description><![CDATA[<p>With the TechZone Accelerator Toolkit IBM software, open source projects and custom applications can easily be deployed to various clouds. This article explains on a high level how to develop new modules with Terraform. Check out my earlier blog that introduces the toolkit: Introducing IBM’s Toolkit to handle Everything as Code. The toolkit leverages Terrafrom [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/developing-techzone-toolkit-terraform-modules/">Developing TechZone Toolkit Terraform Modules</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>With the TechZone Accelerator Toolkit IBM software, open source projects and custom applications can easily be deployed to various clouds. This article explains on a high level how to develop new modules with Terraform.</em><span id="more-5289"></span></p>
+<p>Check out my earlier blog that introduces the toolkit: <a href="http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/" rel="noopener noreferrer" target="_blank">Introducing IBM’s Toolkit to handle Everything as Code</a>. The toolkit leverages Terrafrom and GitOps and is based on best practices from IBM projects with partners and clients. With the toolkit both infrastructure like Kubernetes clusters as well as Kubernetes resources within clusters can be deployed. Infrastructure resources are deployed via Terraform, resources within clusters via Argo CD. </p>
+<p><strong>Custom Modules and custom Catalogs</strong></p>
+<p>The toolkit is available as open source and it is extensible. Custom modules can be added to deploy more software or to add other target platforms. The <a href="https://modules.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">TechZone Module Catalog</a> contains a list of curated modules which need to provide automatic testing capabilities. However, the curated catalog doesn&#8217;t have to be used or can be used in addition to a custom catalog. This is necessary if you want to build modules for internal consumption only and it is necessary for modules while they are being developed.</p>
+<p>My colleague Thomas Südbröcker has documented how to <a href="https://github.com/cloud-native-toolkit/site-operator-guide/blob/e0f2302f7d67c185edd63d71e2612ddf078bb34f/docs/learn/iascable/lab4/index.md#6-create-an-own-catalog" rel="noopener noreferrer" target="_blank">create your own catalog</a>. When running the &#8216;iascable&#8217; CLI to generate Terraform modules based on BOMs (bill of materials), the locations of the catalogs can be passed in. Alternatively you can also define the catalogs directly in the BOMs.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ BASE_CATALOG=https://modules.cloudnativetoolkit.dev/index.yaml
+$ CUSTOM_CATALOG=https://raw.githubusercontent.com/Vishal-Ramani/UBI-helm-module-example/main/example/catalog/ubi-helm-catalog.yaml
+$ iascable build -i ibm-vpc-roks-argocd-ubi.yaml -c $BASE_CATALOG -c $CUSTOM_CATALOG
+</pre>
+<p><strong>Terraform Modules</strong></p>
+<p>The TechZone Toolkit provides two types of modules:</p>
+<ol>
+<li>Terraform modules</li>
+<li>GitOps modules</li>
+</ol>
+<p>Terraform modules are used to create infrastructure like clusters, VPCs, external resources and more. The GitOps modules are used to deploy and operate different types of software within clusters.</p>
+<p>The Toolkit Terraform modules are just Terraform modules with some extended conventions how to build them. Modules contain these <a href="https://modules.cloudnativetoolkit.dev/#/how-to/terraform" rel="noopener noreferrer" target="_blank">files</a>:</p>
+<ul>
+<li>main.tf: Logic of the module</li>
+<li>variables.tf: Input variables</li>
+<li>outputs.tf: Output variables which can be passed to child modules</li>
+<li>version.tf: Minimum required Terraform version</li>
+<li>module.yaml: Metadata descriptor</li>
+<li>README.md: Documentation</li>
+</ul>
+<p>The best way to get started building modules is to look at the available modules in the <a href="https://modules.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">catalog</a>. The module catalog provides a filter &#8216;Module type&#8217;. Browse through the existing modules and pick one which sounds similar to what you want to achieve or simple enough to use it as template or starting point.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-14.56.46-1.png" alt="" width="2342" height="1238" class="alignnone size-full wp-image-5290" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-14.56.46-1.png 2342w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-14.56.46-1-300x159.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-14.56.46-1-768x406.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-14.56.46-1-1024x541.png 1024w" sizes="(max-width: 2342px) 100vw, 2342px" /></p>
+<p>To find out more about these capabilities, check out the following resources:</p>
+<ul>
+<li><a href="https://operate.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">TechZone Accelerator Toolkit Documentation</a></li>
+<li><a href="https://operate.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">TechZone Accelerator Toolkit Modules</a></li>
+<li><a href="https://github.com/cloud-native-toolkit/iascable" rel="noopener noreferrer" target="_blank">TechZone Accelerator Toolkit CLI (iascable)</a></li>
+<li><a href="https://github.com/cloud-native-toolkit/terraform-gitops-ubi" rel="noopener noreferrer" target="_blank">Sample GitOps Module: UBI</a></li>
+<li><a href="https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp" rel="noopener noreferrer" target="_blank">Sample GitOps Module: Watson NLP</a></li>
+<li><a href="https://github.com/IBM/watson-automation" rel="noopener noreferrer" target="_blank">Sample BOMs to deploy Watson NLP</a></li>
+</ul>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/developing-techzone-toolkit-terraform-modules/">Developing TechZone Toolkit Terraform Modules</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">5289</post-id>	</item>
+		<item>
+		<title>Running IBM Watson Text to Speech in Containers</title>
+		<link>http://heidloff.net/article/running-ibm-watson-text-to-speech-in-containers/</link>
+				<pubDate>Thu, 10 Nov 2022 13:07:43 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=5277</guid>
+				<description><![CDATA[<p>IBM Watson NLP (Natural Language Understanding) and Watson Speech containers can be run locally, on-premises or Kubernetes and OpenShift clusters. Via REST and WebSockets APIs AI can easily be embedded in applications. This post describes how to run Watson Text to Speech locally. To set some context, here are the descriptions of IBM Watson Speech [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/running-ibm-watson-text-to-speech-in-containers/">Running IBM Watson Text to Speech in Containers</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>IBM Watson NLP (Natural Language Understanding) and Watson Speech containers can be run locally, on-premises or Kubernetes and OpenShift clusters. Via REST and WebSockets APIs AI can easily be embedded in applications. This post describes how to run Watson Text to Speech locally.</em><span id="more-5277"></span></p>
+<p>To set some context, here are the descriptions of <a href="https://www.ibm.com/products/watson-speech-embed-libraries" rel="noopener noreferrer" target="_blank">IBM Watson Speech Libraries for Embed</a> and the Watson Text to Speech (TTS) library.</p>
+<blockquote><p>Build your applications with enterprise-grade speech technology: IBM Watson Speech Libraries for Embed are a set of containerized text-to-speech and speech-to-text libraries designed to offer our IBM partners greater flexibility to infuse the best of IBM Research technology into their solutions. Now available as embeddable AI, partners gain greater capabilities to build voice transcription and voice synthesis applications more quickly and deploy them in any hybrid multi-cloud environment.</p></blockquote>
+<blockquote><p>The Watson TTS library converts written text into natural-sounding voice in a variety of languages for real-time speech synthesis. Offered as a containerized library, developers can build applications quickly with interoperable and production scalable components to run their speech tasks anywhere.</p></blockquote>
+<p>The Watson Text to Speech library is available as containers providing REST and WebSockets interfaces. While this offering is new, the underlaying functionality has been used and optimized for a long time in IBM offerings like the IBM Cloud SaaS service for TTS and IBM Cloud Pak for Data. </p>
+<p>To try it, a <a href="https://www.ibm.com/account/reg/us-en/signup?formid=urx-51754" rel="noopener noreferrer" target="_blank">trial</a> is available. The container images are stored in an IBM container registry that is accessed via an <a href="https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726" rel="noopener noreferrer" target="_blank">IBM Entitlement Key</a>.</p>
+<p><strong>How to run TTS locally via Docker</strong></p>
+<p>To run STT as container, the container image needs to be built first. Different <a href="https://www.ibm.com/docs/en/watson-libraries?topic=home-models-catalog" rel="noopener noreferrer" target="_blank">models</a> are provided for different languages and use cases. There is a <a href="https://github.com/ibm-build-lab/Watson-Speech/tree/main/single-container-tts" rel="noopener noreferrer" target="_blank">sample</a> that describes how to run TTS with two speech models <a href="https://www.ibm.com/docs/en/watson-libraries?topic=rc-run-docker-run" rel="noopener noreferrer" target="_blank">locally</a>. </p>
+<p>In a first terminal execute these commands to build and run the container:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ docker login cp.icr.io --username cp --password &lt;entitlement_key&gt;                                          
+$ git clone https://github.com/ibm-build-lab/Watson-Speech.git
+$ cd Watson-Speech/single-container-tts    
+$ docker build . -t tts-standalone
+$ docker run --rm -it --env ACCEPT_LICENSE=true --publish 1080:1080 tts-standalone
+</pre>
+<p>In second terminal invoke these commands to invoke a REST API:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ cd Watson-Speech/single-container-stt
+$ curl &quot;http://localhost:1080/text-to-speech/api/v1/synthesize&quot; \
+  --header &quot;Content-Type: application/json&quot; \
+  --data '{&quot;text&quot;:&quot;Hello world&quot;}' \
+  --header &quot;Accept: audio/wav&quot; \
+  --output output.wav
+$ ls -la
+$ curl &quot;http://localhost:1080/text-to-speech/api/v1/voices&quot;
+</pre>
+<p>Here is a screenshot of the container in action: </p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-13.43.23.png" alt="" width="2046" height="1102" class="alignnone size-full wp-image-5278" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-13.43.23.png 2046w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-13.43.23-300x162.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-13.43.23-768x414.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-13.43.23-1024x552.png 1024w" sizes="(max-width: 2046px) 100vw, 2046px" /></p>
+<p>To define which models you want to put in your image, a multi stage <a href="https://github.com/ibm-build-lab/Watson-Speech/blob/main/single-container-tts/Dockerfile" rel="noopener noreferrer" target="_blank">Dockerfile</a> is used.</p>
+<pre class="brush: plain; title: ; notranslate">
+# Model images
+FROM cp.icr.io/cp/ai/watson-tts-generic-models:1.0.0 AS catalog
+# Add additional models here
+FROM cp.icr.io/cp/ai/watson-tts-en-us-michaelv3voice:1.0.0 AS en-us-voice
+FROM cp.icr.io/cp/ai/watson-tts-fr-ca-louisev3voice:1.0.0 AS fr-ca-voice
+
+# Base image for the runtime
+FROM cp.icr.io/cp/ai/watson-tts-runtime:1.0.0 AS runtime
+
+# Environment variable used for directory where configurations are mounted
+ENV CONFIG_DIR=/opt/ibm/chuck.x86_64/var
+
+# Copy in the catalog and runtime configurations
+COPY --chown=watson:0 --from=catalog catalog.json ${CONFIG_DIR}/catalog.json
+COPY --chown=watson:0 ./config/* ${CONFIG_DIR}/
+
+# Intermediate image to populate the model cache
+FROM runtime as model_cache
+
+# Copy model archives from model images
+RUN sudo mkdir -p /models/pool2
+
+# For each additional models, copy the line below with the model image
+COPY --chown=watson:0 --from=en-us-voice model/* /models/pool2/
+COPY --chown=watson:0 --from=fr-ca-voice model/* /models/pool2/
+
+# Run script to initialize the model cache from the model archives
+COPY ./prepareModels.sh .
+
+RUN ./prepareModels.sh
+
+# Final runtime image with models baked in
+FROM runtime as release
+
+COPY --from=model_cache ${CONFIG_DIR}/cache/ ${CONFIG_DIR}/cache/
+</pre>
+<p>To find out more about Watson Text to Speech, check out these resources:</p>
+<ul>
+<li><a href="https://www.ibm.com/docs/en/watson-libraries?topic=watson-text-speech-library-embed-home" rel="noopener noreferrer" target="_blank">Documentation</a></li>
+<li><a href="https://www.ibm.com/docs/en/watson-libraries?topic=home-models-catalog" rel="noopener noreferrer" target="_blank">Model catalog</a></li>
+<li><a href="https://cloud.ibm.com/apidocs/text-to-speech" rel="noopener noreferrer" target="_blank">SaaS API docs</a></li>
+<li><a href="https://www.ibm.com/account/reg/us-en/signup?formid=urx-51754" rel="noopener noreferrer" target="_blank">Trial</a></li>
+<li><a href="https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726" rel="noopener noreferrer" target="_blank">Entitlement key</a></li>
+</ul>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/running-ibm-watson-text-to-speech-in-containers/">Running IBM Watson Text to Speech in Containers</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">5277</post-id>	</item>
+		<item>
+		<title>Running IBM Watson NLP locally in Containers</title>
+		<link>http://heidloff.net/article/running-ibm-watson-nlp-locally-in-containers/</link>
+				<pubDate>Wed, 09 Nov 2022 08:50:49 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=5269</guid>
+				<description><![CDATA[<p>IBM announced the general availability of Watson NLP (Natural Language Understanding) and Watson Speech containers which can be run locally, on-premises or Kubernetes and OpenShift clusters. This post describes how to run Watson NLP locally. To set some context, here is the description of IBM Watson NLP Library for Embed. Enhance your applications with best-in-class [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/running-ibm-watson-nlp-locally-in-containers/">Running IBM Watson NLP locally in Containers</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>IBM announced the general availability of Watson NLP (Natural Language Understanding) and Watson Speech containers which can be run locally, on-premises or Kubernetes and OpenShift clusters. This post describes how to run Watson NLP locally.</em><span id="more-5269"></span></p>
+<p>To set some context, here is the description of <a href="https://www.ibm.com/products/ibm-watson-natural-language-processing" rel="noopener noreferrer" target="_blank">IBM Watson NLP Library for Embed</a>.</p>
+<blockquote><p>Enhance your applications with best-in-class Natural Language AI: Introducing IBM Watson NLP Library for Embed, a containerized library designed to empower IBM partners with greater flexibility to infuse powerful natural language AI into their solutions. It combines the best of open source and IBM Research NLP algorithms to deliver superior AI capabilities developers can access and integrate into their apps in the environment of their choice. Offered to partners as embeddable AI, a first of its kind software portfolio that offers best of breed AI from IBM.</p></blockquote>
+<p>The Watson NLP library is available as containers providing REST and gRPC interfaces. While this offering is new, the underlaying functionality has been used and optimized for a long time in IBM offerings like the IBM Watson Assistant and NLU (Natural Language Understanding) SaaS services and IBM Cloud Pak for Data. </p>
+<p>Watson NLP comes with a wide variety of text processing functions, such as emotion analysis and topic modeling. Watson NLP is built on top of the best AI open source software. Additionally it provides stable and supported interfaces, it handles a wide range of languages and its quality is enterprise proven.</p>
+<p>To try it, a <a href="https://www.ibm.com/products/ibm-watson-natural-language-processing" rel="noopener noreferrer" target="_blank">trial</a> is available. The container images are stored in an IBM container registry that is accessed via an <a href="https://www.ibm.com/account/reg/signup?formid=urx-51726" rel="noopener noreferrer" target="_blank">IBM Entitlement Key</a>.</p>
+<p><strong>How to run NLP locally via Docker</strong></p>
+<p>To run NLP as container locally, you first need to define which <a href="https://www.ibm.com/docs/en/watson-libraries?topic=models-catalog" rel="noopener noreferrer" target="_blank">models</a> you want to use which address different use cases. By only picking the ones you need, the size of the containers is reduced. You can also train your own models which I want to blog about separately. </p>
+<p>To define your models, save the following script to &#8216;runNLP.sh&#8217; and modify the fourth line. The script pulls down the models and puts them in a volume that is accessed by the NLP runtime container.</p>
+<pre class="brush: plain; title: ; notranslate">
+#!/usr/bin/env bash
+IMAGE_REGISTRY=${IMAGE_REGISTRY:-&quot;cp.icr.io/cp/ai&quot;}
+RUNTIME_IMAGE=${RUNTIME_IMAGE:-&quot;watson-nlp-runtime:1.0.18&quot;}
+export MODELS=&quot;${MODELS:-&quot;watson-nlp_syntax_izumo_lang_en_stock:1.0.7,watson-nlp_syntax_izumo_lang_fr_stock:1.0.7&quot;}&quot;
+IFS=',' read -ra models_arr &lt;&lt;&lt; &quot;${MODELS}&quot;
+
+# Create a shared volume and initialize with open permissions
+docker volume rm model_data 2&gt;/dev/null || true
+docker volume create --label model_data
+docker run --rm -it -v model_data:/model_data alpine chmod 777 /model_data
+
+# Put models into the shared volume
+for model in &quot;${models_arr[@]}&quot;
+do
+  docker run --rm -it -v model_data:/app/models -e ACCEPT_LICENSE=true $IMAGE_REGISTRY/$model
+done
+
+# Run the runtime with the models mounted
+docker run ${@} \
+  --rm -it \
+  -v model_data:/app/model_data \
+  -e ACCEPT_LICENSE=true \
+  -e LOCAL_MODELS_DIR=/app/model_data \
+  -p 8085:8085 \
+  -p 8080:8080 \
+  $tls_args $IMAGE_REGISTRY/$RUNTIME_IMAGE
+</pre>
+<p>To download the models and run the container, invoke these commands in a first terminal:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ docker login cp.icr.io --username cp --password &lt;entitlement_key&gt;                                          
+$ ./runNLP.sh
+</pre>
+<p>In second terminal invoke this command to invoke a REST API:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ curl -X POST &quot;http://localhost:8080/v1/watson.runtime.nlp.v1/NlpService/SyntaxPredict&quot; \
+  -H &quot;accept: application/json&quot; \
+  -H &quot;grpc-metadata-mm-model-id: syntax_izumo_lang_en_stock&quot; \
+  -H &quot;content-type: application/json&quot; \
+  -d &quot; { \&quot;rawDocument\&quot;: { \&quot;text\&quot;: \&quot;It is so easy to embed Watson NLP in applications. Very cool.\&quot; }}&quot;
+</pre>
+<p>Here is a screenshot of the container in action: </p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-08.42.31.png" alt="" width="1974" height="1072" class="alignnone size-full wp-image-5270" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-08.42.31.png 1974w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-08.42.31-300x163.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-08.42.31-768x417.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-08.42.31-1024x556.png 1024w" sizes="(max-width: 1974px) 100vw, 1974px" /></p>
+<p>You can invoke the Swagger (OpenAI) user interface by opening http://localhost:8080/swagger.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-09.42.48.png" alt="" width="1262" height="926" class="alignnone size-full wp-image-5271" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-09.42.48.png 1262w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-09.42.48-300x220.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-09.42.48-768x564.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-09.42.48-1024x751.png 1024w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-09.42.48-135x100.png 135w" sizes="(max-width: 1262px) 100vw, 1262px" /></p>
+<p>The NLP containers also provides a <a href="https://github.com/IBM/watson-automation#grpc" rel="noopener noreferrer" target="_blank">gRCP interface</a>.</p>
+<p>To find out more about Watson NLP, check out these resources:</p>
+<ul>
+<li><a href="https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home" rel="noopener noreferrer" target="_blank">Documentation</a></li>
+<li><a href="https://www.ibm.com/docs/en/watson-libraries?topic=models-catalog" rel="noopener noreferrer" target="_blank">Model catalog</a></li>
+<li><a href="https://www.ibm.com/products/ibm-watson-natural-language-processing" rel="noopener noreferrer" target="_blank">Trial</a></li>
+<li><a href="https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726" rel="noopener noreferrer" target="_blank">Entitlement key</a></li>
+<li><a href="https://github.com/IBM/watson-automation" rel="noopener noreferrer" target="_blank">Automation for Watson NLP Deployments</a></li>
+</ul>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/running-ibm-watson-nlp-locally-in-containers/">Running IBM Watson NLP locally in Containers</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">5269</post-id>	</item>
+		<item>
+		<title>Running IBM Watson Speech to Text in Containers</title>
+		<link>http://heidloff.net/article/running-ibm-watson-speech-to-text-in-containers/</link>
+				<pubDate>Tue, 08 Nov 2022 08:46:03 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=5255</guid>
+				<description><![CDATA[<p>IBM announced the general availability of Watson NLP and Watson Speech containers which can be run locally, on-premises or Kubernetes and OpenShift clusters. This post describes how to run Speech to Text (STT) locally. To set some context, here are the descriptions of IBM Watson Speech Libraries for Embed and the Watson Speech to Text [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/running-ibm-watson-speech-to-text-in-containers/">Running IBM Watson Speech to Text in Containers</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>IBM announced the general availability of Watson NLP and Watson Speech containers which can be run locally, on-premises or Kubernetes and OpenShift clusters. This post describes how to run Speech to Text (STT) locally.</em><span id="more-5255"></span></p>
+<p>To set some context, here are the descriptions of <a href="https://www.ibm.com/products/watson-speech-embed-libraries" rel="noopener noreferrer" target="_blank">IBM Watson Speech Libraries for Embed</a> and the Watson Speech to Text library.</p>
+<blockquote><p>Build your applications with enterprise-grade speech technology: IBM Watson Speech Libraries for Embed are a set of containerized text-to-speech and speech-to-text libraries designed to offer our IBM partners greater flexibility to infuse the best of IBM Research technology into their solutions. Now available as embeddable AI, partners gain greater capabilities to build voice transcription and voice synthesis applications more quickly and deploy them in any hybrid multi-cloud environment.</p></blockquote>
+<blockquote><p>Watson STT library uses natural language AI technology to understand the human voice and turn it into usable, searchable text. As an embeddable AI library, developers have greater access to the best of IBM Watson Speech technology and IBM Research algorithms to build voice transcription and voice synthesis applications faster: 1. Accuracy out-of-box with advanced training techniques. 2. Customization tools to tailor the models for your specific domain.</p></blockquote>
+<p>The Watson Speech to Text library is available as containers providing REST and WebSockets interfaces. While this offering is new, the underlaying functionality has been used and optimized for a long time in IBM offerings like the IBM Cloud SaaS service STT and IBM Cloud Pak for Data. STT is a speech recognition service that offers functionalities like text recognition, audio preprocessing, noise removal, background noise separation, semantic sentence conversation, and how many speakers are in conversions. </p>
+<p>To try it, a <a href="https://www.ibm.com/products/watson-speech-embed-libraries" rel="noopener noreferrer" target="_blank">trial</a> is available. The container images are stored in an IBM container registry that is accessed via an <a href="https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726" rel="noopener noreferrer" target="_blank">IBM Entitlement Key</a>.</p>
+<p><strong>How to run STT locally via Docker</strong></p>
+<p>To run STT as container, the container image needs to be built first. Different <a href="https://www.ibm.com/docs/en/watson-libraries?topic=wtsleh-models-catalog" rel="noopener noreferrer" target="_blank">speech models</a> are provided for different languages and different voices. There is a <a href="https://github.com/ibm-build-lab/Watson-Speech/tree/main/single-container-stt" rel="noopener noreferrer" target="_blank">sample</a> that describes how to run STT with two speech models <a href="https://www.ibm.com/docs/en/watson-libraries?topic=rc-run-docker-run-1" rel="noopener noreferrer" target="_blank">locally</a>. </p>
+<p>In a first terminal execute these commands to build and run the container:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ docker login cp.icr.io --username cp --password &lt;entitlement_key&gt;                                          
+$ git clone https://github.com/ibm-build-lab/Watson-Speech.git
+$ cd Watson-Speech/single-container-stt      
+$ docker build . -t speech-standalone
+$ docker run -e ACCEPT_LICENSE=true --rm --publish 1080:1080 speech-standalone
+</pre>
+<p>In second terminal invoke these commands to invoke a REST API:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ cd Watson-Speech/single-container-stt
+$ curl &quot;http://localhost:1080/speech-to-text/api/v1/recognize&quot; \
+  --header &quot;Content-Type: audio/wav&quot; \
+  --data-binary @sample_dataset/en-quote-1.wav
+</pre>
+<p>Here is a screenshot of the container in action: </p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-09-at-09.02.18.png" alt="" width="2156" height="1694" class="alignnone size-full wp-image-5264" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-09-at-09.02.18.png 2156w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-09-at-09.02.18-300x236.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-09-at-09.02.18-768x603.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-09-at-09.02.18-1024x805.png 1024w" sizes="(max-width: 2156px) 100vw, 2156px" /></p>
+<p>To define which models you want to put in your image, a multi stage <a href="https://github.com/ibm-build-lab/Watson-Speech/blob/main/single-container-stt/Dockerfile" rel="noopener noreferrer" target="_blank">Dockerfile</a> is used.</p>
+<pre class="brush: plain; title: ; notranslate">
+# Model images
+FROM cp.icr.io/cp/ai/watson-stt-generic-models:1.0.0 as catalog
+# Add additional models here
+FROM cp.icr.io/cp/ai/watson-stt-en-us-multimedia:1.0.0 as en-us-multimedia
+FROM cp.icr.io/cp/ai/watson-stt-fr-fr-multimedia:1.0.0 as fr-fr-multimedia
+
+# Base image for the runtime
+FROM cp.icr.io/cp/ai/watson-stt-runtime:1.0.0 AS runtime
+
+# Environment variable used for directory where configurations are mounted
+ENV CONFIG_DIR=/opt/ibm/chuck.x86_64/var
+
+# Copy in the catalog and runtime configurations
+COPY --chown=watson:0 --from=catalog catalog.json ${CONFIG_DIR}/catalog.json
+COPY --chown=watson:0 ./${LOCAL_DIR}/* ${CONFIG_DIR}/
+
+# Intermediate image to populate the model cache
+FROM runtime as model_cache
+
+# Copy model archives from model images
+RUN sudo mkdir -p /models/pool2
+# For each additional models, copy the line below with the model image
+COPY --chown=watson:0 --from=en-us-multimedia model/* /models/pool2/
+COPY --chown=watson:0 --from=fr-fr-multimedia model/* /models/pool2/
+
+# Run script to initialize the model cache from the model archives
+COPY ./prepareModels.sh .
+RUN ./prepareModels.sh
+
+# Final runtime image with models baked in
+FROM runtime as release
+
+COPY --from=model_cache ${CONFIG_DIR}/cache/ ${CONFIG_DIR}/cache/
+</pre>
+<p>To find out more about Watson Speech to Text, check out these resources:</p>
+<ul>
+<li><a href="https://www.ibm.com/docs/en/watson-libraries?topic=watson-text-speech-library-embed-home" rel="noopener noreferrer" target="_blank">Documentation</a></li>
+<li><a href="https://www.ibm.com/docs/en/watson-libraries?topic=wtsleh-models-catalog" rel="noopener noreferrer" target="_blank">Model catalog</a></li>
+<li><a href="https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models" rel="noopener noreferrer" target="_blank">SaaS model catalog</a></li>
+<li><a href="https://cloud.ibm.com/apidocs/speech-to-text" rel="noopener noreferrer" target="_blank">SaaS API docs</a></li>
+<li><a href="https://www.ibm.com/products/watson-speech-embed-libraries" rel="noopener noreferrer" target="_blank">Trial</a></li>
+<li><a href="https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726" rel="noopener noreferrer" target="_blank">Entitlement key</a></li>
+</ul>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/running-ibm-watson-speech-to-text-in-containers/">Running IBM Watson Speech to Text in Containers</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">5255</post-id>	</item>
+		<item>
+		<title>Setting up the TechZone Accelerator Toolkit</title>
+		<link>http://heidloff.net/article/setting-up-the-techzone-accelerator-toolkit/</link>
+				<pubDate>Mon, 07 Nov 2022 07:36:18 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=5249</guid>
+				<description><![CDATA[<p>With the TechZone Accelerator Toolkit IBM software, open source projects and custom applications can easily be deployed to various clouds. This article explains how to set up environments to use the Toolkit CLI. Check out my earlier blog that introduces the toolkit: Introducing IBM’s Toolkit to handle Everything as Code. The toolkit leverages Terrafrom and [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/setting-up-the-techzone-accelerator-toolkit/">Setting up the TechZone Accelerator Toolkit</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>With the TechZone Accelerator Toolkit IBM software, open source projects and custom applications can easily be deployed to various clouds. This article explains how to set up environments to use the Toolkit CLI.</em><span id="more-5249"></span></p>
+<p>Check out my earlier blog that introduces the toolkit: <a href="http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/" rel="noopener noreferrer" target="_blank">Introducing IBM’s Toolkit to handle Everything as Code</a>. The toolkit leverages Terrafrom and GitOps and is based on best practices from IBM projects with partners and clients.</p>
+<p>The Accelerator Toolkit comes with a CLI called <a href="https://github.com/cloud-native-toolkit/iascable" rel="noopener noreferrer" target="_blank">iascable</a> which converts BOMs (bill of materials/custom solution definitions) into Terraform assets. To run Terraform, additional CLIs are needed in specific versions, for example kubectl, oc, jq, git, helm, etc.</p>
+<p>To simplify the setup of these tools, a container image is provided which comes with everything you need. Here is an example flow of commands that show how to install the CLI, how to run the container and how to run Terraform.</p>
+<p>Setup the CLI, clone a sample repo and generate Terraform:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ curl -sL https://iascable.cloudnativetoolkit.dev/install.sh | sh
+$ git clone https://github.com/IBM/watson-automation
+$ cd watson-deployments/roks-new-nlp 
+$ iascable build -i bom.yaml
+$ cd output
+</pre>
+<p>Launch the container:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ ./launch.sh
+</pre>
+<p>Apply Terraform:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ cd cluster-with-watson-nlp
+$ ./apply.sh
+</pre>
+<p>Watch this <a href="https://youtu.be/8lbVRAvJgy4?t=173" rel="noopener noreferrer" target="_blank">short video starting at 2:53 min</a> for a demo:</p>
+<p><iframe width="853" height="480" src="//www.youtube.com/embed/8lbVRAvJgy4?t=173" frameborder="0" allowfullscreen></iframe></p>
+<p>The toolkit provides two alternatives to run the image:</p>
+<ol>
+<li>Docker</li>
+<li>Multipass</li>
+</ol>
+<p>There are some additional environments (Podman and Colima) that are used within the community, but these are not supported and cannot be guaranteed to work. </p>
+<p>While Docker is easier to use, Multipass is provided as alternative if you don&#8217;t want or cannot run Docker Desktop. Here is the definition from the <a href="https://multipass.run/" rel="noopener noreferrer" target="_blank">Multipass</a> home page.</p>
+<blockquote><p>Ubuntu VMs on demand for any workstation. Get an instant Ubuntu VM with a single command. Multipass can launch and run virtual machines and configure them with cloud-init like a public cloud.</p></blockquote>
+<p>The following options are currently supported for recent versions of Linux, MacOS and Windows:</p>
+<ul>
+<li>Linux: Docker Engine</li>
+<li>MacOS: 1. Docker Desktop, 2. Multipass</li>
+<li>Windows: Windows Subsystem for Linux running Ubuntu image with Docker Engine installed</li>
+</ul>
+<p>Follow the instructions in the Accelerator Toolkit documentation for details.</p>
+<ul>
+<li><a href="https://operate.cloudnativetoolkit.dev/getting-started/setup/#supported-runtime-environments" rel="noopener noreferrer" target="_blank">Supported runtime environments</a></li>
+<li><a href="https://operate.cloudnativetoolkit.dev/tutorials/1-setup/#installing-the-environment" rel="noopener noreferrer" target="_blank">Installing the environment</a></li>
+</ul>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/setting-up-the-techzone-accelerator-toolkit/">Setting up the TechZone Accelerator Toolkit</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">5249</post-id>	</item>
+		<item>
+		<title>Deploying TechZone Toolkit Modules on existing Clusters</title>
+		<link>http://heidloff.net/article/deploying-techzone-toolkit-modules-on-existing-clusters/</link>
+				<pubDate>Fri, 04 Nov 2022 07:28:12 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=5243</guid>
+				<description><![CDATA[<p>With the TechZone Accelerator Toolkit IBM software, open source projects and custom applications can easily be deployed to various clouds. This article explains how to deploy resources on existing OpenShift clusters. Check out my earlier blog that introduces the toolkit: Introducing IBM’s Toolkit to handle Everything as Code. The toolkit leverages Terrafrom and GitOps and [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/deploying-techzone-toolkit-modules-on-existing-clusters/">Deploying TechZone Toolkit Modules on existing Clusters</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>With the TechZone Accelerator Toolkit IBM software, open source projects and custom applications can easily be deployed to various clouds. This article explains how to deploy resources on existing OpenShift clusters.</em><span id="more-5243"></span></p>
+<p>Check out my earlier blog that introduces the toolkit: <a href="http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/" rel="noopener noreferrer" target="_blank">Introducing IBM’s Toolkit to handle Everything as Code</a>. The toolkit leverages Terrafrom and GitOps and is based on best practices from IBM projects with partners and clients.</p>
+<p>With the toolkit both infrastructure like Kubernetes clusters as well as resources within Kubernetes clusters can be deployed. Infrastructure resources are deployed via Terraform, resources within clusters via Argo CD. </p>
+<p>In some cases you might already have clusters and only want to set up resources within these clusters. Additionally when developing your own modules for the toolkit, you often want to skip creations of clusters, since it takes too much time.</p>
+<p>To automate the <a href="https://github.com/IBM/watson-automation" rel="noopener noreferrer" target="_blank">deployments of Watson containers</a> to embed AI in custom applications, we&#8217;ve created a repo. The repo contains documentation how to set up an OpenShift cluster with Watson containers and also documentation how to deploy the Watson containers to existing clusters.</p>
+<p>The following <a href="https://github.com/IBM/watson-automation/blob/main/roks-new-nlp/bom.yaml" rel="noopener noreferrer" target="_blank">sample</a> shows how an OpenShift cluster is created in the IBM Cloud which comes with Argo CD, a GitOps repo, Watson NLP and a sample application based on ubi.</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: cloudnativetoolkit.dev/v1alpha1
+kind: BillOfMaterial
+metadata:
+  name: cluster-with-watson-nlp
+spec:
+  modules:
+    - name: ibm-ocp-vpc
+    - name: argocd-bootstrap
+    - name: gitops-repo
+    - name: terraform-gitops-ubi
+    - name: terraform-gitops-watson-nlp
+</pre>
+<p>To deploy Watson containers to existing OpenShift cluster, another module called &#8216;<a href="https://github.com/cloud-native-toolkit/terraform-ocp-login" rel="noopener noreferrer" target="_blank">ocp-login</a>&#8216; can be used.</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: cloudnativetoolkit.dev/v1alpha1
+kind: BillOfMaterial
+metadata:
+  name: cluster-with-watson-nlp
+spec:
+  modules:
+    - name: ocp-login
+    - name: argocd-bootstrap
+    - name: gitops-repo
+    - name: terraform-gitops-ubi
+    - name: terraform-gitops-watson-nlp
+</pre>
+<p>There is <a href="https://github.com/IBM/watson-automation/blob/main/documentation/Usage.md#usage-of-existing-clusters" rel="noopener noreferrer" target="_blank">documentation</a> that describes how to use the ocp-login module. You need two pieces of information that are defined in credentials.properties.</p>
+<ul>
+<li>OpenShift server URL, for example &#8216;https://cXXX-e.yy-zz.containers.cloud.ibm.com:30364&#8217;</li>
+<li>OpenShift login token, for example &#8216;sha256~xxx&#8217;</li>
+</ul>
+<p>This is the complete <a href="https://github.com/IBM/watson-automation/blob/main/roks-existing-nlp/output/credentials-template.properties" rel="noopener noreferrer" target="_blank">credentials.properties</a> file which also includes credentials to access the GitOps repo and the Watson container registry:</p>
+<pre class="brush: plain; title: ; notranslate">
+export TF_VAR_gitops_repo_token=___your-github-token____
+export TF_VAR_terraform_gitops_watson_nlp_registry_credentials=___your-registry-credentials___
+export TF_VAR_server_url=https://cXXX-e.yy-zz.containers.cloud.ibm.com:30364
+export TF_VAR_cluster_login_token=sha256~xxx
+</pre>
+<p>To obtain &#8216;TF_VAR_server_url&#8217; and &#8216;TF_VAR_cluster_login_token&#8217; open the OpenShift console, click on your user name in the upper right corner and choose &#8216;copy login command&#8217;.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-04-at-08.19.06.png" alt="" width="2438" height="908" class="alignnone size-full wp-image-5244" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-04-at-08.19.06.png 2438w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-04-at-08.19.06-300x112.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-04-at-08.19.06-768x286.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-04-at-08.19.06-1024x381.png 1024w" sizes="(max-width: 2438px) 100vw, 2438px" /></p>
+<p>To find out more about these capabilities, check out the following resources:</p>
+<ul>
+<li><a href="https://github.com/IBM/watson-automation" rel="noopener noreferrer" target="_blank">Watson Automation Repo</a></li>
+<li><a href="https://operate.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">TechZone Accelerator Toolkit</a></li>
+<li><a href="https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home" rel="noopener noreferrer" target="_blank">Watson NLP</a></li>
+</ul>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/deploying-techzone-toolkit-modules-on-existing-clusters/">Deploying TechZone Toolkit Modules on existing Clusters</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">5243</post-id>	</item>
+	</channel>
+</rss>

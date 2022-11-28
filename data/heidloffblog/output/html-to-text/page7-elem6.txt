@@ -1,0 +1,5 @@
+Developing protected Serverless Web Applications.
+
+Serverless platforms are often used to build APIs for web and mobile apps. I’ve open sourced a pattern that shows how to implement protected APIs with IBM Cloud Functions and how to invoke them from Angular web applications. Get the code from GitHub. IBM Cloud Functions comes with an API Gateway. Developers can grant access […]
+
+The post Developing protected Serverless Web Applications [http://heidloff.net/article/serverless-web-applications-oauth] appeared first on Niklas Heidloff [http://heidloff.net].

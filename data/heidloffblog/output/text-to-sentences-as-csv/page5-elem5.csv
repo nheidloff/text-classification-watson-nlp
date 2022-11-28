@@ -1,0 +1,165 @@
+page5-elem5,Converting Custom Resource Versions in Operators.
+page5-elem5,Custom Kubernetes resources typically have multiple versions.
+page5-elem5,Operators need to be able to convert between all different versions in all directions.
+page5-elem5,This article describes how to implement this using a simple example.
+page5-elem5,As applications evolve custom resource definitions need to be extended.
+page5-elem5,As for every API these changes need to be upwards compatible.
+page5-elem5,Additionally the information from the newer versions needs also to be stored in older versions.
+page5-elem5,This is why conversions need to be done in BOTH directions without loosing information.
+page5-elem5,This allows Kubernetes to provide the following functionality.
+page5-elem5,See the documentation Versions in CustomResourceDefinitions [https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definition-versioning/] for details.
+page5-elem5,* Custom resource is requested in a different version than stored version.
+page5-elem5,* Watch is created in one version but the changed object is stored in another version.
+page5-elem5,* Custom resource PUT request is in a different version than storage version.
+page5-elem5,The best documentation I’ve found about conversion comes from Kubebuilder:
+page5-elem5,* Hubs spokes and other wheel metaphors [https://book.kubebuilder.io/multiversion-tutorial/conversion-concepts.html]
+page5-elem5,* Kubebuilder Doc – Implementing Conversion [https://book.kubebuilder.io/multiversion-tutorial/conversion.html]
+page5-elem5,Let’s look at a concrete example.
+page5-elem5,I’m working on a GitHub repo that describes various operator patterns and best practises [https://github.com/IBM/operator-sample-go].
+page5-elem5,There is a custom resource ‘Application’ which has two version: The intial v1alpha1 version and the latest version v1beta1.
+page5-elem5,This is a resource using the alpha version [https://github.com/IBM/operator-sample-go/blob/d4b54480a059a8d46443a03f02a5af0e2f3d15a2/operator-application/config/samples/application.sample_v1alpha1_application.yaml]:
+page5-elem5,apiVersion: application.sample.ibm.com/v1alpha1
+page5-elem5,kind: Application
+page5-elem5,metadata:
+page5-elem5,name: application
+page5-elem5,namespace: application-alpha
+page5-elem5,spec:
+page5-elem5,version: "1.0.0"
+page5-elem5,amountPods: 1
+page5-elem5,databaseName: database
+page5-elem5,databaseNamespace: database
+page5-elem5,The beta version [https://github.com/IBM/operator-sample-go/blob/d4b54480a059a8d46443a03f02a5af0e2f3d15a2/operator-application/config/samples/application.sample_v1beta1_application.yaml] has one additional property ‘title’.
+page5-elem5,apiVersion: application.sample.ibm.com/v1beta1
+page5-elem5,kind: Application
+page5-elem5,metadata:
+page5-elem5,name: application
+page5-elem5,namespace: application-beta
+page5-elem5,spec:
+page5-elem5,version: "1.0.0"
+page5-elem5,amountPods: 1
+page5-elem5,databaseName: database
+page5-elem5,databaseNamespace: database
+page5-elem5,title: Movies
+page5-elem5,Once deployed the application resource can be read via the following kubectl commands.
+page5-elem5,By default the latest version is returned.
+page5-elem5,$ kubectl get applications/application -n application-beta -oyaml
+page5-elem5,or
+page5-elem5,$ kubectl get applications.v1beta1.application.sample.ibm.com/application -n application-beta -oyaml
+page5-elem5,apiVersion: application.sample.ibm.com/v1beta1
+page5-elem5,kind: Application
+page5-elem5,metadata:
+page5-elem5,annotations:
+page5-elem5,kubectl.kubernetes.io/last-applied-configuration: ...
+page5-elem5,...
+page5-elem5,spec:
+page5-elem5,amountPods: 1
+page5-elem5,databaseName: database
+page5-elem5,databaseNamespace: database
+page5-elem5,title: Movies
+page5-elem5,version: 1.0.0
+page5-elem5,You can also request a specific version in this case the alpha version from the application-alpha resource.
+page5-elem5,In the sample the ‘title’ is missing since it wasn’t part of the resource when it was created.
+page5-elem5,$ kubectl get applications.v1alpha1.application.sample.ibm.com/application -n application-alpha -oyaml
+page5-elem5,apiVersion: application.sample.ibm.com/v1alpha1
+page5-elem5,kind: Application
+page5-elem5,metadata:
+page5-elem5,annotations:
+page5-elem5,kubectl.kubernetes.io/last-applied-configuration: ...
+page5-elem5,...
+page5-elem5,spec:
+page5-elem5,amountPods: 1
+page5-elem5,databaseName: database
+page5-elem5,databaseNamespace: database
+page5-elem5,version: 1.0.0
+page5-elem5,Furthermore you can request the beta version of the application-alpha resource.
+page5-elem5,In this case there is a title which has the value ‘Undefined’ since it was not set initially.
+page5-elem5,$ kubectl get applications.v1beta1.application.sample.ibm.com/application -n application-alpha -oyaml | grep -A6 -e "spec:" -e "apiVersion: application.sample.ibm.com/"
+page5-elem5,apiVersion: application.sample.ibm.com/v1beta1
+page5-elem5,kind: Application
+page5-elem5,metadata:
+page5-elem5,annotations:
+page5-elem5,kubectl.kubernetes.io/last-applied-configuration: ...
+page5-elem5,...
+page5-elem5,spec:
+page5-elem5,amountPods: 1
+page5-elem5,databaseName: database
+page5-elem5,databaseNamespace: database
+page5-elem5,title: Undefined
+page5-elem5,version: 1.0.0
+page5-elem5,You can even request the application-beta resource in the alpha version.
+page5-elem5,In this case the title can not be stored in the ‘spec’ part.
+page5-elem5,The trick is to use annotations.
+page5-elem5,Annotations are part of every resource in the metadata section.
+page5-elem5,They are basically a ‘generic schema’ which name/values pairs.
+page5-elem5,$ kubectl get applications.v1alpha1.application.sample.ibm.com/application -n application-beta -oyaml | grep -A6 -e "spec:" -e "apiVersion: application.sample.ibm.com/"
+page5-elem5,apiVersion: application.sample.ibm.com/v1alpha1
+page5-elem5,kind: Application
+page5-elem5,metadata:
+page5-elem5,annotations:
+page5-elem5,applications.application.sample.ibm.com/title: Movies
+page5-elem5,kubectl.kubernetes.io/last-applied-configuration: ...
+page5-elem5,...
+page5-elem5,spec:
+page5-elem5,amountPods: 1
+page5-elem5,databaseName: database
+page5-elem5,databaseNamespace: database
+page5-elem5,version: 1.0.0
+page5-elem5,Next let me describe how to implement this scenario.
+page5-elem5,First you need to define which of the versions should be used to store the resources in etcd via ‘+kubebuilder:storageversion’ (code [https://github.com/IBM/operator-sample-go/blob/d4b54480a059a8d46443a03f02a5af0e2f3d15a2/operator-application/api/v1beta1/application_types.go#L31-L41]).
+page5-elem5,//+kubebuilder:object:root=true
+page5-elem5,//+kubebuilder:subresource:status
+page5-elem5,//+kubebuilder:storageversion
+page5-elem5,type Application struct {
+page5-elem5,metav1.TypeMeta   `json:"inline"`
+page5-elem5,metav1.ObjectMeta `json:"metadataomitempty"`
+page5-elem5,Spec   ApplicationSpec   `json:"specomitempty"`
+page5-elem5,Status ApplicationStatus `json:"statusomitempty"`
+page5-elem5,Next you need to define which of the versions is your hub.
+page5-elem5,All other ones are spokes.
+page5-elem5,See the Kubebuilder documentation.
+page5-elem5,I’ve defined the latest as hub which only contains the empty Hub() function (code [https://github.com/IBM/operator-sample-go/blob/d4b54480a059a8d46443a03f02a5af0e2f3d15a2/operator-application/api/v1beta1/application_conversion.go]).
+page5-elem5,package v1beta1
+page5-elem5,func (*Application) Hub() {}
+page5-elem5,Next the spokes need to implement ConvertTo() and ConvertFrom().
+page5-elem5,Here is the ConvertFrom() function [https://github.com/IBM/operator-sample-go/blob/d4b54480a059a8d46443a03f02a5af0e2f3d15a2/operator-application/api/v1alpha1/application_conversion.go#L42-L60] that converts from the latest to the initial version.
+page5-elem5,// convert from the hub version (src= v1beta1) to this version (dst = v1alpha1)
+page5-elem5,func (dst *Application) ConvertFrom(srcRaw conversion.Hub) error {
+page5-elem5,src := srcRaw.
+page5-elem5,(*v1beta1.Application)
+page5-elem5,dst.ObjectMeta = src.ObjectMeta
+page5-elem5,dst.Status.Conditions = src.Status.Conditions
+page5-elem5,dst.Spec.AmountPods = src.Spec.AmountPods
+page5-elem5,dst.Spec.DatabaseName = src.Spec.DatabaseName
+page5-elem5,dst.Spec.DatabaseNamespace = src.Spec.DatabaseNamespace
+page5-elem5,dst.Spec.SchemaUrl = src.Spec.SchemaUrl
+page5-elem5,dst.Spec.Version = src.Spec.Version
+page5-elem5,if dst.ObjectMeta.Annotations == nil {
+page5-elem5,dst.ObjectMeta.Annotations = make(map[string]string)
+page5-elem5,dst.ObjectMeta.Annotations[variables.ANNOTATION_TITLE] = string(src.Spec.Title)
+page5-elem5,return nil
+page5-elem5,And here is the ConvertTo() function [https://github.com/IBM/operator-sample-go/blob/d4b54480a059a8d46443a03f02a5af0e2f3d15a2/operator-application/api/v1alpha1/application_conversion.go#L12-L40] that converts from the initial to the latest version.
+page5-elem5,// convert this version (src = v1alpha1) to the hub version (dst = v1beta1)
+page5-elem5,func (src *Application) ConvertTo(dstRaw conversion.Hub) error {
+page5-elem5,dst := dstRaw.
+page5-elem5,(*v1beta1.Application)
+page5-elem5,dst.Spec.AmountPods = src.Spec.AmountPods
+page5-elem5,dst.Spec.DatabaseName = src.Spec.DatabaseName
+page5-elem5,dst.Spec.DatabaseNamespace = src.Spec.DatabaseNamespace
+page5-elem5,dst.Spec.SchemaUrl = src.Spec.SchemaUrl
+page5-elem5,dst.Spec.Version = src.Spec.Version
+page5-elem5,if src.ObjectMeta.Annotations == nil {
+page5-elem5,dst.Spec.Title = variables.DEFAULT_ANNOTATION_TITLE
+page5-elem5,} else {
+page5-elem5,title annotationFound := src.ObjectMeta.Annotations[variables.ANNOTATION_TITLE]
+page5-elem5,if annotationFound {
+page5-elem5,dst.Spec.Title = title
+page5-elem5,} else {
+page5-elem5,dst.Spec.Title = variables.DEFAULT_ANNOTATION_TITLE
+page5-elem5,dst.ObjectMeta = src.ObjectMeta
+page5-elem5,dst.Status.Conditions = src.Status.Conditions
+page5-elem5,return nil
+page5-elem5,The implementation of the conversion webhooks is rather straight forward.
+page5-elem5,The setup of the webhooks is a little bit more tricky.
+page5-elem5,Check out my earlier blog Configuring Webhooks for Kubernetes Operators [http://heidloff.net/article/configuring-webhooks-kubernetes-operators/].
+page5-elem5,Try the sample operator [https://github.com/IBM/operator-sample-go] which demonstrates the capabilities outlined above as well as many other operator patterns.
+page5-elem5,The post Converting Custom Resource Versions in Operators [http://heidloff.net/article/converting-custom-resource-versions-kubernetes-operators/] appeared first on Niklas Heidloff [http://heidloff.net].

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 21 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=21" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Fri, 25 Nov 2022 07:22:15 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>Serverless and Kubernetes Demos</title><link>http://heidloff.net/article/serverless-kubernetes-demos</link><comments>http://heidloff.net/article/serverless-kubernetes-demos#respond</comments><pubDate>Thu, 12 Apr 2018 07:28:47 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=2936</guid><description><![CDATA[<p>Over the next weeks I&#8217;ll repeat my session &#8220;When to use Serverless? When to use Kubernetes?&#8221; several times. As backup and for people who won&#8217;t attend the sessions I&#8217;ve recorded the demos. Read the summary of the session and get the slides. Demo 1 &#8211; 0:33 min Developing and debugging OpenWhisk Node.js functions in Visual [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/serverless-kubernetes-demos">Serverless and Kubernetes Demos</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p>Over the next weeks I&#8217;ll repeat my session &#8220;<a href="http://heidloff.net/article/when-to-use-serverless-kubernetes" rel="noopener" target="_blank">When to use Serverless? When to use Kubernetes?</a>&#8221; several times. As backup and for people who won&#8217;t attend the sessions I&#8217;ve recorded the demos.<span id="more-2936"></span></p>
+<p>Read the <a href="http://heidloff.net/article/when-to-use-serverless-kubernetes" rel="noopener" target="_blank">summary</a> of the session and get the <a href="https://www.slideshare.net/niklasheidloff/when-to-use-serverless-when-to-use-kubernetes" rel="noopener" target="_blank">slides</a>.</p>
+<p>Demo 1 &#8211; <a href="https://www.youtube.com/watch?v=Wqy2AHvhDGs&#038;t=33s" rel="noopener" target="_blank">0:33 min</a><br />
+<strong>Developing and debugging OpenWhisk Node.js functions in Visual Studio Code</strong></p>
+<p>Demo 2 &#8211; <a href="https://www.youtube.com/watch?v=Wqy2AHvhDGs&#038;t=156s" rel="noopener" target="_blank">2:36 min</a><br />
+<strong>Developing and debugging Docker based functions and microservices  in Visual Studio Code</strong></p>
+<p>Demo 3 &#8211; <a href="https://www.youtube.com/watch?v=Wqy2AHvhDGs&#038;t=348s" rel="noopener" target="_blank">5:48 min</a><br />
+<strong>A/B testing of Kubernetes applications with Istio</strong></p>
+<p>Demo 4a &#8211; <a href="https://www.youtube.com/watch?v=Wqy2AHvhDGs&#038;t=510s" rel="noopener" target="_blank">8:30 min</a><br />
+<strong>Deploying OpenWhisk functions to the IBM Cloud via CLI</strong></p>
+<p>Demo 4b &#8211; <a href="https://www.youtube.com/watch?v=Wqy2AHvhDGs&#038;t=623s" rel="noopener" target="_blank">10:23 min</a><br />
+<strong>Deploying nginx to Kubernetes via CLI and yaml configuration files and scaling pods</strong></p>
+<p>Demo 4c &#8211; <a href="https://www.youtube.com/watch?v=Wqy2AHvhDGs&#038;t=767s" rel="noopener" target="_blank">12:47 min</a><br />
+<strong>Deploying Jenkins to Kubernetes via Helm</strong></p>
+<p>Demo 5 &#8211; <a href="https://www.youtube.com/watch?v=Wqy2AHvhDGs&#038;t=858s" rel="noopener" target="_blank">14:18 min</a><br />
+<strong>Monitoring Kubernetes applications via Kubernetes Dashboard and Istio Dashboard<br />
+</strong><br />
+<iframe width="853" height="480" src="//www.youtube.com/embed/Wqy2AHvhDGs" frameborder="0" allowfullscreen></iframe></p>
+<p>Here is the summary slide of the session:</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/02/kube-vs-serverless.png"><img src="http://heidloff.net/wp-content/uploads/2018/02/kube-vs-serverless.png" alt="kube-vs-serverless" width="2450" height="1370" class="alignnone size-full wp-image-2812" srcset="http://heidloff.net/wp-content/uploads/2018/02/kube-vs-serverless.png 2450w, http://heidloff.net/wp-content/uploads/2018/02/kube-vs-serverless-300x168.png 300w, http://heidloff.net/wp-content/uploads/2018/02/kube-vs-serverless-1024x573.png 1024w" sizes="(max-width: 2450px) 100vw, 2450px" /></a></p>
+<p>Want to run these demos yourself? Try it out on the <a href="https://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/serverless-kubernetes-demos">Serverless and Kubernetes Demos</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><wfw:commentRss>http://heidloff.net/article/serverless-kubernetes-demos/feed/</wfw:commentRss><slash:comments>0</slash:comments><post-id xmlns="com-wordpress:feed-additions:1">2936</post-id></item></channel></rss>

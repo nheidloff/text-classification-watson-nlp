@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 5 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=5" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Thu, 24 Nov 2022 10:47:53 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>Converting Custom Resource Versions in Operators</title><link>http://heidloff.net/article/converting-custom-resource-versions-kubernetes-operators/</link><pubDate>Tue, 29 Mar 2022 10:12:49 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=4912</guid><description><![CDATA[<p>Custom Kubernetes resources typically have multiple versions. Operators need to be able to convert between all different versions in all directions. This article describes how to implement this using a simple example. As applications evolve, custom resource definitions need to be extended. As for every API these changes need to be upwards compatible. Additionally the [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/converting-custom-resource-versions-kubernetes-operators/">Converting Custom Resource Versions in Operators</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p><em>Custom Kubernetes resources typically have multiple versions. Operators need to be able to convert between all different versions in all directions. This article describes how to implement this using a simple example.</em><span id="more-4912"></span></p>
+<p>As applications evolve, custom resource definitions need to be extended. As for every API these changes need to be upwards compatible. Additionally the information from the newer versions needs also to be stored in older versions. This is why conversions need to be done in BOTH directions without loosing information.</p>
+<p>This allows Kubernetes to provide the following functionality. See the documentation <a href="https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definition-versioning/" rel="noopener noreferrer" target="_blank">Versions in CustomResourceDefinitions</a> for details.</p>
+<ul>
+<li>Custom resource is requested in a different version than stored version.</li>
+<li>Watch is created in one version but the changed object is stored in another version.</li>
+<li>Custom resource PUT request is in a different version than storage version.</li>
+</ul>
+<p>The best documentation I&#8217;ve found about conversion comes from Kubebuilder:</p>
+<ul>
+<li><a href="https://book.kubebuilder.io/multiversion-tutorial/conversion-concepts.html" rel="noopener noreferrer" target="_blank">Hubs, spokes, and other wheel metaphors</a></li>
+<li><a href="https://book.kubebuilder.io/multiversion-tutorial/conversion.html" rel="noopener noreferrer" target="_blank">Kubebuilder Doc &#8211; Implementing Conversion</a></li>
+</ul>
+<p>Let&#8217;s look at a concrete example. I&#8217;m working on a GitHub repo that describes various <a href="https://github.com/IBM/operator-sample-go" rel="noopener noreferrer" target="_blank">operator patterns and best practises</a>. There is a custom resource &#8216;Application&#8217; which has two version: The intial v1alpha1 version and the latest version v1beta1.</p>
+<p>This is a resource using the <a href="https://github.com/IBM/operator-sample-go/blob/d4b54480a059a8d46443a03f02a5af0e2f3d15a2/operator-application/config/samples/application.sample_v1alpha1_application.yaml" rel="noopener noreferrer" target="_blank">alpha version</a>:</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: application.sample.ibm.com/v1alpha1
+kind: Application
+metadata:
+  name: application
+  namespace: application-alpha
+spec:
+  version: &quot;1.0.0&quot;
+  amountPods: 1
+  databaseName: database
+  databaseNamespace: database
+</pre>
+<p>The <a href="https://github.com/IBM/operator-sample-go/blob/d4b54480a059a8d46443a03f02a5af0e2f3d15a2/operator-application/config/samples/application.sample_v1beta1_application.yaml" rel="noopener noreferrer" target="_blank">beta version</a> has one additional property &#8216;title&#8217;.</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: application.sample.ibm.com/v1beta1
+kind: Application
+metadata:
+  name: application
+  namespace: application-beta
+spec:
+  version: &quot;1.0.0&quot;
+  amountPods: 1
+  databaseName: database
+  databaseNamespace: database
+  title: Movies
+</pre>
+<p>Once deployed, the application resource can be read via the following kubectl commands. By default the latest version is returned.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl get applications/application -n application-beta -oyaml
+or
+$ kubectl get applications.v1beta1.application.sample.ibm.com/application -n application-beta -oyaml 
+apiVersion: application.sample.ibm.com/v1beta1
+kind: Application
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: ...
+...
+spec:
+  amountPods: 1
+  databaseName: database
+  databaseNamespace: database
+  title: Movies
+  version: 1.0.0
+</pre>
+<p>You can also request a specific version, in this case the alpha version from the application-alpha resource. In the sample the &#8216;title&#8217; is missing since it wasn&#8217;t part of the resource when it was created.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl get applications.v1alpha1.application.sample.ibm.com/application -n application-alpha -oyaml
+apiVersion: application.sample.ibm.com/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: ...
+...
+spec:
+  amountPods: 1
+  databaseName: database
+  databaseNamespace: database
+  version: 1.0.0
+</pre>
+<p>Furthermore you can request the beta version of the application-alpha resource. In this case there is a title which has the value &#8216;Undefined&#8217; since it was not set initially.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl get applications.v1beta1.application.sample.ibm.com/application -n application-alpha -oyaml | grep -A6 -e &quot;spec:&quot; -e &quot;apiVersion: application.sample.ibm.com/&quot; 
+apiVersion: application.sample.ibm.com/v1beta1
+kind: Application
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: ...
+...
+spec:
+  amountPods: 1
+  databaseName: database
+  databaseNamespace: database
+  title: Undefined
+  version: 1.0.0
+</pre>
+<p>You can even request the application-beta resource in the alpha version. In this case the title can not be stored in the &#8216;spec&#8217; part. The trick is to use annotations. Annotations are part of every resource in the metadata section. They are basically a &#8216;generic schema&#8217; which name/values pairs.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl get applications.v1alpha1.application.sample.ibm.com/application -n application-beta -oyaml | grep -A6 -e &quot;spec:&quot; -e &quot;apiVersion: application.sample.ibm.com/&quot; 
+apiVersion: application.sample.ibm.com/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    applications.application.sample.ibm.com/title: Movies
+    kubectl.kubernetes.io/last-applied-configuration: ...
+...
+spec:
+  amountPods: 1
+  databaseName: database
+  databaseNamespace: database
+  version: 1.0.0
+</pre>
+<p>Next let me describe how to implement this scenario. First you need to define which of the versions should be used to store the resources in etcd via &#8216;+kubebuilder:storageversion&#8217; (<a href="https://github.com/IBM/operator-sample-go/blob/d4b54480a059a8d46443a03f02a5af0e2f3d15a2/operator-application/api/v1beta1/application_types.go#L31-L41" rel="noopener noreferrer" target="_blank">code</a>).</p>
+<pre class="brush: plain; title: ; notranslate">
+//+kubebuilder:object:root=true
+//+kubebuilder:subresource:status
+//+kubebuilder:storageversion
+type Application struct {
+  metav1.TypeMeta   `json:&quot;,inline&quot;`
+  metav1.ObjectMeta `json:&quot;metadata,omitempty&quot;`
+  Spec   ApplicationSpec   `json:&quot;spec,omitempty&quot;`
+  Status ApplicationStatus `json:&quot;status,omitempty&quot;`
+}
+</pre>
+<p>Next you need to define which of the versions is your hub. All other ones are spokes. See the Kubebuilder documentation. I&#8217;ve defined the latest as hub which only contains the empty Hub() function (<a href="https://github.com/IBM/operator-sample-go/blob/d4b54480a059a8d46443a03f02a5af0e2f3d15a2/operator-application/api/v1beta1/application_conversion.go" rel="noopener noreferrer" target="_blank">code</a>).</p>
+<pre class="brush: plain; title: ; notranslate">
+package v1beta1
+func (*Application) Hub() {}
+</pre>
+<p>Next the spokes need to implement ConvertTo() and ConvertFrom(). Here is the ConvertFrom() <a href="https://github.com/IBM/operator-sample-go/blob/d4b54480a059a8d46443a03f02a5af0e2f3d15a2/operator-application/api/v1alpha1/application_conversion.go#L42-L60" rel="noopener noreferrer" target="_blank">function</a> that converts from the latest to the initial version.</p>
+<pre class="brush: plain; title: ; notranslate">
+// convert from the hub version (src= v1beta1) to this version (dst = v1alpha1)
+func (dst *Application) ConvertFrom(srcRaw conversion.Hub) error {
+  src := srcRaw.(*v1beta1.Application)
+  dst.ObjectMeta = src.ObjectMeta
+  dst.Status.Conditions = src.Status.Conditions
+  dst.Spec.AmountPods = src.Spec.AmountPods
+  dst.Spec.DatabaseName = src.Spec.DatabaseName
+  dst.Spec.DatabaseNamespace = src.Spec.DatabaseNamespace
+  dst.Spec.SchemaUrl = src.Spec.SchemaUrl
+  dst.Spec.Version = src.Spec.Version
+  if dst.ObjectMeta.Annotations == nil {
+    dst.ObjectMeta.Annotations = make(map[string]string)
+  }
+  dst.ObjectMeta.Annotations[variables.ANNOTATION_TITLE] = string(src.Spec.Title)
+  return nil
+}
+</pre>
+<p>And here is the ConvertTo() <a href="https://github.com/IBM/operator-sample-go/blob/d4b54480a059a8d46443a03f02a5af0e2f3d15a2/operator-application/api/v1alpha1/application_conversion.go#L12-L40" rel="noopener noreferrer" target="_blank">function</a> that converts from the initial to the latest version.</p>
+<pre class="brush: plain; title: ; notranslate">
+// convert this version (src = v1alpha1) to the hub version (dst = v1beta1)
+func (src *Application) ConvertTo(dstRaw conversion.Hub) error {
+  dst := dstRaw.(*v1beta1.Application)
+  dst.Spec.AmountPods = src.Spec.AmountPods
+  dst.Spec.DatabaseName = src.Spec.DatabaseName
+  dst.Spec.DatabaseNamespace = src.Spec.DatabaseNamespace
+  dst.Spec.SchemaUrl = src.Spec.SchemaUrl
+  dst.Spec.Version = src.Spec.Version
+  if src.ObjectMeta.Annotations == nil {
+    dst.Spec.Title = variables.DEFAULT_ANNOTATION_TITLE
+  } else {
+    title, annotationFound := src.ObjectMeta.Annotations[variables.ANNOTATION_TITLE]
+    if annotationFound {
+      dst.Spec.Title = title
+    } else {
+      dst.Spec.Title = variables.DEFAULT_ANNOTATION_TITLE
+    }
+  }
+  dst.ObjectMeta = src.ObjectMeta
+  dst.Status.Conditions = src.Status.Conditions
+  return nil
+}
+</pre>
+<p>The implementation of the conversion webhooks is rather straight forward. The setup of the webhooks is a little bit more tricky. Check out my earlier blog <a href="http://heidloff.net/article/configuring-webhooks-kubernetes-operators/" rel="noopener noreferrer" target="_blank">Configuring Webhooks for Kubernetes Operators</a>.</p>
+<p>Try the <a href="https://github.com/IBM/operator-sample-go" rel="noopener noreferrer" target="_blank">sample operator</a> which demonstrates the capabilities outlined above as well as many other operator patterns.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/converting-custom-resource-versions-kubernetes-operators/">Converting Custom Resource Versions in Operators</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><post-id xmlns="com-wordpress:feed-additions:1">4912</post-id></item></channel></rss>

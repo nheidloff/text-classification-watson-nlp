@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 22 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=22" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Fri, 25 Nov 2022 07:22:15 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>Data Flows in Serverless Cloud-Native Applications</title><link>http://heidloff.net/article/serverless-data-flows</link><comments>http://heidloff.net/article/serverless-data-flows#respond</comments><pubDate>Thu, 22 Feb 2018 15:15:15 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=2834</guid><description><![CDATA[<p>Serverless platforms like Apache OpenWhisk are gaining more and more traction. Rather than building only single functions, developers are starting to develop cloud-native applications with many serverless functions/microservices. The challenge when building serverless cloud-native applications is how to orchestrate the different functions and how to manage the data flows between the functions. Especially if you [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/serverless-data-flows">Data Flows in Serverless Cloud-Native Applications</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p>Serverless platforms like <a href="https://openwhisk.apache.org/" rel="noopener" target="_blank">Apache OpenWhisk</a> are gaining more and more traction. Rather than building only single functions, developers are starting to develop cloud-native applications with many serverless functions/microservices.<span id="more-2834"></span></p>
+<p>The challenge when building serverless cloud-native applications is how to orchestrate the different functions and how to manage the data flows between the functions. Especially if you want loosely-coupled functions without dependencies between each other, you need a good strategy how to handle the data flows.</p>
+<p>IBM open sourced <a href="https://github.com/ibm-functions/composer" rel="noopener" target="_blank">Composer</a> which is an extension to Apache OpenWhisk. With Composer applications can be defined which contain multiple functions. While the functions are stateless, the applications manage the state between the different function invocations. Read my previous <a href="http://heidloff.net/article/serverless-apps-cloud-functions-composition-flows" rel="noopener" target="_blank">article</a> for a short Composer introduction.</p>
+<p>With Composer applications can be defined either declaratively via JSON or programmatically via JavaScript. Below I describe a pattern how to handle the data flows in applications programmatically.</p>
+<p>Before I explain the pattern, let me summarize my requirements:</p>
+<ul>
+<li>Input parameters of applications need to be accessible in all functions</li>
+<li>Output parameters of previous functions need to be accessible in all later functions</li>
+<li>Functions should have well defined inputs and outputs (schemas)</li>
+<li>Functions get their inputs in the expected format and don&#8217;t have to parse anything first</li>
+<li>Not handled in this article: Applications shouldn&#8217;t break when functions have new schema versions</li>
+</ul>
+<p>For my simple sample application I use two simple functions. This is the first function &#8216;<a href="https://github.com/nheidloff/openwhisk-data-flows/blob/master/functions/simple1.js" rel="noopener" target="_blank">simple1.js</a>&#8216;:</p>
+<pre class="brush: jscript; title: ; notranslate">
+let main = params =&gt; {
+    let inputParameters = params.input;
+    let outputParameters = {
+        'output-simple1': {
+            'some-parameter': 'value of some-parameter in simple1'
+        }
+    }
+    return outputParameters;
+}
+</pre>
+<p>This is the second function &#8216;<a href="https://github.com/nheidloff/openwhisk-data-flows/blob/master/functions/simple2.js" rel="noopener" target="_blank">simple2.js</a>&#8216;:</p>
+<pre class="brush: jscript; title: ; notranslate">
+let main = params =&gt; {
+    let inputParameters = params.input;
+    let outputParameters = {
+        'output-simple2': {
+            'some-parameter': 'value of some-parameter in simple2',
+            'echo-input-parameters': inputParameters
+        }
+    }
+    return outputParameters;
+}
+</pre>
+<p>This is the sample application &#8216;<a href="https://github.com/nheidloff/openwhisk-data-flows/blob/master/apps/in-app-conversions.js" rel="noopener" target="_blank">in-app-conversions.js</a>&#8216;. The application has only two functions which are executed sequentially.</p>
+<pre class="brush: jscript; title: ; notranslate">
+composer.sequence(
+    params =&gt; {
+        params['input'] = {
+            'input-param1': params['input-param1']
+            // add more transformations here 
+        }
+        return params;
+    },
+    composer.task('composer-demo-nh/simple1', { merge: true }),
+    params =&gt; {
+        params['input'] = {
+            'input-param1': params['input-param1'],
+            'some-more-input-for': 'simple2 function'
+            // add more transformations here 
+        }
+        return params;
+    },
+    composer.task('composer-demo-nh/simple2', { merge: true })
+)
+</pre>
+<p>Before I explain the application, here is the output of the &#8216;fsh app invoke&#8217; command:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ fsh app invoke composer-demo-nh/in-app-conversions -p input-param1 input-param1-value
+</pre>
+<pre class="brush: plain; title: ; notranslate">
+{
+  input-param1: &quot;input-param1-value&quot;,
+  output-simple1: {
+    some-parameter: &quot;value of some-parameter in simple1&quot;
+  },
+  input: {
+    input-param1: &quot;input-param1-value&quot;,
+    some-more-input-for: &quot;simple2 function&quot;
+  },
+  output-simple2: {
+    some-parameter: &quot;value of some-parameter in simple2&quot;,
+    echo-input-parameters: {
+      input-param1: &quot;input-param1-value&quot;,
+      some-more-input-for: &quot;simple2 function&quot;
+    }
+  }
+}
+</pre>
+<p>Let me now describe how the application works:</p>
+<ul>
+<li>In order to access all input parameters of the application (in this case &#8216;input-param1&#8217;) &#8216;<a href="https://github.com/ibm-functions/composer/blob/master/docs/COMPOSER.md#composertasktask-options" rel="noopener" target="_blank">merge: true</a>&#8216; is used which merges the inputs and outputs of functions together.</li>
+<li>In order to avoid naming collisions when merging, a simple naming convention is used. Each function puts it&#8217;s output in an unique &#8216;namespace&#8217;, for example &#8216;output-simple1&#8217;.</li>
+<li>The &#8216;params&#8217; object contains the inputs of the applications and the outputs of all functions. In order to access the input of a function within a specific function, the function reads the subset of data from &#8216;params.input&#8217;.</li>
+<li>The conversions are done via JavaScript in the application directly by inserting a JavaScript <a href="https://github.com/ibm-functions/composer/blob/master/docs/COMPOSER.md#composertasktask-options" rel="noopener" target="_blank">task</a> between the functions.</li>
+</ul>
+<p>This is the visualization of the sample application in the fsh shell:</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/02/data-flow-sample2.png"><img src="http://heidloff.net/wp-content/uploads/2018/02/data-flow-sample2.png" alt="data-flow-sample2" width="1786" height="1818" class="alignnone size-full wp-image-2837" srcset="http://heidloff.net/wp-content/uploads/2018/02/data-flow-sample2.png 1786w, http://heidloff.net/wp-content/uploads/2018/02/data-flow-sample2-295x300.png 295w, http://heidloff.net/wp-content/uploads/2018/02/data-flow-sample2-1006x1024.png 1006w" sizes="(max-width: 1786px) 100vw, 1786px" /></a></p>
+<p><a href="https://github.com/nheidloff/openwhisk-data-flows" rel="noopener" target="_blank">Get the code from GitHub.</a></p>
+<p>In a future article <a href="http://heidloff.net/article/transforming-json-serverless" rel="noopener" target="_blank">Transforming JSON Data in Serverless Applications</a> I will extend this sample to demonstrate how to handle more complex scenarios and and how to do  conversions between JSON via a nice open source project that supports &#8216;JSON schemas&#8217;.</p>
+<p>If you want to try out OpenWhisk in the cloud, you can get an account on the <a href="http://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/serverless-data-flows">Data Flows in Serverless Cloud-Native Applications</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><wfw:commentRss>http://heidloff.net/article/serverless-data-flows/feed/</wfw:commentRss><slash:comments>0</slash:comments><post-id xmlns="com-wordpress:feed-additions:1">2834</post-id></item></channel></rss>

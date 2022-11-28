@@ -1,0 +1,80 @@
+page1-elem2,Running IBM Watson Speech To Text in Minikube.
+page1-elem2,IBM Watson NLP (Natural Language Understanding) and Watson Speech containers can be run locally on-premises or Kubernetes and OpenShift clusters.
+page1-elem2,Via REST and WebSockets APIs AI can easily be embedded in applications.
+page1-elem2,This post describes how to run Watson Speech To Text locally in Minikube.
+page1-elem2,To set some context check out the landing page IBM Watson Speech Libraries for Embed [https://www.ibm.com/products/watson-speech-embed-libraries].
+page1-elem2,The Watson Speech To Text library is available as containers providing REST and WebSockets interfaces.
+page1-elem2,While this offering is new the underlaying functionality has been used and optimized for a long time in IBM offerings like the IBM Cloud SaaS service for STS and IBM Cloud Pak for Data.
+page1-elem2,To try it a trial [https://www.ibm.com/account/reg/us-en/signup?formid=urx-51754] is available.
+page1-elem2,The container images are stored in an IBM container registry that is accessed via an IBM Entitlement Key [https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726].
+page1-elem2,How to run STS locally via Minikube
+page1-elem2,My post Running IBM Watson Speech to Text in Containers [http://heidloff.net/article/running-ibm-watson-speech-to-text-in-containers/] explained how to run Watson STT locally in Docker.
+page1-elem2,The instructions below describe how to deploy Watson Speech To Text locally to Minikube via kubectl and yaml files.
+page1-elem2,First you need to install Minikube for example via brew on MacOS.
+page1-elem2,Next Minikube needs to be started with more memory and disk size than the Minikube defaults.
+page1-elem2,I’ve used the settings below which is more than required but I wanted to leave space for other applications.
+page1-elem2,Note that you also need to give your container runtime more resources.
+page1-elem2,For example if you use Docker Desktop navigate to Preferences-Resources to do this.
+page1-elem2,$ brew install minikube
+page1-elem2,$ minikube start --cpus 12 --memory 16000 --disk-size 50g
+page1-elem2,The namespace and secret need to be created.
+page1-elem2,$ kubectl create namespace watson-demo
+page1-elem2,$ kubectl config set-context --current --namespace=watson-demo
+page1-elem2,$ kubectl create secret docker-registry \
+page1-elem2,--docker-server=cp.icr.io \
+page1-elem2,--docker-username=cp \
+page1-elem2,--docker-password=<your IBM Entitlement Key> \
+page1-elem2,-n watson-demo \
+page1-elem2,ibm-entitlement-key
+page1-elem2,Clone a repo with the Kubernetes yaml files to deploy Watson Speech To Text.
+page1-elem2,$ git clone https://github.com/nheidloff/watson-embed-demos.git
+page1-elem2,$ kubectl apply -f watson-embed-demos/minikube-speech-to-text/kubernetes/
+page1-elem2,$ kubectl get pods --watch
+page1-elem2,To use other models modify deployment.yaml [https://github.com/nheidloff/watson-embed-demos/blob/4660d1db1471e1d3079f2932bfc3107845bf6e45/minikube-speech-to-text/kubernetes/deployment.yaml#L70-L90].
+page1-elem2,- name: watson-stt-en-us-telephony
+page1-elem2,image: cp.icr.io/cp/ai/watson-stt-en-us-telephony:1.0.0
+page1-elem2,args:
+page1-elem2,- sh
+page1-elem2,- -c
+page1-elem2,- cp model/* /models/pool2
+page1-elem2,env:
+page1-elem2,- name: ACCEPT_LICENSE
+page1-elem2,value: "true"
+page1-elem2,resources:
+page1-elem2,limits:
+page1-elem2,cpu: 1
+page1-elem2,ephemeral-storage: 1Gi
+page1-elem2,memory: 1Gi
+page1-elem2,requests:
+page1-elem2,cpu: 100m
+page1-elem2,ephemeral-storage: 1Gi
+page1-elem2,memory: 256Mi
+page1-elem2,volumeMounts:
+page1-elem2,- name: models
+page1-elem2,mountPath: /models/pool2
+page1-elem2,When you open the Kubernetes Dashboard (via ‘minikube dashboard’) you’ll see the deployed resources.
+page1-elem2,The pod contains the runtime container and four init containers (two specific models a generic model and a utility container).
+page1-elem2,To invoke Watson Speech To Text port forwarding can be used.
+page1-elem2,$ kubectl port-forward svc/ibm-watson-tts-embed 1080
+page1-elem2,Invoke the REST API with a sample audio file.
+page1-elem2,$ curl "http://localhost:1080/speech-to-text/api/v1/recognize" \
+page1-elem2,--header "Content-Type: audio/wav" \
+page1-elem2,--data-binary @watson-embed-demos/demo.wav
+page1-elem2,"result_index": 0
+page1-elem2,"results": [
+page1-elem2,"final": true
+page1-elem2,"alternatives": [
+page1-elem2,"transcript": "ibm watson speech to text can easily be embedded in applications"
+page1-elem2,"confidence": 0.85
+page1-elem2,To find out more about Watson Speech To Speech and Watson for Embed in general check out these resources:
+page1-elem2,* Watson Speech To Text Documentation [https://www.ibm.com/docs/en/watson-libraries?topic=watson-speech-text-library-embed-home]
+page1-elem2,* Watson Speech To Text Model Catalog [https://www.ibm.com/docs/en/watson-libraries?topic=wtsleh-models-catalog]
+page1-elem2,* Watson Speech To Text SaaS Model Catalog [https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models]
+page1-elem2,* Watson Speech To Text SaaS API docs [https://cloud.ibm.com/apidocs/speech-to-text]
+page1-elem2,* Trial [https://www.ibm.com/account/reg/us-en/signup?formid=urx-51754]
+page1-elem2,* Entitlement key [https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726]
+page1-elem2,* Automation for Watson NLP Deployments [https://github.com/IBM/watson-automation]
+page1-elem2,* Running IBM Watson NLP locally in Containers [http://heidloff.net/article/running-ibm-watson-nlp-locally-in-containers/]
+page1-elem2,* Running IBM Watson Speech to Text in Containers [http://heidloff.net/article/running-ibm-watson-speech-to-text-in-containers/]
+page1-elem2,* Running IBM Watson Text to Speech in Containers [http://heidloff.net/article/running-ibm-watson-text-to-speech-in-containers/]
+page1-elem2,The post Running IBM Watson Speech To Text in Minikube [http://heidloff.net/article/running-ibm-watson-speech-to-text-in-minikube/] appeared first on Niklas Heidloff [http://heidloff.net].

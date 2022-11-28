@@ -1,0 +1,74 @@
+Running and Deploying IBM Watson NLP Containers. <p><em>IBM Watson NLP (Natural Language Understanding) and Watson Speech containers can be run locally, on-premises or Kubernetes and OpenShift clusters. Via REST and gRCP APIs AI can easily be embedded in applications. This post describes different options how to run and deploy Watson NLP.</em><span id="more-5407"></span></p>
+<p>To set some context, check out the landing page <a href="https://www.ibm.com/products/ibm-watson-natural-language-processing" rel="noopener noreferrer" target="_blank">IBM Watson NLP Library for Embed</a>. The Watson NLP containers can be run on different container platforms, they provide REST and gRCP interfaces, they can be extended with custom models and they can easily be embedded in solutions. While this offering is new, the underlaying functionality has been used and optimized for a long time in IBM offerings like the IBM Watson Assistant and NLU (Natural Language Understanding) SaaS services and IBM Cloud Pak for Data.</p>
+<p>There are multiple options how to run and deploy Watson NLP:</p>
+<ul>
+<li><a href="http://heidloff.net/article/running-ibm-watson-nlp-locally-in-containers/" rel="noopener noreferrer" target="_blank">Locally via container engines like Docker or Podman</a></li>
+<li><a href="http://heidloff.net/article/running-ibm-watson-nlp-in-minikube/" rel="noopener noreferrer" target="_blank">Deployments to Kubernetes (or OpenShift and Minikube) via Helm chart</a></li>
+<li><a href="http://heidloff.net/article/setting-up-openshift-and-applications-in-one-hour/" rel="noopener noreferrer" target="_blank">Deployments to Kubernetes/OpenShift via TechZone Deployer (Terraform and ArgoCD)</a></li>
+<li>Deployments to Kubernetes via kubectl and yaml files (focus of this post)</li>
+<li><a href="https://www.ibm.com/docs/en/watson-libraries?topic=containers-run-kubernetes-kserve-modelmesh-serving" rel="noopener noreferrer" target="_blank">Deployments to Kubernetes and KServe ModelMesh Serving</a></li>
+</ul>
+<p>To run Watson NLP two components are needed:</p>
+<ul>
+<li>Watson NLP runtime: Executes the core functionality and provides REST and gRPC interfaces.</li>
+<li>Models: Predefined or custom models are stored in a directory/volume that the runtime can access. The models can be copied there manually, init containers can be used or they can be downloaded from cloud object storage.</li>
+</ul>
+<p>There are different ways to package these two components up in containers. Read the post <a href="http://heidloff.net/article/building-custom-ibm-watson-nlp-images-models/" rel="noopener noreferrer" target="_blank">Building custom IBM Watson NLP Images</a> for details.</p>
+<p><strong>Deployments to Kubernetes via kubectl and yaml files</strong></p>
+<p>Via kubectl or oc <a href="https://github.com/nheidloff/watson-embed-demos/blob/main/nlp/kubernetes/deployment.yaml" rel="noopener noreferrer" target="_blank">Kubernetes resources</a> can be deployed. The Watson NLP pod contains the NLP runtime container and potentially multiple init containers. Each init container contains either <a href="https://www.ibm.com/docs/en/watson-libraries?topic=models-catalog" rel="noopener noreferrer" target="_blank">predefined</a> or custom models.</p>
+<pre class="brush: plain; title: ; notranslate">
+initContainers:
+- name: ensemble-model
+  image: cp.icr.io/cp/ai/watson-nlp_syntax_izumo_lang_en_stock:1.0.7
+  volumeMounts:
+  - name: model-directory
+    mountPath: &quot;/app/models&quot;
+  env:
+  - name: ACCEPT_LICENSE
+    value: 'true'
+</pre>
+<pre class="brush: plain; title: ; notranslate">
+containers:
+- name: watson-nlp-runtime
+  image: cp.icr.io/cp/ai/watson-nlp-runtime:1.0.18
+  env:
+  - name: ACCEPT_LICENSE
+    value: 'true'
+  - name: LOCAL_MODELS_DIR
+    value: &quot;/app/models&quot;
+</pre>
+<p>To deploy the Kubernetes resources, the following commands need to be executed.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl create namespace watson-demo
+$ kubectl config set-context --current --namespace=watson-demo
+$ kubectl create secret docker-registry \
+--docker-server=cp.icr.io \
+--docker-username=cp \
+--docker-password=&lt;your IBM Entitlement Key&gt; \
+-n watson-demo \
+ibm-entitlement-key
+$ git clone https://github.com/nheidloff/watson-embed-demos.git
+$ kubectl apply -f watson-embed-demos/nlp/kubernetes/
+$ kubectl get pods --watch
+$ kubectl get svc
+$ kubectl port-forward svc/watson-nlp-runtime-service 8080
+</pre>
+<p>In the second terminal the REST API can be invoked.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ curl -X POST &quot;http://localhost:8080/v1/watson.runtime.nlp.v1/NlpService/SyntaxPredict&quot; \
+  -H &quot;accept: application/json&quot; \
+  -H &quot;grpc-metadata-mm-model-id: syntax_izumo_lang_en_stock&quot; \
+  -H &quot;content-type: application/json&quot; \
+  -d &quot; { \&quot;rawDocument\&quot;: { \&quot;text\&quot;: \&quot;It is so easy to embed Watson NLP in applications. Very cool.\&quot; }}&quot;
+</pre>
+<p>To see and run other REST APIs, the Swagger (OpenAPI) user interface can be opened: http://localhost:8080/swagger.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-18-at-08.08.49.png" alt="" width="1792" height="1602" class="alignnone size-full wp-image-5411" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-18-at-08.08.49.png 1792w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-18-at-08.08.49-300x268.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-18-at-08.08.49-768x687.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-18-at-08.08.49-1024x915.png 1024w" sizes="(max-width: 1792px) 100vw, 1792px" /></p>
+<p>To find out more about Watson NLP and Watson for Embed in general, check out these resources:</p>
+<ul>
+<li><a href="https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home" rel="noopener noreferrer" target="_blank">IBM Watson NLP Documentation</a></li>
+<li><a href="https://www.ibm.com/account/reg/us-en/signup?formid=urx-51726" rel="noopener noreferrer" target="_blank">IBM Watson NLP Trial</a></li>
+<li><a href="https://github.com/IBM/watson-automation" rel="noopener noreferrer" target="_blank">Automation for Watson NLP Deployments</a></li>
+<li><a href="http://heidloff.net/article/running-ibm-watson-nlp-locally-in-containers/" rel="noopener noreferrer" target="_blank">Running IBM Watson NLP locally in Containers</a></li>
+<li><a href="http://heidloff.net/article/running-ibm-watson-nlp-in-minikube/" rel="noopener noreferrer" target="_blank">Running IBM Watson NLP in Minikube</a></li>
+</ul>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/running-and-deploying-ibm-watson-nlp-containers/">Running and Deploying IBM Watson NLP Containers</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>

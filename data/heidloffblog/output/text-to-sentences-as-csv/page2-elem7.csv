@@ -1,0 +1,67 @@
+page2-elem7,Running IBM Watson Speech to Text in Containers.
+page2-elem7,IBM announced the general availability of Watson NLP and Watson Speech containers which can be run locally on-premises or Kubernetes and OpenShift clusters.
+page2-elem7,This post describes how to run Speech to Text (STT) locally.
+page2-elem7,To set some context here are the descriptions of IBM Watson Speech Libraries for Embed [https://www.ibm.com/products/watson-speech-embed-libraries] and the Watson Speech to Text library.
+page2-elem7,> Build your applications with enterprise-grade speech technology: IBM Watson Speech Libraries for Embed are a set of containerized text-to-speech and speech-to-text libraries designed to offer our IBM partners greater flexibility to infuse the best of IBM Research technology into their solutions.
+page2-elem7,Now available as embeddable AI partners gain greater capabilities to build voice transcription and voice synthesis applications more quickly and deploy them in any hybrid multi-cloud environment.
+page2-elem7,> Watson STT library uses natural language AI technology to understand the human voice and turn it into usable searchable text.
+page2-elem7,As an embeddable AI library developers have greater access to the best of IBM Watson Speech technology and IBM Research algorithms to build voice transcription and voice synthesis applications faster: 1.
+page2-elem7,Accuracy out-of-box with advanced training techniques.
+page2-elem7,2.
+page2-elem7,Customization tools to tailor the models for your specific domain.
+page2-elem7,The Watson Speech to Text library is available as containers providing REST and WebSockets interfaces.
+page2-elem7,While this offering is new the underlaying functionality has been used and optimized for a long time in IBM offerings like the IBM Cloud SaaS service STT and IBM Cloud Pak for Data.
+page2-elem7,STT is a speech recognition service that offers functionalities like text recognition audio preprocessing noise removal background noise separation semantic sentence conversation and how many speakers are in conversions.
+page2-elem7,To try it a trial [https://www.ibm.com/products/watson-speech-embed-libraries] is available.
+page2-elem7,The container images are stored in an IBM container registry that is accessed via an IBM Entitlement Key [https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726].
+page2-elem7,How to run STT locally via Docker
+page2-elem7,To run STT as container the container image needs to be built first.
+page2-elem7,Different speech models [https://www.ibm.com/docs/en/watson-libraries?topic=wtsleh-models-catalog] are provided for different languages and different voices.
+page2-elem7,There is a sample [https://github.com/ibm-build-lab/Watson-Speech/tree/main/single-container-stt] that describes how to run STT with two speech models locally [https://www.ibm.com/docs/en/watson-libraries?topic=rc-run-docker-run-1].
+page2-elem7,In a first terminal execute these commands to build and run the container:
+page2-elem7,$ docker login cp.icr.io --username cp --password <entitlement_key>
+page2-elem7,$ git clone https://github.com/ibm-build-lab/Watson-Speech.git
+page2-elem7,$ cd Watson-Speech/single-container-stt
+page2-elem7,$ docker build .
+page2-elem7,-t speech-standalone
+page2-elem7,$ docker run -e ACCEPT_LICENSE=true --rm --publish 1080:1080 speech-standalone
+page2-elem7,In second terminal invoke these commands to invoke a REST API:
+page2-elem7,$ cd Watson-Speech/single-container-stt
+page2-elem7,$ curl "http://localhost:1080/speech-to-text/api/v1/recognize" \
+page2-elem7,--header "Content-Type: audio/wav" \
+page2-elem7,--data-binary @sample_dataset/en-quote-1.wav
+page2-elem7,Here is a screenshot of the container in action:
+page2-elem7,To define which models you want to put in your image a multi stage Dockerfile [https://github.com/ibm-build-lab/Watson-Speech/blob/main/single-container-stt/Dockerfile] is used.
+page2-elem7,# Model images
+page2-elem7,FROM cp.icr.io/cp/ai/watson-stt-generic-models:1.0.0 as catalog
+page2-elem7,# Add additional models here
+page2-elem7,FROM cp.icr.io/cp/ai/watson-stt-en-us-multimedia:1.0.0 as en-us-multimedia
+page2-elem7,FROM cp.icr.io/cp/ai/watson-stt-fr-fr-multimedia:1.0.0 as fr-fr-multimedia
+page2-elem7,# Base image for the runtime
+page2-elem7,FROM cp.icr.io/cp/ai/watson-stt-runtime:1.0.0 AS runtime
+page2-elem7,# Environment variable used for directory where configurations are mounted
+page2-elem7,ENV CONFIG_DIR=/opt/ibm/chuck.x86_64/var
+page2-elem7,# Copy in the catalog and runtime configurations
+page2-elem7,COPY --chown=watson:0 --from=catalog catalog.json ${CONFIG_DIR}/catalog.json
+page2-elem7,COPY --chown=watson:0 ./${LOCAL_DIR}/* ${CONFIG_DIR}/
+page2-elem7,# Intermediate image to populate the model cache
+page2-elem7,FROM runtime as model_cache
+page2-elem7,# Copy model archives from model images
+page2-elem7,RUN sudo mkdir -p /models/pool2
+page2-elem7,# For each additional models copy the line below with the model image
+page2-elem7,COPY --chown=watson:0 --from=en-us-multimedia model/* /models/pool2/
+page2-elem7,COPY --chown=watson:0 --from=fr-fr-multimedia model/* /models/pool2/
+page2-elem7,# Run script to initialize the model cache from the model archives
+page2-elem7,COPY ./prepareModels.sh .
+page2-elem7,RUN ./prepareModels.sh
+page2-elem7,# Final runtime image with models baked in
+page2-elem7,FROM runtime as release
+page2-elem7,COPY --from=model_cache ${CONFIG_DIR}/cache/ ${CONFIG_DIR}/cache/
+page2-elem7,To find out more about Watson Speech to Text check out these resources:
+page2-elem7,* Documentation [https://www.ibm.com/docs/en/watson-libraries?topic=watson-text-speech-library-embed-home]
+page2-elem7,* Model catalog [https://www.ibm.com/docs/en/watson-libraries?topic=wtsleh-models-catalog]
+page2-elem7,* SaaS model catalog [https://cloud.ibm.com/docs/speech-to-text?topic=speech-to-text-models]
+page2-elem7,* SaaS API docs [https://cloud.ibm.com/apidocs/speech-to-text]
+page2-elem7,* Trial [https://www.ibm.com/products/watson-speech-embed-libraries]
+page2-elem7,* Entitlement key [https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726]
+page2-elem7,The post Running IBM Watson Speech to Text in Containers [http://heidloff.net/article/running-ibm-watson-speech-to-text-in-containers/] appeared first on Niklas Heidloff [http://heidloff.net].

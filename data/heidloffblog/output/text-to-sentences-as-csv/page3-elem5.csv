@@ -1,0 +1,61 @@
+page3-elem5,Setting up OpenShift and Applications in one Hour.
+page3-elem5,With the TechZone Accelerator Toolkit OpenShift can be set up in the cloud including custom applications by using automation via Terraform and Argo CD.
+page3-elem5,In my previous blog I explained the toolkit: Introducing IBM’s Toolkit to handle Everything as Code [http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/].
+page3-elem5,The toolkit leverages Terrafrom and GitOps and is based on best practices based on IBM’s deployment experiences from partner and client projects.
+page3-elem5,Let’s take a look how the toolkit can be used.
+page3-elem5,The module catalog [https://modules.cloudnativetoolkit.dev/] provides 200+ modules to install IBM Software and open source components which can be deployed on clouds like AWS Azure and IBM Cloud.
+page3-elem5,Complete stack solutions are defined in yaml files.
+page3-elem5,These bill of materials contain list of modules in this example [https://github.com/IBM/watson-automation/blob/e92c9cef8acb1bd5c57177dad3d91c42ff9c8aee/roks-new-nlp/bom.yaml#L27] OpenShift in the IBM Cloud Argo CD including a GitOps repo the Watson NLP (natural language processing) container and a custom application.
+page3-elem5,apiVersion: cloudnativetoolkit.dev/v1alpha1
+page3-elem5,kind: BillOfMaterial
+page3-elem5,metadata:
+page3-elem5,name: cluster-with-watson-nlp
+page3-elem5,spec:
+page3-elem5,modules:
+page3-elem5,- name: ibm-ocp-vpc
+page3-elem5,version: v1.16.0
+page3-elem5,- name: argocd-bootstrap
+page3-elem5,version: v1.12.0
+page3-elem5,- name: gitops-repo
+page3-elem5,alias: gitops_repo
+page3-elem5,version: v1.22.2
+page3-elem5,- name: terraform-gitops-ubi
+page3-elem5,alias: terraform_gitops_ubi
+page3-elem5,version: v0.0.8
+page3-elem5,- name: terraform-gitops-watson-nlp
+page3-elem5,alias: terraform_gitops_watson_nlp
+page3-elem5,version: v0.0.80
+page3-elem5,The modules can be configured via variables [https://github.com/IBM/watson-automation/blob/e92c9cef8acb1bd5c57177dad3d91c42ff9c8aee/roks-new-nlp/output/cluster-with-watson-nlp/variables-template.yaml] for example regions resource group names sizes of clusters etc.
+page3-elem5,variables:
+page3-elem5,# overall
+page3-elem5,- name: region
+page3-elem5,description: The IBM Cloud region where the instance should be provisioned
+page3-elem5,value: xxx
+page3-elem5,- name: resource_group_name
+page3-elem5,description: The name of the IBM Cloud resource group where the resources should be provisioned
+page3-elem5,value: xxx
+page3-elem5,# ocp
+page3-elem5,- name: worker_count
+page3-elem5,description: The number of workers that should be provisioned per subnet
+page3-elem5,value: 2
+page3-elem5,- name: cluster_flavor
+page3-elem5,description: The flavor of the worker nodes that will be provisioned
+page3-elem5,value: bx2.4x16
+page3-elem5,To run the sample you need to clone the repo and install the toolkit’s CLI [https://github.com/cloud-native-toolkit/iascable] called iascable.
+page3-elem5,$ curl -sL https://iascable.cloudnativetoolkit.dev/install.sh | sh
+page3-elem5,$ git clone https://github.com/IBM/watson-automation
+page3-elem5,With the CLI the bill of material is converted into Terraform assets.
+page3-elem5,$ cd watson-deployments/roks-new-nlp
+page3-elem5,$ iascable build -i bom.yaml
+page3-elem5,$ cd output
+page3-elem5,An image is provided which comes with all tools necessary to run Terraform.
+page3-elem5,To start the container invoke this command in a terminal:
+page3-elem5,$ ./launch.sh
+page3-elem5,In the running container invoke these commands:
+page3-elem5,$ cd cluster-with-watson-nlp
+page3-elem5,$ ./apply.sh
+page3-elem5,The ‘apply’ command takes roughly 45 minutes to set up the managed OpenShift cluster in the IBM Cloud and the additional modules.
+page3-elem5,After this you can find the resources in the IBM Cloud console [https://github.com/IBM/watson-automation/blob/e92c9cef8acb1bd5c57177dad3d91c42ff9c8aee/documentation/screenshots/openshift-01.png].
+page3-elem5,Argo CD has been set up to deploy the Watson NLP container and the custom application.
+page3-elem5,To find out more about the toolkit check out the documentation [https://operate.cloudnativetoolkit.dev/] and the sample [https://github.com/IBM/watson-automation] above.
+page3-elem5,The post Setting up OpenShift and Applications in one Hour [http://heidloff.net/article/setting-up-openshift-and-applications-in-one-hour/] appeared first on Niklas Heidloff [http://heidloff.net].

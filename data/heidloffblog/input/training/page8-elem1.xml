@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 22 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=22" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Fri, 25 Nov 2022 07:22:15 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>Transforming JSON Data in Serverless Applications</title><link>http://heidloff.net/article/transforming-json-serverless</link><comments>http://heidloff.net/article/transforming-json-serverless#respond</comments><pubDate>Mon, 26 Feb 2018 08:25:08 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=2854</guid><description><![CDATA[<p>Serverless platforms like Apache OpenWhisk are gaining more and more traction. Rather than building only single functions, developers are starting to develop cloud-native applications with many serverless functions/microservices. The challenge when building serverless applications is how to manage the data flows between the functions, especially if you want loosely coupled functions without dependencies between each [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/transforming-json-serverless">Transforming JSON Data in Serverless Applications</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p>Serverless platforms like <a href="https://openwhisk.apache.org/" rel="noopener" target="_blank">Apache OpenWhisk</a> are gaining more and more traction. Rather than building only single functions, developers are starting to develop cloud-native applications with many serverless functions/microservices.<span id="more-2854"></span></p>
+<p>The challenge when building serverless applications is how to manage the data flows between the functions, especially if you want loosely coupled functions without dependencies between each other.</p>
+<p>In my previous article <a href="http://heidloff.net/article/serverless-data-flows" rel="noopener" target="_blank">Data Flows in Serverless Cloud-Native Applications</a> I explained a pattern how to manage the data flows between functions. In this article I will go one step further and describe how functions can define their input and output schemas and how transformations of JSON data can be done.</p>
+<p><a href="https://github.com/nheidloff/openwhisk-data-flows" rel="noopener" target="_blank">The complete code of this sample is on GitHub.</a></p>
+<p>I picked a simple scenario application which sends a mail. The serverless application is invoked with two input parameters: person id and subject. For the specific person the full profile is received which contains the email address. The last function sends a mail to this email address with the defined subject. </p>
+<p>There are only two &#8216;real&#8217; functions that are executed sequentially: 1. read person profile, 2. send mail. Before they are executed however, additional &#8216;transformation&#8217; functions are invoked which transform the data into the exact format that is expected. Here is the code of the <a href="https://github.com/nheidloff/openwhisk-data-flows/blob/master/apps/send-mail-app.js" rel="noopener" target="_blank">application</a>:</p>
+<pre class="brush: jscript; title: ; notranslate">
+composer.try(
+    composer.sequence(
+        composer.task('composer-demo-nh/transform-read-person-profile', { merge: true }),
+        composer.task('composer-demo-nh/read-person-profile', { merge: true }),
+        composer.task('composer-demo-nh/transform-send-mail', { merge: true }),
+        composer.task('composer-demo-nh/send-mail', { merge: true })
+    ),
+    params =&gt; {
+        return { 
+            ok: false,
+            'message': 'An error has occured in the app send-mail-app',
+            'error-from-function': params.error
+         } 
+    }
+)
+</pre>
+<p>Let&#8217;s take a look at the function that reads the <a href="https://github.com/nheidloff/openwhisk-data-flows/blob/master/functions/read-person-profile.js" rel="noopener" target="_blank">user profile</a>. The function expects a person id and returns a person profile including an email address. The inputs and outputs are defined via <a href="http://json-schema.org" rel="noopener" target="_blank">JSON Schema</a>.</p>
+<p>Check out the schema of the person profile which is the <a href="https://github.com/nheidloff/openwhisk-data-flows/blob/master/functions/read-person-profile.js#L76-L108" rel="noopener" target="_blank">output</a>. The <a href="https://github.com/nheidloff/openwhisk-data-flows/blob/master/functions/read-person-profile.js#L38-L47" rel="noopener" target="_blank">input</a> schema is simple since it only contains one id:</p>
+<pre class="brush: plain; title: ; notranslate">
+{
+  &quot;$schema&quot;: &quot;http://json-schema.org/draft-04/schema#&quot;,
+  &quot;type&quot;: &quot;object&quot;,
+  &quot;properties&quot;: {
+    &quot;id&quot;: {
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;Schema Input of read-person-profile&quot;
+}
+</pre>
+<p>Since the &#8216;send mail&#8217; function doesn&#8217;t expect the full person profile, but only an email address and a subject (see <a href="https://github.com/nheidloff/openwhisk-data-flows/blob/master/functions/send-mail.js#L22-L34" rel="noopener" target="_blank">schema</a>), the data needs to be converted. </p>
+<p>For this purpose I use <a href="http://jsonata.org/" rel="noopener" target="_blank">JSONata</a> which is a lightweight query and transformation language for JSON data inspired by semantics of XPath. For Node.js developers there is an <a href="https://github.com/jsonata-js/jsonata" rel="noopener" target="_blank">npm module</a> which is a JavaScript implementation of JSONata.</p>
+<p>This is the &#8216;<a href="https://github.com/nheidloff/openwhisk-data-flows/blob/master/functions/transform-send-mail.js" rel="noopener" target="_blank">transform function</a>&#8216; which creates the expected input for the &#8216;send mail&#8217; function. tbd</p>
+<pre class="brush: jscript; title: ; notranslate">
+const jsonata = require('jsonata');
+
+let main = params =&gt; {    
+    try {
+        let inputApplication = params['input-application'];       
+        let subject = inputApplication.subject;
+
+        let outputReadPersonProfile = params['output-read-person-profile'];  
+             
+        let expression = jsonata(&quot;Email[type='office'].address[0]&quot;);        
+        let email = expression.evaluate(outputReadPersonProfile);  
+        
+        let outputParameters = {
+            'input': {
+                'email': email,
+                'subject': subject
+            }
+        }
+        return outputParameters;
+    }
+    catch (error) {
+        return {
+            error: 'Error in transform-send-mail'
+        }
+    }
+}
+</pre>
+<p>With jsonata(&#8220;Email[type=&#8217;office&#8217;].address[0]&#8221;) the first business email address is returned from the profile.</p>
+<p>To summarize I think functions should define their input and output schemas so that, for example, they can be built by different developers and assembled easily in serverless applications. Functions with schemas can also easier be re-used in different applications. The transformations of the data that flows in serverless applications can be done in separate &#8216;transformation&#8217; functions.</p>
+<p>A similar concept is used by <a href="https://console.bluemix.net/catalog/services/app-connect" rel="noopener" target="_blank">IBM App Connect</a> which can be used to integrate different applications without having to code anything. App Connect provides a JSON Parser node where you can enter a schema or sample JSON. Subsequent nodes can then access data from previous nodes declaratively. See my previous article <a href="http://heidloff.net/article/integrating-applications-without-code" rel="noopener" target="_blank">Integrating Applications without writing Code</a> for an example.</p>
+<p>I really like the App Connect user experience to select data in JSON. Recently App Connect won the <a href="https://medium.com/design-ibm/ibm-cloud-continues-to-demonstrate-design-excellence-7a5150124136" rel="noopener" target="_blank">iF Design Award 2018</a>. I think it would be great to see that user experience added to OpenWhisk Composer. Here is a screenshot how the scenario from above could be done via App Connect.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/02/app-connect-openwhisk3.png"><img src="http://heidloff.net/wp-content/uploads/2018/02/app-connect-openwhisk3.png" alt="app-connect-openwhisk3" width="2018" height="1950" class="alignnone size-full wp-image-2858" srcset="http://heidloff.net/wp-content/uploads/2018/02/app-connect-openwhisk3.png 2018w, http://heidloff.net/wp-content/uploads/2018/02/app-connect-openwhisk3-300x290.png 300w, http://heidloff.net/wp-content/uploads/2018/02/app-connect-openwhisk3-1024x989.png 1024w" sizes="(max-width: 2018px) 100vw, 2018px" /></a></p>
+<p>If you want to try out OpenWhisk in the cloud, you can get an account on the <a href="http://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/transforming-json-serverless">Transforming JSON Data in Serverless Applications</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><wfw:commentRss>http://heidloff.net/article/transforming-json-serverless/feed/</wfw:commentRss><slash:comments>0</slash:comments><post-id xmlns="com-wordpress:feed-additions:1">2854</post-id></item></channel></rss>

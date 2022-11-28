@@ -1,0 +1,64 @@
+Running IBM Watson NLP locally in Containers. <p><em>IBM announced the general availability of Watson NLP (Natural Language Understanding) and Watson Speech containers which can be run locally, on-premises or Kubernetes and OpenShift clusters. This post describes how to run Watson NLP locally.</em><span id="more-5269"></span></p>
+<p>To set some context, here is the description of <a href="https://www.ibm.com/products/ibm-watson-natural-language-processing" rel="noopener noreferrer" target="_blank">IBM Watson NLP Library for Embed</a>.</p>
+<blockquote><p>Enhance your applications with best-in-class Natural Language AI: Introducing IBM Watson NLP Library for Embed, a containerized library designed to empower IBM partners with greater flexibility to infuse powerful natural language AI into their solutions. It combines the best of open source and IBM Research NLP algorithms to deliver superior AI capabilities developers can access and integrate into their apps in the environment of their choice. Offered to partners as embeddable AI, a first of its kind software portfolio that offers best of breed AI from IBM.</p></blockquote>
+<p>The Watson NLP library is available as containers providing REST and gRPC interfaces. While this offering is new, the underlaying functionality has been used and optimized for a long time in IBM offerings like the IBM Watson Assistant and NLU (Natural Language Understanding) SaaS services and IBM Cloud Pak for Data. </p>
+<p>Watson NLP comes with a wide variety of text processing functions, such as emotion analysis and topic modeling. Watson NLP is built on top of the best AI open source software. Additionally it provides stable and supported interfaces, it handles a wide range of languages and its quality is enterprise proven.</p>
+<p>To try it, a <a href="https://www.ibm.com/products/ibm-watson-natural-language-processing" rel="noopener noreferrer" target="_blank">trial</a> is available. The container images are stored in an IBM container registry that is accessed via an <a href="https://www.ibm.com/account/reg/signup?formid=urx-51726" rel="noopener noreferrer" target="_blank">IBM Entitlement Key</a>.</p>
+<p><strong>How to run NLP locally via Docker</strong></p>
+<p>To run NLP as container locally, you first need to define which <a href="https://www.ibm.com/docs/en/watson-libraries?topic=models-catalog" rel="noopener noreferrer" target="_blank">models</a> you want to use which address different use cases. By only picking the ones you need, the size of the containers is reduced. You can also train your own models which I want to blog about separately. </p>
+<p>To define your models, save the following script to &#8216;runNLP.sh&#8217; and modify the fourth line. The script pulls down the models and puts them in a volume that is accessed by the NLP runtime container.</p>
+<pre class="brush: plain; title: ; notranslate">
+#!/usr/bin/env bash
+IMAGE_REGISTRY=${IMAGE_REGISTRY:-&quot;cp.icr.io/cp/ai&quot;}
+RUNTIME_IMAGE=${RUNTIME_IMAGE:-&quot;watson-nlp-runtime:1.0.18&quot;}
+export MODELS=&quot;${MODELS:-&quot;watson-nlp_syntax_izumo_lang_en_stock:1.0.7,watson-nlp_syntax_izumo_lang_fr_stock:1.0.7&quot;}&quot;
+IFS=',' read -ra models_arr &lt;&lt;&lt; &quot;${MODELS}&quot;
+
+# Create a shared volume and initialize with open permissions
+docker volume rm model_data 2&gt;/dev/null || true
+docker volume create --label model_data
+docker run --rm -it -v model_data:/model_data alpine chmod 777 /model_data
+
+# Put models into the shared volume
+for model in &quot;${models_arr[@]}&quot;
+do
+  docker run --rm -it -v model_data:/app/models -e ACCEPT_LICENSE=true $IMAGE_REGISTRY/$model
+done
+
+# Run the runtime with the models mounted
+docker run ${@} \
+  --rm -it \
+  -v model_data:/app/model_data \
+  -e ACCEPT_LICENSE=true \
+  -e LOCAL_MODELS_DIR=/app/model_data \
+  -p 8085:8085 \
+  -p 8080:8080 \
+  $tls_args $IMAGE_REGISTRY/$RUNTIME_IMAGE
+</pre>
+<p>To download the models and run the container, invoke these commands in a first terminal:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ docker login cp.icr.io --username cp --password &lt;entitlement_key&gt;                                          
+$ ./runNLP.sh
+</pre>
+<p>In second terminal invoke this command to invoke a REST API:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ curl -X POST &quot;http://localhost:8080/v1/watson.runtime.nlp.v1/NlpService/SyntaxPredict&quot; \
+  -H &quot;accept: application/json&quot; \
+  -H &quot;grpc-metadata-mm-model-id: syntax_izumo_lang_en_stock&quot; \
+  -H &quot;content-type: application/json&quot; \
+  -d &quot; { \&quot;rawDocument\&quot;: { \&quot;text\&quot;: \&quot;It is so easy to embed Watson NLP in applications. Very cool.\&quot; }}&quot;
+</pre>
+<p>Here is a screenshot of the container in action: </p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-08.42.31.png" alt="" width="1974" height="1072" class="alignnone size-full wp-image-5270" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-08.42.31.png 1974w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-08.42.31-300x163.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-08.42.31-768x417.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-08.42.31-1024x556.png 1024w" sizes="(max-width: 1974px) 100vw, 1974px" /></p>
+<p>You can invoke the Swagger (OpenAI) user interface by opening http://localhost:8080/swagger.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-09.42.48.png" alt="" width="1262" height="926" class="alignnone size-full wp-image-5271" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-09.42.48.png 1262w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-09.42.48-300x220.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-09.42.48-768x564.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-09.42.48-1024x751.png 1024w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-10-at-09.42.48-135x100.png 135w" sizes="(max-width: 1262px) 100vw, 1262px" /></p>
+<p>The NLP containers also provides a <a href="https://github.com/IBM/watson-automation#grpc" rel="noopener noreferrer" target="_blank">gRCP interface</a>.</p>
+<p>To find out more about Watson NLP, check out these resources:</p>
+<ul>
+<li><a href="https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home" rel="noopener noreferrer" target="_blank">Documentation</a></li>
+<li><a href="https://www.ibm.com/docs/en/watson-libraries?topic=models-catalog" rel="noopener noreferrer" target="_blank">Model catalog</a></li>
+<li><a href="https://www.ibm.com/products/ibm-watson-natural-language-processing" rel="noopener noreferrer" target="_blank">Trial</a></li>
+<li><a href="https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726" rel="noopener noreferrer" target="_blank">Entitlement key</a></li>
+<li><a href="https://github.com/IBM/watson-automation" rel="noopener noreferrer" target="_blank">Automation for Watson NLP Deployments</a></li>
+</ul>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/running-ibm-watson-nlp-locally-in-containers/">Running IBM Watson NLP locally in Containers</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>

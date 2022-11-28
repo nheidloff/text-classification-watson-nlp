@@ -1,0 +1,66 @@
+page5-elem4,The Kubernetes Operator Metamodel.
+page5-elem4,Operators provide huge value by automating day 2 operations for software running on Kubernetes.
+page5-elem4,However for operator developers there is a steep learning curve.
+page5-elem4,This article describes the key objects and concepts you need to understand before building operators.
+page5-elem4,There are several sites tutorials and articles that describe operators.
+page5-elem4,When I started to work on operators it would have helped me to understand the metamodel key concepts and high level architecture first.
+page5-elem4,Unfortunately I didn’t find such an overview.
+page5-elem4,The best overview I found is the Kubebuilder Architecture Concept Diagram [https://book.kubebuilder.io/architecture.html].
+page5-elem4,I’ve extended and changed this diagram to add key components that were missing and to help me explaining our clients how operators work.
+page5-elem4,I’ve also simplified the diagram to focus on key capabilities only.
+page5-elem4,Most of the concepts in the diagram are generic for all types of operators no matter how they have been implemented.
+page5-elem4,Some parts are specific to operators built with Golang [https://go.dev/] Operator SDK [https://sdk.operatorframework.io/] including Kubebuilder [https://github.com/kubernetes-sigs/kubebuilder] and the Operator Lifecycle Manager Framework [https://operatorframework.io/].
+page5-elem4,Below are some more details about the different objects.
+page5-elem4,I have also added links to samples.
+page5-elem4,The samples are part of a bigger sample called operator-sample-go [https://github.com/IBM/operator-sample-go] which is available on GitHub that describes various operator patterns and best practises.
+page5-elem4,Operator
+page5-elem4,The term ‘Operator’ or ‘Kubernetes Operator’ describes the mechanism to automate deployments and day 2 operations for software running on Kubernetes which implements the operator pattern [https://kubernetes.io/docs/concepts/extend-kubernetes/operator/].
+page5-elem4,This pattern is used by Kubernetes internally as well as externally for custom resources.
+page5-elem4,Operators contain custom resource definitions and business logic to manage these resources.
+page5-elem4,The self contained operators are deployed as containers on Kubernetes.
+page5-elem4,Usually there is one running operator instance per cluster.
+page5-elem4,For production deployments the Operator Lifecycle Manager (OLM) provides functionality to deploy and operate the operators for example to handle multiple versions.
+page5-elem4,Operators are packaged in CSVs (cluster service versions).
+page5-elem4,Samples:
+page5-elem4,* Operator Dockerfile [https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/Dockerfile]
+page5-elem4,* Operator CSV [https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/bundle/manifests/operator-application.clusterserviceversion.yaml]
+page5-elem4,* Operator initialization in main.go [https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/main.go]
+page5-elem4,API
+page5-elem4,The term API is often used as synonym to custom resource definition.
+page5-elem4,Custom resource definitions have schemas and potentially multiple versions.
+page5-elem4,This allows managing resources declaratively in Kubernetes production environments.
+page5-elem4,Custom resource definitions are identified [https://book.kubebuilder.io/cronjob-tutorial/gvks.html] by their group version and resource name.
+page5-elem4,One operator can contain multiple resource definitions.
+page5-elem4,Samples:
+page5-elem4,* Sample resource [https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/config/samples/application.sample_v1beta1_application.yaml]
+page5-elem4,* Schema as Go struct [https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/api/v1beta1/application_types.go]
+page5-elem4,* Schema as yaml [https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/config/crd/bases/application.sample.ibm.com_applications.yaml]
+page5-elem4,* Versions [https://github.com/IBM/operator-sample-go/tree/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/api]
+page5-elem4,Manager
+page5-elem4,The manager contains the business logic of the operator which knows how to deploy and manage custom resources.
+page5-elem4,Additionally it comes with generic built in functionality to handle HA leader election export metrics handle webhook certs and broadcasts events.
+page5-elem4,It also provides a client to access Kubernetes and a cache to improve efficiency.
+page5-elem4,Sample:
+page5-elem4,* Manager creation in main.go [https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/main.go#L57]
+page5-elem4,Controller
+page5-elem4,The main responsibility of controllers is to synchronize the ‘to be’ states as defined in custom resources with the ‘as is’ states in Kubernetes clusters.
+page5-elem4,This includes creations of new resources updates to existing resources or deletions.
+page5-elem4,This logic is implemented in the controllers’ reconcile function.
+page5-elem4,The reconciler doesn’t use an imperative model to manage resources because of the nature of distributed Kubernetes systems and because of the long time it can take to change resources without blocking anything.
+page5-elem4,Instead the reconciler is invoked over and over again until it signals that it’s done.
+page5-elem4,This is why reconcilers need to be idempotent.
+page5-elem4,One controller manages one custom resource definition including all versions of it.
+page5-elem4,The controller uses caches and Kubernetes clients and gets events via filters.
+page5-elem4,Samples:
+page5-elem4,* Flow in Reconcile function [https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/controllers/application/controller.go]
+page5-elem4,* Synchronization of resources [https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/controllers/application/service.go#L43-L49]
+page5-elem4,* Creations and updates of resources [https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/controllers/application/secret.go]
+page5-elem4,* Definition of resources to watch [https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/controllers/application/controller.go#L126]
+page5-elem4,Webhooks
+page5-elem4,With webhooks values of resources can be changed and conversions between different versions can be done.
+page5-elem4,Samples:
+page5-elem4,* Initialization [https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/api/v1beta1/application_webhook.go#L28]
+page5-elem4,* Validation [https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/api/v1beta1/application_webhook.go#L38-L83]
+page5-elem4,* Conversion [https://github.com/IBM/operator-sample-go/blob/884e14053522645fcfedde38e4ae8a03378902f8/operator-application/api/v1alpha1/application_conversion.go]
+page5-elem4,To learn more about operator patterns and best practices check out the repo operator-sample-go [https://github.com/IBM/operator-sample-go].
+page5-elem4,The post The Kubernetes Operator Metamodel [http://heidloff.net/article/the-kubernetes-operator-metamodel/] appeared first on Niklas Heidloff [http://heidloff.net].

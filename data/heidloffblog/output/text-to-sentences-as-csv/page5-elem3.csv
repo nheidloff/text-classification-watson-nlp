@@ -1,0 +1,33 @@
+page5-elem3,Shift-Left Continuous Integration with DevSecOps Pipelines.
+page5-elem3,IBM provides a DevSecOps reference implementation that I’ve used to build our SaaS reference architecture.
+page5-elem3,This article describes the CI pipeline especially the part to enforce branch protection.
+page5-elem3,This article is part of a mini series.
+page5-elem3,* DevSecOps for SaaS Reference Architecture on OpenShift [http://heidloff.net/article/devsecops-saas-reference-architecture-openshift/]
+page5-elem3,* This article: Shift-Left Continuous Integration with DevSecOps Pipelines [http://heidloff.net/article/shift-left-continuous-integration-devsecops-pipelines/]
+page5-elem3,* Change Evidence and Issue Management with DevSecOps [http://heidloff.net/article/change-evidence-issue-management-devsecops/]
+page5-elem3,* Continuous Delivery with DevSecOps Reference Architecture [http://heidloff.net/article/continuous-delivery-ibm-devsecops-reference-architecture/]
+page5-elem3,* Tekton without Tekton in DevSecOps Pipelines [http://heidloff.net/article/tekton-without-tekton-devsecops-pipelines/]
+page5-elem3,A core concept of DevSecOps is ‘shift left testing and security’.
+page5-elem3,The basic idea is simple.
+page5-elem3,Do as much security and functional testing as early as possible in the software development lifecycle.
+page5-elem3,The earlier issues are detected the easier and cheaper is it to fix the issues.
+page5-elem3,These are the main tasks of the first of the two CI pipelines that are part of the IBM DevSecOps reference implementation.
+page5-elem3,* Branch protection is ensured so that developers cannot push to the main branch directly
+page5-elem3,* CIS checks are run
+page5-elem3,* Secrets in code and config files are detected
+page5-elem3,* Unit tests are run
+page5-elem3,* Vulnerability scans are performed
+page5-elem3,The documentation [http://Continuous Integration (CI) toolchain introduction https://cloud.ibm.com/docs/devsecops?topic=devsecops-tutorial-cd-devsecops#devsecops-ci-toolchain-intro] describes these steps in more details.
+page5-elem3,Let’s look how this can be done when developers check in code.
+page5-elem3,You can find the complete flow [https://github.com/IBM/multi-tenancy-documentation/blob/main/documentation/kubernetes-via-ibm-kubernetes-service-and-ibm-openshift/ci-pull-request.md] in the GitHub repo.
+page5-elem3,Changes from developers are not pushed into the main branch directly.
+page5-elem3,Instead feature branches are used which is a good pattern anyway.
+page5-elem3,After the pull request has been created the first CI pipeline starts automatically to perform the various security and functional tests.
+page5-elem3,I like the integration in GitHub.
+page5-elem3,As a developer I can see most of the results directly in the GitHub experience.
+page5-elem3,In the background the pipeline on the IBM Cloud is run.
+page5-elem3,Even if the various security checks have been successful the pull request still cannot be merged.
+page5-elem3,A second developer (in this case my colleague Adam) needs to approve first.
+page5-elem3,From my personal experience I can say that these reviews are another very good pattern.
+page5-elem3,Check out the IBM Toolchains documentation [https://cloud.ibm.com/docs/devsecops?topic=devsecops-tutorial-cd-devsecops] and the SaaS reference architecture [https://github.com/IBM/multi-tenancy] to find out more.
+page5-elem3,The post Shift-Left Continuous Integration with DevSecOps Pipelines [http://heidloff.net/article/shift-left-continuous-integration-devsecops-pipelines/] appeared first on Niklas Heidloff [http://heidloff.net].

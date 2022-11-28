@@ -1,0 +1,638 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	
+xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+>
+
+<channel>
+	<title>Page 20 &#8211; Niklas Heidloff</title>
+	<atom:link href="http://heidloff.net/feed/?paged=20" rel="self" type="application/rss+xml" />
+	<link>http://heidloff.net</link>
+	<description></description>
+	<lastBuildDate>
+	Fri, 25 Nov 2022 07:22:15 +0000	</lastBuildDate>
+	<language>en-US</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=5.1.15</generator>
+<site xmlns="com-wordpress:feed-additions:1">102773794</site>	<item>
+		<title>Training TensorFlow Object Detection Models</title>
+		<link>http://heidloff.net/article/tensorflow-object-detection-deep-learning</link>
+				<comments>http://heidloff.net/article/tensorflow-object-detection-deep-learning#respond</comments>
+				<pubDate>Mon, 17 Sep 2018 12:51:40 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=3090</guid>
+				<description><![CDATA[<p>TensorFlow Object Detection is a powerful technology to recognize different objects in images including their positions. The trained Object Detection models can be run on mobile and edge devices to execute predictions really fast. I&#8217;ve used this technology to build a demo where Anki Overdrive cars and obstacles are detected via an iOS app. When [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/tensorflow-object-detection-deep-learning">Training TensorFlow Object Detection Models</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><a href="https://github.com/tensorflow/models/tree/master/research/object_detection" rel="noopener" target="_blank">TensorFlow Object Detection</a> is a powerful technology to recognize different objects in images including their positions. The trained Object Detection models can be run on mobile and edge devices to execute predictions really fast. I&#8217;ve used this technology to build a demo where Anki Overdrive cars and obstacles are detected via an iOS app. When obstacles are detected, the cars are stopped automatically.<span id="more-3090"></span></p>
+<p>Check out the short <a href="https://youtu.be/i7qnAA33ZFo" rel="noopener" target="_blank">video</a> (only 2 mins) for a quick demo.</p>
+<p>This picture shows the track with two cars and a phone and the iOS app which draws rectangles around the objects.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/09/picture2-small.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/09/picture2-small.jpg" alt="picture2-small" width="800" height="600" class="alignnone size-full wp-image-3089" srcset="http://heidloff.net/wp-content/uploads/2018/09/picture2-small.jpg 800w, http://heidloff.net/wp-content/uploads/2018/09/picture2-small-300x225.jpg 300w, http://heidloff.net/wp-content/uploads/2018/09/picture2-small-135x100.jpg 135w" sizes="(max-width: 800px) 100vw, 800px" /></a></p>
+<p>I have <a href="https://github.com/nheidloff/object-detection-anki-overdrive-cars" rel="noopener" target="_blank">open sourced</a> the code on GitHub. The repo includes two parts: </p>
+<ol>
+<li>Trained deep learning model to recognize items on Anki Overdrive tracks with an iOS app</li>
+<li>Documentation how to train TensorFlow Object Detection models</li>
+</ol>
+<p>The instructions in the <a href="https://github.com/nheidloff/object-detection-anki-overdrive-cars/blob/master/README.md" rel="noopener" target="_blank">README</a> are pretty detailed. Below is a quick overview of the main steps that you can follow to train models to detect your own objects.</p>
+<p><strong>1) Development Environment Setup</strong></p>
+<p>First you need to download the trained MobileNet model which is an optimized model for mobile devices. Rather than training a new model from scratch, transfer learning is used. Basically the last layer of the neural network is replaced with your own objects.</p>
+<p>To make the <a href="https://github.com/nheidloff/object-detection-anki-overdrive-cars#1-development-environment-setup" rel="noopener" target="_blank">setup of the development environment</a> as simple as possible, Docker containers are provided.</p>
+<p><strong>2) Labelling of Images</strong></p>
+<p>While for Visual Recognition models only images and the names of the categories need to be provided, the <a href="https://github.com/nheidloff/object-detection-anki-overdrive-cars#2-labelling-of-images-and-creation-of-tfrecords" rel="noopener" target="_blank">labeling for Object Detection</a> is more sophisticated. In addition to the list of objects you also need to provide their positions. I&#8217;ve used <a href="https://github.com/tzutalin/labelImg" rel="noopener" target="_blank">labelImg</a> to create the labels and rectangles as shown in the screenshot.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/09/labelimage2.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/09/labelimage2.jpg" alt="labelimage2" width="800" height="511" class="alignnone size-full wp-image-3083" srcset="http://heidloff.net/wp-content/uploads/2018/09/labelimage2.jpg 800w, http://heidloff.net/wp-content/uploads/2018/09/labelimage2-300x192.jpg 300w" sizes="(max-width: 800px) 100vw, 800px" /></a></p>
+<p>From what I&#8217;ve read these are some best practices how to create the training data:</p>
+<ul>
+<li>Take/get at least 50 pictures per object.</li>
+<li>Use a rather small resolution, for example 640 x 480.</li>
+<li>Use different sizes of your objects and different angles.</li>
+<li>Use pictures that have multiple objects in them.</li>
+<li>When marking the objects with labelImg, put the rectangles as closely as possible around the objects.</li>
+</ul>
+<p>The images and the annotations exported from the labelImg tool need to be <a href="https://github.com/nheidloff/object-detection-anki-overdrive-cars/blob/master/README.md#creation-of-tfrecords" rel="noopener" target="_blank">converted</a> into a certain format (TFRecords) which TensorFlow Object Detection expects.</p>
+<p><strong>3) Training of the Model</strong></p>
+<p>Trainings with just a few training steps can be run <a href="https://github.com/nheidloff/object-detection-anki-overdrive-cars#3-training-of-the-model" rel="noopener" target="_blank">locally</a>. This is useful, for example, if you want to test whether the code runs. When you can use a GPU, trainings with many steps should also be possible locally, but I haven&#8217;t tried it.</p>
+<p>I&#8217;ve used <a href="https://www.ibm.com/cloud/container-service" rel="noopener" target="_blank">Kubernetes on the IBM Cloud</a> to run the training. The 17.000 training steps took roughly 1.5 days. In order to also leverage GPUs I want to look at <a href="https://github.com/IBM/FfDL" rel="noopener" target="_blank">FfDL</a>. I&#8217;ll blog about it when I&#8217;ll have found out more. If you want to use the IBM Cloud, you can get a <a href="https://ibm.biz/nheidloff" rel="noopener" target="_blank">free account</a>.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/09/od-kubernetes.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/09/od-kubernetes.jpg" alt="od-kubernetes" width="800" height="407" class="alignnone size-full wp-image-3088" srcset="http://heidloff.net/wp-content/uploads/2018/09/od-kubernetes.jpg 800w, http://heidloff.net/wp-content/uploads/2018/09/od-kubernetes-300x153.jpg 300w" sizes="(max-width: 800px) 100vw, 800px" /></a></p>
+<p>After the training a frozen graph of the model needs to be created. The repo contains a script and a Docker container to do this.</p>
+<p><strong>4) Usage of the Model in Notebooks and Apps</strong></p>
+<p>The training model can be tested with a <a href="https://github.com/nheidloff/object-detection-anki-overdrive-cars#5-testing-of-the-model" rel="noopener" target="_blank">Python notebook</a>. The screenshot shows the detected objects in a test image.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/09/notebook.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/09/notebook.jpg" alt="notebook" width="800" height="652" class="alignnone size-full wp-image-3086" srcset="http://heidloff.net/wp-content/uploads/2018/09/notebook.jpg 800w, http://heidloff.net/wp-content/uploads/2018/09/notebook-300x245.jpg 300w" sizes="(max-width: 800px) 100vw, 800px" /></a></p>
+<p>The repo also contains an <a href="https://github.com/nheidloff/object-detection-anki-overdrive-cars#6-setup-of-the-ios-app" rel="noopener" target="_blank">iOS app</a> which I found on <a href="https://github.com/csharpseattle/tensorflowiOS" rel="noopener" target="_blank">GitHub</a>.</p>
+<p><strong>Connecting the Cars and the iOS App to the Watson IoT Platform</strong></p>
+<p>In order to stop the Anki Overdrive cars when phones are put on the track, you need to set up additional components, especially the Node.js controller and the <a href="https://www.ibm.com/internet-of-things" rel="noopener" target="_blank">Watson IoT Platform</a>. In order to do this, follow the instructions from my project <a href="https://github.com/IBM-Bluemix/node-mqtt-for-anki-overdrive" rel="noopener" target="_blank">node-mqtt-for-anki-overdrive</a>.</p>
+<p>Here is a diagram of the high level architecture:</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/09/od-architecture-small.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/09/od-architecture-small.jpg" alt="od-architecture-small" width="800" height="445" class="alignnone size-full wp-image-3087" srcset="http://heidloff.net/wp-content/uploads/2018/09/od-architecture-small.jpg 800w, http://heidloff.net/wp-content/uploads/2018/09/od-architecture-small-300x167.jpg 300w" sizes="(max-width: 800px) 100vw, 800px" /></a></p>
+<p>The next screenshot shows a simple <a href="https://nodered.org/" rel="noopener" target="_blank">Node-RED</a> flow that stops the cars when obstacles are detected.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/09/node-red1.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/09/node-red1.jpg" alt="node-red1" width="800" height="444" class="alignnone size-full wp-image-3085" srcset="http://heidloff.net/wp-content/uploads/2018/09/node-red1.jpg 800w, http://heidloff.net/wp-content/uploads/2018/09/node-red1-300x167.jpg 300w" sizes="(max-width: 800px) 100vw, 800px" /></a></p>
+<p>If you want to run this demo yourself, you need an <a href="https://www.anki.com/en-us/overdrive/get-started" rel="noopener" target="_blank">Anki Overdrive Starter Kit</a> and the <a href="https://github.com/nheidloff/object-detection-anki-overdrive-cars" rel="noopener" target="_blank">code</a> from GitHub.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/tensorflow-object-detection-deep-learning">Training TensorFlow Object Detection Models</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/tensorflow-object-detection-deep-learning/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">3090</post-id>	</item>
+		<item>
+		<title>Deploying Machine Learning Models in the Cloud</title>
+		<link>http://heidloff.net/article/deployment-machine-learning-models-cloud</link>
+				<comments>http://heidloff.net/article/deployment-machine-learning-models-cloud#respond</comments>
+				<pubDate>Fri, 03 Aug 2018 09:46:06 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=3073</guid>
+				<description><![CDATA[<p>For software development there are many methodologies, patterns and techniques to build, deploy and run applications. DevOps is the state of the art methodology which describes a software engineering culture with a holistic view of software development and operation. For data science there is a lot of information how machine and deep learning models can [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/deployment-machine-learning-models-cloud">Deploying Machine Learning Models in the Cloud</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>For software development there are many methodologies, patterns and techniques to build, deploy and run applications. DevOps is the state of the art methodology which describes a software engineering culture with a holistic view of software development and operation.</p>
+<p>For data science there is a lot of information how machine and deep learning models can be built. The operational aspects seem to still be evolving. I&#8217;m currently trying to understand better how to deploy models in the cloud and how to use them efficiently in applications. Below are some of my findings so far.<span id="more-3073"></span></p>
+<p>In the simplest case <a href="http://heidloff.net/article/open-source-ai-models-zoo-exchange-onnx" rel="noopener" target="_blank">models provided by data scientists</a> and models extended by developers can be wrapped in Docker containers and accessed via REST APIs. The Docker containers can be run, for example, on <a href="http://heidloff.net/article/model-asset-exchange-dl-kubernetes-tensorflow" rel="noopener" target="_blank">Kubernetes</a> or on serverless platforms like <a href="http://heidloff.net/article/visual-recognition-tensorflow" rel="noopener" target="_blank">OpenWhisk</a>. When building Flask based web applications, the models could even be packaged and run in the same container.</p>
+<p>While this works for prototypes and quick evaluations, there are several other aspects you need to take into account when deploying models to production environments.</p>
+<p><strong>Versioning</strong></p>
+<p>As for other services and APIs multiple versions need to be handled. At a minimum it should be possible to roll out new models via blue-green deployments. Furthermore traffic management functionality like canary deployments and <a href="http://heidloff.net/article/ab-testing-kubernetes-istio" rel="noopener" target="_blank">A/B testing</a> is often required for sophisticated production applications.</p>
+<p><strong>Inference Pipelines</strong></p>
+<p>In order to run inferences, applications have to provide the input in a certain format as expected by the models. In some cases this means that the data needs to be formatted first. For example in a visual recognition scenario the application might have to convert a JPG image into a JSON structure. Vise versa the output of the model might not have the format the application requires.</p>
+<p>Additionally sometimes it&#8217;s more efficient to do batch invocations rather than causing network traffic for every single request. Sometimes multiple models are invoked at the same time and the responses are sent together back to the applications. </p>
+<p>So rather than deploying only the core model, inference pipelines should be deployed and made available as service.</p>
+<p><strong>Inference Model Optimizations</strong></p>
+<p>I blogged about how to deploy models to edge devices via <a href="http://heidloff.net/article/tensorflow-lite-ibm-watson-ios" rel="noopener" target="_blank">TensorFlow Lite</a> and <a href="http://heidloff.net/article/tensorflowjs-ibm-watson-web-browsers-dl" rel="noopener" target="_blank">TensorFlow.js</a>. In both cases models need to be optimized in terms of model size, memory usage, battery usage, etc. To achieve this, one method is to remove dropouts from the graph. Dropouts are used during training to prevent overfitting models. At runtime, when running predictions, they are not needed.</p>
+<p>Another method to optimize models is quantization. Weights in graphs are often defined via floats. When using integers instead however, the sizes of the models are reduced significantly while the accuracy is only affected minimally or not at all.</p>
+<p>Similarly to optimizations for mobile devices, optimizations are done before deploying models to the cloud. </p>
+<p><strong>Standard Requirements for Services</strong></p>
+<p>As for other services authentication and authorization need to be handled. In order to make models accessible to multiple applications and developers, <a href="http://heidloff.net/article/machine-learning-models-rest-apis" rel="noopener" target="_blank">API Management</a> is desirable.</p>
+<p>REST APIs are not the only way to expose models. Maybe other protocols like gRPC or messaging based systems are better options for specific scenarios.</p>
+<p>Services that run inferences need to be scalable and there needs to be monitoring functionality. In summary services that run inferences have the same requirements as all other services. </p>
+<p><strong>Available Frameworks</strong></p>
+<p>There are several frameworks to deploy models in the cloud. In the best case a framework should fulfill all requirements above and the framework should be serverless so that people can focus on the business logic rather than infrastructure. Below are a couple of frameworks and offerings that you might want to check out.</p>
+<p><a href="https://dataplatform.cloud.ibm.com/docs/content/analyze-data/ml_dlaas_model_deploy_score_ovr.html?audience=wdp&#038;context=analytics" rel="noopener" target="_blank">Watson Studio</a> supports not only the training of models, but also deployments of models. These models can have different versions and can be invoked via REST APIs:</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/08/watson-studio-deployment.png"><img src="http://heidloff.net/wp-content/uploads/2018/08/watson-studio-deployment-1024x435.png" alt="watson-studio-deployment" width="750" height="319" class="alignnone size-large wp-image-3075" srcset="http://heidloff.net/wp-content/uploads/2018/08/watson-studio-deployment-1024x435.png 1024w, http://heidloff.net/wp-content/uploads/2018/08/watson-studio-deployment-300x127.png 300w" sizes="(max-width: 750px) 100vw, 750px" /></a></p>
+<p>The models from the <a href="https://developer.ibm.com/code/exchanges/models/" rel="noopener" target="_blank">IBM Model Asset Exchange</a> can be deployed easily to <a href="http://heidloff.net/article/model-asset-exchange-dl-kubernetes-tensorflow" rel="noopener" target="_blank">Kubernetes</a>. Istio on top of Kubernetes supports traffic management, for example to do canary rollouts.</p>
+<p><a href="https://github.com/SeldonIO/seldon-core" rel="noopener" target="_blank">Seldon</a> is an open source platform for deploying machine learning models on Kubernetes. It supports libraries like TensorFlow and Sklearn and REST and gRPC APIs. It can be used well together with the <a href="https://developer.ibm.com/code/2018/06/12/serve-it-hot-deploy-your-ffdl-trained-models-using-seldon/" rel="noopener" target="_blank">Fabric for Deep Learning</a>. I like especially the capability to do what I call <a href="https://github.com/SeldonIO/seldon-core/blob/master/docs/crd/readme.md#creating-your-resource-definition" rel="noopener" target="_blank">Inference Pipelines</a> above.</p>
+<p><a href="https://www.tensorflow.org/serving/" rel="noopener" target="_blank">TensorFlow Serving</a> is a flexible, high-performance serving system for machine learning models with built-in support for TensorFlow models. It seems to be pretty powerful but when I <a href="http://heidloff.net/article/tensorflow-serving-inception-ibm-cloud-kubernetes" rel="noopener" target="_blank">tried</a> it last year, it wasn&#8217;t that easy. I&#8217;m sure it has improved a lot since then. For example since recently TensorFlow Serving also supports <a href="https://www.tensorflow.org/serving/api_rest" rel="noopener" target="_blank">REST</a> and not only gRPC.</p>
+<p><a href="https://github.com/PipelineAI/pipeline" rel="noopener" target="_blank">PipelineAI</a> is a real-time enterprise AI platform and looks very promising. I&#8217;ve watched some of the great <a href="https://www.youtube.com/channel/UCvlZKtekcKkBUuz8f9dhobw/videos" rel="noopener" target="_blank">videos</a> which describe not only PipelineAI, but also deployment strategies and concepts in general. Models are packaged in Docker containers and can be run on Kubernetes. While that part is open source, I&#8217;m not sure yet about other PipelineAI components which do the model optimizations and visualization. </p>
+<p>Again, I&#8217;m only learning this topic myself currently, but maybe this article creates some awareness for the deployment requirements and options.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/deployment-machine-learning-models-cloud">Deploying Machine Learning Models in the Cloud</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/deployment-machine-learning-models-cloud/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">3073</post-id>	</item>
+		<item>
+		<title>Training AI Models on Kubernetes</title>
+		<link>http://heidloff.net/article/training-ai-models-kubernetes-open-source</link>
+				<comments>http://heidloff.net/article/training-ai-models-kubernetes-open-source#respond</comments>
+				<pubDate>Thu, 02 Aug 2018 09:16:10 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=3067</guid>
+				<description><![CDATA[<p>Early this year IBM announced Deep Learning as a Service within Watson Studio. The core of this service is available as open source and can be run on Kubernetes clusters. This allows developers and data scientists to train models with confidential data on-premises, for example on the Kubernetes-based IBM Cloud Private. The open source version [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/training-ai-models-kubernetes-open-source">Training AI Models on Kubernetes</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>Early this year IBM <a href="https://developer.ibm.com/code/2018/03/20/fabric-for-deep-learning/" rel="noopener" target="_blank">announced</a> Deep Learning as a Service within Watson Studio. The core of this service is available as open source and can be run on Kubernetes clusters. This allows developers and data scientists to train models with confidential data on-premises, for example on the Kubernetes-based <a href="https://www.ibm.com/cloud/private" rel="noopener" target="_blank">IBM Cloud Private</a>.<span id="more-3067"></span></p>
+<p>The open source version of IBM&#8217;s Deep Learning service is called <a href="https://github.com/IBM/FfDL" rel="noopener" target="_blank">Fabric for Deep Learning</a>. Fabric for Deep Learning supports framework independent training of Deep Learning models on distributed hardware. For the training CPUs can be used as well as <a href="https://github.com/IBM/FfDL/blob/master/docs/gpu-guide.md" rel="noopener" target="_blank">GPUs</a>. Check out the <a href="https://github.com/IBM/FfDL/blob/master/docs/user-guide.md#1-supported-deep-learning-frameworks" rel="noopener" target="_blank">documentation</a> for a list of DL frameworks, versions and processing units.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/08/FfDL-blog-image.png"><img src="http://heidloff.net/wp-content/uploads/2018/08/FfDL-blog-image-1024x584.png" alt="FfDL-blog-image" width="750" height="428" class="alignnone size-large wp-image-3066" srcset="http://heidloff.net/wp-content/uploads/2018/08/FfDL-blog-image-1024x584.png 1024w, http://heidloff.net/wp-content/uploads/2018/08/FfDL-blog-image-300x171.png 300w" sizes="(max-width: 750px) 100vw, 750px" /></a></p>
+<p>I had open sourced samples that show how to train visual recognition models with Watson Studio that can be deployed to edge devices via <a href="https://github.com/nheidloff/watson-deep-learning-tensorflow-lite" rel="noopener" target="_blank">TensorFlow Lite</a> and <a href="https://github.com/nheidloff/watson-deep-learning-javascript" rel="noopener" target="_blank">TensorFlow.js</a>. I extended one of these samples slightly to show how to train the model with Fabric for Deep Learning instead. To do this, I only had to change a manifest file slightly since the format expected by Watson Studio is different. </p>
+<p>This is the manifest file that describes how to invoke and run the training. For more details how to run trainings on Kubernetes, check out the <a href="https://github.com/nheidloff/watson-deep-learning-tensorflow-lite#training-with-fabric-for-deep-learning" rel="noopener" target="_blank">readme</a> of my project and the Fabric for Deep Learning <a href="https://github.com/IBM/FfDL/blob/master/docs/user-guide.md" rel="noopener" target="_blank">documentation</a>.</p>
+<pre class="brush: plain; title: ; notranslate">
+name: retrain
+description: retrain
+version: &quot;1.0&quot;
+gpus: 2
+cpus: 8
+memory: 4Gb
+learners: 1
+
+data_stores:
+  - id: sl-internal-os
+    type: mount_cos
+    training_data:
+      container: nh-input
+    training_results:
+      container: nh-output
+    connection:
+      auth_url: http://169.62.129.231:32551
+      user_name: test
+      password: test
+
+framework:
+  name: tensorflow
+  version: &quot;1.5.0-gpu-py3&quot;
+  command: python3 retrain.py --bottleneck_dir ${RESULT_DIR}/bottlenecks --image_dir ${DATA_DIR}/images --how_many_training_steps=1000 --architecture mobilenet_0.25_224 --output_labels ${RESULT_DIR}/labels.txt --output_graph ${RESULT_DIR}/graph.pb --model_dir ${DATA_DIR} --learning_rate 0.01 --summaries_dir ${RESULT_DIR}/retrain_logs
+
+evaluation_metrics:
+  type: tensorboard
+  in: &quot;$JOB_STATE_DIR/logs/tb&quot;
+</pre>
+<p>To initiate the training, this manifest file and the training Python code needs to be uploaded. In order to do this, you can either use the web user experience or a CLI.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/08/ffdl-training.png"><img src="http://heidloff.net/wp-content/uploads/2018/08/ffdl-training-1024x429.png" alt="ffdl-training" width="750" height="314" class="alignnone size-large wp-image-3065" srcset="http://heidloff.net/wp-content/uploads/2018/08/ffdl-training-1024x429.png 1024w, http://heidloff.net/wp-content/uploads/2018/08/ffdl-training-300x126.png 300w" sizes="(max-width: 750px) 100vw, 750px" /></a></p>
+<p>In my example I&#8217;ve stored the data on my Kubernetes cluster. Fabric for Deep Learning comes with <a href="https://github.com/IBM/FfDL#6-detailed-testing-instructions" rel="noopener" target="_blank">S3 based Object Storage</a> which means that you can use the AWS CLI to upload and download data. Alternatively you could also use Object Storage in the cloud, for example <a href="https://console.bluemix.net/catalog/services/cloud-object-storage" rel="noopener" target="_blank">IBM&#8217;s Cloud Object Storage</a>.</p>
+<p>To find out more about Fabric for Deep Learning, check out these <a href="https://github.com/IBM/FfDL/tree/master/demos" rel="noopener" target="_blank">resources</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/training-ai-models-kubernetes-open-source">Training AI Models on Kubernetes</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/training-ai-models-kubernetes-open-source/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">3067</post-id>	</item>
+		<item>
+		<title>Reusing Open Source Models in AI Applications</title>
+		<link>http://heidloff.net/article/open-source-ai-models-zoo-exchange-onnx</link>
+				<comments>http://heidloff.net/article/open-source-ai-models-zoo-exchange-onnx#respond</comments>
+				<pubDate>Wed, 01 Aug 2018 13:50:03 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=3056</guid>
+				<description><![CDATA[<p>Building machine and deep learning models from scratch is often not trivial, not for developers and sometimes not even for data scientists. Fortunately over the last years several models have been developed and shared that can be reused and sometimes extended. This allows developers adding AI to applications without having to be data scientists. This [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/open-source-ai-models-zoo-exchange-onnx">Reusing Open Source Models in AI Applications</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>Building machine and deep learning models from scratch is often not trivial, not for developers and sometimes not even for data scientists. Fortunately over the last years several models have been developed and shared that can be reused and sometimes extended. This allows developers adding AI to applications without having to be data scientists.<span id="more-3056"></span></p>
+<p>This article describes how to find open source AI models and introduces briefly ONNX, which allows conversions between different model formats.</p>
+<p>In order to find models, there isn&#8217;t the one place to go to. In my experience the best way to find models is to rely on Google searches. That having said, there are a number of websites though with lot&#8217;s of interesting open source models.</p>
+<p><strong>IBM Model Asset Exchange</strong></p>
+<p>The <a href="https://developer.ibm.com/code/exchanges/models/" rel="noopener" target="_blank">IBM Model Asset Exchange</a> doesn&#8217;t contain too many models yet, but I like the consumability for developers. As I <a href="http://heidloff.net/article/model-asset-exchange-dl-kubernetes-tensorflow" rel="noopener" target="_blank">blogged</a> about, the models are put in Docker containers and predictions can be done via REST APIs. The models are published under open source licenses and the IP has been vetted. Some of the models can be re-trained easily with custom data.</p>
+<p><strong>TensorFlow Models</strong></p>
+<p>As the name implies the <a href="https://github.com/tensorflow/models" rel="noopener" target="_blank">TensorFlow Models</a> GitHub project is specialized on TensorFlow. This catalog has a big amount of models and many different types of models. Many of the models are high quality and well documented, for example the visual recognition models. For some of the other models I&#8217;m not sure whether they are actively maintained. Also some of the models are not the trained models, but code to execute trainings of models.</p>
+<p><strong>Caffe2 Model Zoo</strong></p>
+<p>The <a href="https://caffe2.ai/docs/zoo.html" rel="noopener" target="_blank">Caffe2 Model Zoo</a> is another website you might want to check out when looking for models. There is a bigger number of visual recognition models available for Caffe and Caffe2. As a developer without much data science background however, I&#8217;ve found it sometimes hard to understand what these models do and how to use them.</p>
+<p><strong>ONNX Model Zoo</strong></p>
+<p>The <a href="https://github.com/onnx/models" rel="noopener" target="_blank">Open Neural Network eXchange Model Zoo</a> is a collection of pre-trained, state-of-the-art models in the ONNX format. <a href="http://onnx.ai/" rel="noopener" target="_blank">ONNX</a> is an open format to represent deep learning models. ONNX was initiated by Facebook and Microsoft, <a href="https://www.ibm.com/blogs/research/2017/10/open-standards-deep-learning-simplify-development-neural-networks/" rel="noopener" target="_blank">IBM</a> joined shortly after this. </p>
+<p>There are several <a href="https://github.com/onnx/tutorials" rel="noopener" target="_blank">converters</a> available to import ONNX models in frameworks like TensorFlow, CoreML and Caffe and vice versa converters to convert models from different deep learning frameworks into the ONNX format. This allows developers, for example, to convert models that cannot be run natively on mobile devices into formats that can be executed on mobile devices. Unfortunately I haven&#8217;t had luck to get a sample working so far, but I&#8217;ll keep trying as the different converters evolve.</p>
+<p>This screenshots shows the currently available ONNX converters:</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/08/onnx-converters.jpeg"><img src="http://heidloff.net/wp-content/uploads/2018/08/onnx-converters.jpeg" alt="onnx-converters" width="1000" height="694" class="alignnone size-full wp-image-3055" srcset="http://heidloff.net/wp-content/uploads/2018/08/onnx-converters.jpeg 1000w, http://heidloff.net/wp-content/uploads/2018/08/onnx-converters-300x208.jpeg 300w" sizes="(max-width: 1000px) 100vw, 1000px" /></a></p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/open-source-ai-models-zoo-exchange-onnx">Reusing Open Source Models in AI Applications</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/open-source-ai-models-zoo-exchange-onnx/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">3056</post-id>	</item>
+		<item>
+		<title>Building Models with AutoML in IBM Watson Studio</title>
+		<link>http://heidloff.net/article/automl-ibm-watson-studio</link>
+				<comments>http://heidloff.net/article/automl-ibm-watson-studio#respond</comments>
+				<pubDate>Wed, 25 Jul 2018 13:09:27 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=3049</guid>
+				<description><![CDATA[<p>Many developers, including myself, want to use AI in their applications. Building machine learning models however, often requires a lot of expertise and time. This article describes a technique called AutoML which can be used by developers to build models without having to be data scientists. While developers only have to provide the data and [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/automl-ibm-watson-studio">Building Models with AutoML in IBM Watson Studio</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>Many developers, including myself, want to use AI in their applications. Building machine learning models however, often requires a lot of expertise and time. This article describes a technique called AutoML which can be used by developers to build models without having to be data scientists. While developers only have to provide the data and define the goals, AutoML figures out the best model automatically.<span id="more-3049"></span></p>
+<p>There are several ways for developers to use AI without having to be a data scientist:</p>
+<ul>
+<li>Cognitive Services</li>
+<li>Reusable Models</li>
+<li>AutoML</li>
+</ul>
+<p><strong>Cognitive Services</strong></p>
+<p>Cognitive services are provided by most cloud providers these days. For example IBM offers as part of the <a href="https://www.ibm.com/watson/products-services/" rel="noopener" target="_blank">Watson Developer Cloud</a> services for speech recognition, natural language understanding, visual recognition and assistants. Developers can use these services out of the box or customize them declaratively. The services can be accessed via REST APIs or language libraries.</p>
+<p><strong>Reusable Models</strong></p>
+<p>Cognitive services like the Watson services cover common AI scenarios. For more specific scenarios developers can sometimes use existing models that have been open sourced. The <a href="https://ai.googleblog.com/2017/06/mobilenets-open-source-models-for.html" rel="noopener" target="_blank">visual recognition models for mobile devices</a> from Google are a good example. They can be customized via transfer learning without having to write code.</p>
+<p>Another example is the <a href="http://heidloff.net/article/model-asset-exchange-dl-kubernetes-tensorflow" rel="noopener" target="_blank">IBM Model Asset Exchange</a> which comes with two types of models: Models that can be re-used directly and models with instructions how to train and customize them. The models are put in Docker containers and can be invoked via REST APIs.</p>
+<p><strong>AutoML</strong></p>
+<p>While cognitive services and reusable models cover many scenarios, sometimes you need to build your own models for your individual requirements and that is often not a trivial task. Personally I took some ML/DL classes, understand the basics and can run the tutorials, but I have a hard time to create my own models for my own specific requirements.</p>
+<p>This is were AutoML comes in. Basically AutoML is a set of capabilities that allows developers and data scientists to provide data, to define potential features (input) and to define the labels (output). AutoML takes care of the heavy lifting and figures out the best features, the best algorithms and the best hyperparameters. </p>
+<p>To learn more about AutoML I encourage you to watch the <a href="https://youtu.be/kSa3UObNS6o?t=23m32s" rel="noopener" target="_blank">TensorFlow Dev Summit 2018 keynote</a> and the <a href="https://www.youtube.com/watch?v=Wy6EKjJT79M" rel="noopener" target="_blank">talk from Andreas Mueller</a>. I also like the recent series of <a href="http://www.fast.ai/2018/07/16/auto-ml2/" rel="noopener" target="_blank">blog entries on fast.ai</a>.</p>
+<p>There are several different AutoML open source libraries and commercial offerings available which use different approaches to find the best model. For example IBM provides <a href="http://heidloff.net/article/watson-machine-learning-sample" rel="noopener" target="_blank">Watson Machine Learning</a> to identify the best algorithm. Additionally with <a href="http://heidloff.net/article/hyperparameter-optimization-ibm-watson-studio" rel="noopener" target="_blank">Watson Deep Learning</a> hyperparameters can be identified.</p>
+<p><em>auto-sklearn</em></p>
+<p>There seem to be several promising open source libraries. Unfortunately I couldn&#8217;t use a lot of them for license reasons. One AutoML library that looks interesting is <a href="http://automl.github.io/auto-sklearn/stable/" rel="noopener" target="_blank">auto-sklearn</a> which won the <a href="https://www.kdnuggets.com/2016/08/winning-automl-challenge-auto-sklearn.html" rel="noopener" target="_blank">2016 KDnuggets competition</a>. There seems to be an improved successor of this library which won the <a href="https://www.automl.org/blog-2nd-automl-challenge/" rel="noopener" target="_blank">2018 competition</a> but I couldn&#8217;t find that code which is why my sample below uses the publicly available version.</p>
+<p><em>Running auto-sklearn in IBM Watson Studio</em></p>
+<p>auto-sklearn comes with a <a href="https://automl.github.io/auto-sklearn/stable/" rel="noopener" target="_blank">hello world sample</a>. You can use a slightly different version of this sample in a notebook in Watson Studio.</p>
+<p>First you need to define a <a href="https://dataplatform.cloud.ibm.com/docs/content/analyze-data/notebook-environments.html?audience=wdp&#038;context=analytics" rel="noopener" target="_blank">custom Anaconda-based environment</a> with auto-sklearn &#8211; see <a href="http://heidloff.net/wp-content/uploads/2018/07/auto-sklearn11.png" rel="noopener" target="_blank">screenshot</a>.</p>
+<p>When I tried to run the unmodified sample, I ran into permission issues when accessing the file system. It turned out that the library uses absolute paths to which the notebooks don&#8217;t have access. Fortunately auto-sklearn let me change these directories so that I could use relative directories to which notebooks have full access. Here is the modified code:</p>
+<pre class="brush: plain; title: ; notranslate">
+import autosklearn.classification
+import sklearn.model_selection
+import sklearn.datasets
+import sklearn.metrics
+import os
+os.makedirs('tmp')
+os.makedirs('output')
+X, y = sklearn.datasets.load_digits(return_X_y=True)
+X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, random_state=1)
+automl = autosklearn.classification.AutoSklearnClassifier(shared_mode=True, tmp_folder='tmp', output_folder='output', delete_tmp_folder_after_terminate=False, delete_output_folder_after_terminate=False)
+automl.fit(X_train, y_train)
+y_hat = automl.predict(X_test)
+print(&quot;Accuracy score&quot;, sklearn.metrics.accuracy_score(y_test, y_hat))
+automl.sprint_statistics()
+automl.cv_results_
+</pre>
+<p>This is a screenshot of the notebook:</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/07/auto-sklearn2.png"><img src="http://heidloff.net/wp-content/uploads/2018/07/auto-sklearn2-1024x779.png" alt="auto-sklearn2" width="750" height="571" class="alignnone size-large wp-image-3048" srcset="http://heidloff.net/wp-content/uploads/2018/07/auto-sklearn2-1024x779.png 1024w, http://heidloff.net/wp-content/uploads/2018/07/auto-sklearn2-300x228.png 300w" sizes="(max-width: 750px) 100vw, 750px" /></a></p>
+<p>Want to run this sample yourself? All you need to do is to get a free <a href="https://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud account</a> and create a notebook in <a href="https://dataplatform.cloud.ibm.com/home?context=analytics" rel="noopener" target="_blank">Watson Studio</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/automl-ibm-watson-studio">Building Models with AutoML in IBM Watson Studio</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/automl-ibm-watson-studio/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">3049</post-id>	</item>
+		<item>
+		<title>Deploying TensorFlow Models on Edge Devices</title>
+		<link>http://heidloff.net/article/tensorflow-lite-ibm-watson-ios</link>
+				<comments>http://heidloff.net/article/tensorflow-lite-ibm-watson-ios#respond</comments>
+				<pubDate>Mon, 09 Jul 2018 10:15:05 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=3032</guid>
+				<description><![CDATA[<p>While it has been possible to deploy TensorFlow models to mobile and embedded devices via TensorFlow for Mobile for some time, Google released an experimental version of TensorFlow Lite as an evolution of TensorFlow for Mobile at the end of last year. This new functionality allows building exciting AI scenarios on edge devices and the [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/tensorflow-lite-ibm-watson-ios">Deploying TensorFlow Models on Edge Devices</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>While it has been possible to deploy TensorFlow models to mobile and embedded devices via <a href="https://www.tensorflow.org/mobile/" rel="noopener" target="_blank">TensorFlow for Mobile</a> for some time, Google released an experimental version of <a href="https://www.tensorflow.org/mobile/tflite/index" rel="noopener" target="_blank">TensorFlow Lite</a> as an evolution of TensorFlow for Mobile at the end of last year. This new functionality allows building exciting AI scenarios on edge devices and the performance of the models is amazing.<span id="more-3032"></span></p>
+<p>This article and my code on <a href="https://github.com/nheidloff/watson-deep-learning-tensorflow-lite" rel="noopener" target="_blank">GitHub</a> describes how to train models via <a href="https://www.ibm.com/cloud/watson-studio" rel="noopener" target="_blank">IBM Watson Studio</a> in the cloud or locally. After the training the models are optimized so that they can be deployed to various devices, for example iOS and Android based systems.</p>
+<p>As example I picked a Visual Recognition scenario similar to my earlier blog entry where I described how to use <a href="http://heidloff.net/article/tensorflowjs-ibm-watson-web-browsers-dl" rel="noopener" target="_blank">TensorFlow.js</a> in browsers. In order to train the model I’ve taken pictures from seven items: plug, soccer ball, mouse, hat, truck, banana and headphones. </p>
+<p>Check out the <a href="https://youtu.be/avMQ5VSFb3A" rel="noopener" target="_blank">video</a> for a quick demo how these items can be recognized in iOS and Android apps. This is an iPhone screenshot where a banana is recognized.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/07/ios-app.png"><img src="http://heidloff.net/wp-content/uploads/2018/07/ios-app-576x1024.png" alt="ios-app" width="576" height="1024" class="alignnone size-large wp-image-3031" srcset="http://heidloff.net/wp-content/uploads/2018/07/ios-app-576x1024.png 576w, http://heidloff.net/wp-content/uploads/2018/07/ios-app-169x300.png 169w, http://heidloff.net/wp-content/uploads/2018/07/ios-app.png 750w" sizes="(max-width: 576px) 100vw, 576px" /></a></p>
+<p>Google provides a nice and easy to follow <a href="https://codelabs.developers.google.com/codelabs/tensorflow-for-poets-2/#0" rel="noopener" target="_blank">tutorial</a> how to train, optimize and deploy a visual recognition model to Android devices. I&#8217;ve tried to deploy the model to an iPhone and have run into some issues. Check out my project on <a href="https://github.com/nheidloff/watson-deep-learning-tensorflow-lite" rel="noopener" target="_blank">GitHub</a> how I&#8217;ve fixed those.</p>
+<ul>
+<li>Since TensorFlow Lite is only experimental, interfaces have changed. To follow the Google tutorial, you need to use the exact TensorFlow version 1.7 and not the later ones.</li>
+<li>For me it wasn&#8217;t easy to install and run the optimization tool. I ended up using a Docker image which comes with TensorFlow and the pre-compiled tools.</li>
+<li>The tutorial describes how to generate an optimized model without quantization, the iOS sample app however expects a quantized model.</li>
+</ul>
+<p>In order to run models on edge devices efficiently, they need to be optimized in terms of model size, memory usage, battery usage, etc. To achieve this, one method is to remove dropouts from the graph. Dropouts are used during training to prevent overfitting models. At runtime, when running predictions, they are not needed.</p>
+<p>Another method to optimize models is <a href="https://www.tensorflow.org/performance/quantization" rel="noopener" target="_blank">quantization</a>. Weights in graphs are often defined via floats. When using integers instead however, the sizes of the models are reduced significantly while the accuracy is only affected minimally or not at all. </p>
+<p>In order to get the <a href="https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/lite/examples/ios/camera" rel="noopener" target="_blank">iOS camera sample</a> working with the model that is generated in the tutorial, I had to do some changes. The <a href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/contrib/lite/examples/ios/camera/CameraExampleViewController.mm#L251-L267" rel="noopener" target="_blank">integers</a> had to be changed to floats when passing in an image to the graph:</p>
+<pre class="brush: plain; title: ; notranslate">
+const float input_mean = 0.0f;
+const float input_std = 255.0f;
+
+float* out = interpreter-&gt;typed_input_tensor&lt;float&gt;(0);
+for (int y = 0; y &lt; wanted_input_height; ++y) {
+  float* out_row = out + (y * wanted_input_width * wanted_input_channels);
+  for (int x = 0; x &lt; wanted_input_width; ++x) {
+    const int in_x = (y * image_width) / wanted_input_width;
+    const int in_y = (x * image_height) / wanted_input_height;
+    uint8_t* in_pixel = in + (in_y * image_width * image_channels) + (in_x * image_channels);
+    float* out_pixel = out_row + (x * wanted_input_channels);
+    for (int c = 0; c &lt; wanted_input_channels; ++c) {
+      out_pixel = (in_pixel - input_mean) / input_std;
+    }
+  }
+}
+</pre>
+<p>After this predictions can be invoked in the Objective-C++ code like this:</p>
+<pre class="brush: plain; title: ; notranslate">
+if (interpreter-&gt;Invoke() != kTfLiteOk) {
+  LOG(FATAL) &lt;&lt; &quot;Failed to invoke!&quot;;
+}
+...
+float* output = interpreter-&gt;typed_output_tensor&lt;float&gt;(0); 
+GetTopN(output, output_size, kNumResults, kThreshold, &amp;top_results);
+NSMutableDictionary* newValues = [NSMutableDictionary dictionary];
+for (const auto&amp; result : top_results) {
+  const float confidence = result.first;
+  const int index = result.second;
+  NSString* labelObject = [NSString stringWithUTF8String:labels[index].c_str()];
+  NSNumber* valueObject = [NSNumber numberWithFloat:confidence];
+  [newValues setObject:valueObject forKey:labelObject];
+}
+</pre>
+<p>If you want to run this example yourself, get the code from <a href="https://github.com/nheidloff/watson-deep-learning-tensorflow-lite" rel="noopener" target="_blank">GitHub</a> and get a free <a href="https://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a> account.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/tensorflow-lite-ibm-watson-ios">Deploying TensorFlow Models on Edge Devices</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/tensorflow-lite-ibm-watson-ios/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">3032</post-id>	</item>
+		<item>
+		<title>Deploying Models from IBM&#8217;s Model Exchange to Kubernetes</title>
+		<link>http://heidloff.net/article/model-asset-exchange-dl-kubernetes-tensorflow</link>
+				<comments>http://heidloff.net/article/model-asset-exchange-dl-kubernetes-tensorflow#respond</comments>
+				<pubDate>Fri, 29 Jun 2018 07:17:50 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=3026</guid>
+				<description><![CDATA[<p>In March IBM launched the Model Asset Exchange which is a place for developers to find and use open source deep learning models. In this article I describe how developers can use these models in applications and how the applications can be deployed to Kubernetes. The Model Asset Exchange contains currently 11 models for visual [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/model-asset-exchange-dl-kubernetes-tensorflow">Deploying Models from IBM&#8217;s Model Exchange to Kubernetes</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>In March IBM <a href="https://developer.ibm.com/code/2018/03/20/igniting-a-community-around-deep-learning-models-with-model-asset-exchange-max/" rel="noopener" target="_blank">launched</a> the <a href="https://developer.ibm.com/code/exchanges/models/" rel="noopener" target="_blank">Model Asset Exchange</a> which is a place for developers to find and use open source deep learning models. In this article I describe how developers can use these models in applications and how the applications can be deployed to Kubernetes.<span id="more-3026"></span></p>
+<p>The Model Asset Exchange contains currently 11 models for visual recognition, text generation, style transfer and more. The models are open source and the IP, including for the data, has been vetted. </p>
+<p>There are two types of models: Models that can be re-used directly and models with instructions how to train and customize them. I like this concept a lot. I&#8217;m a developer and not a data scientist and these models allow me to use AI in my applications without having to write my own neural networks.</p>
+<p>Technically the models are put in Docker images which can be deployed to various environments, for example Kubernetes on the IBM Cloud. The Docker images also abstract which deep learning framework is used. So as a consumer you don&#8217;t have to understand the differences between TensorFlow, PyTorch, etc. Instead developers can simply invoke REST APIs to run predictions. Every model comes with a Swagger API definition and an explorer as shown in the screenshot.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/06/max-caption-generator-swagger.png"><img src="http://heidloff.net/wp-content/uploads/2018/06/max-caption-generator-swagger.png" alt="max-caption-generator-swagger" width="1868" height="1432" class="alignnone size-full wp-image-3025" srcset="http://heidloff.net/wp-content/uploads/2018/06/max-caption-generator-swagger.png 1868w, http://heidloff.net/wp-content/uploads/2018/06/max-caption-generator-swagger-300x230.png 300w, http://heidloff.net/wp-content/uploads/2018/06/max-caption-generator-swagger-1024x785.png 1024w" sizes="(max-width: 1868px) 100vw, 1868px" /></a></p>
+<p>One of the models is the <a href="https://github.com/IBM/MAX-Image-Caption-Generator" rel="noopener" target="_blank">Image Caption Generator</a>. With this model text is generated that describes content on an image. The next screenshot shows a <a href="https://github.com/IBM/MAX-Image-Caption-Generator-Web-App" rel="noopener" target="_blank">sample web application</a> which uses this model. It also displays a tag cloud. Users can click on a tag and only the images are selected that match this tag.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/06/max-caption-generator.png"><img src="http://heidloff.net/wp-content/uploads/2018/06/max-caption-generator.png" alt="max-caption-generator" width="1600" height="1071" class="alignnone size-full wp-image-3024" srcset="http://heidloff.net/wp-content/uploads/2018/06/max-caption-generator.png 1600w, http://heidloff.net/wp-content/uploads/2018/06/max-caption-generator-300x201.png 300w, http://heidloff.net/wp-content/uploads/2018/06/max-caption-generator-1024x685.png 1024w" sizes="(max-width: 1600px) 100vw, 1600px" /></a></p>
+<p>The Docker images of the models are available on <a href="https://hub.docker.com/u/codait/" rel="noopener" target="_blank">Docker Hub</a>. There are also <a href="https://github.com/IBM/MAX-Image-Caption-Generator/blob/master/image-caption-generator.yaml" rel="noopener" target="_blank">yaml</a> files for the models to deploy them easily on Kubernetes.</p>
+<p>The caption generator web application documents currently how to deploy the model to Kubernetes and how to deploy the web application on the IBM Cloud as Cloud Foundry application. I&#8217;ve sent a <a href="https://github.com/IBM/MAX-Image-Caption-Generator-Web-App/pull/31" rel="noopener" target="_blank">pull request</a> that also shows how to deploy the web application to Kubernetes.</p>
+<p>Check out the <a href="https://github.com/nheidloff/MAX-Image-Caption-Generator-Web-App/blob/kubernetes-cli/kube-web.yaml" rel="noopener" target="_blank">yaml</a> file to deploy the web application and the <a href="https://github.com/nheidloff/MAX-Image-Caption-Generator-Web-App/blob/kubernetes-cli/kube-model.yaml" rel="noopener" target="_blank">yaml</a> file to deploy the model.</p>
+<p>In the model yaml file the service has the name &#8216;caption-generator-service&#8217;:</p>
+<pre class="brush: plain; title: ; notranslate">
+kind: Service
+metadata:
+  labels:
+    name: caption-generator-service
+  name: caption-generator-service
+</pre>
+<p>In the web application yaml file this name is passed as argument to the web application:</p>
+<pre class="brush: plain; title: ; notranslate">
+containers:
+  - name: caption-generator-web
+     image: nheidloff/caption-generator-web:latest
+     command: [&quot;python&quot;, &quot;app.py&quot;, &quot;--ml-endpoint=http://caption-generator-service:5000&quot;]
+     ports:
+       - containerPort: 8088
+</pre>
+<p>Want to run this sample yourself? </p>
+<p>All you need to do is to get a free <a href="https://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud account</a>, create a <a href="https://console.bluemix.net/containers-kubernetes/catalog/cluster" rel="noopener" target="_blank">Kubernetes cluster</a>, get the code from <a href="https://github.com/nheidloff/MAX-Image-Caption-Generator-Web-App/tree/kubernetes-cli" rel="noopener" target="_blank">GitHub</a> and run these commands:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl apply -f kube-model.yaml
+$ kubectl apply -f kube-web.yaml 
+</pre>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/model-asset-exchange-dl-kubernetes-tensorflow">Deploying Models from IBM&#8217;s Model Exchange to Kubernetes</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/model-asset-exchange-dl-kubernetes-tensorflow/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">3026</post-id>	</item>
+		<item>
+		<title>Hyperparameter Optimization with IBM Watson Studio</title>
+		<link>http://heidloff.net/article/hyperparameter-optimization-ibm-watson-studio</link>
+				<comments>http://heidloff.net/article/hyperparameter-optimization-ibm-watson-studio#respond</comments>
+				<pubDate>Tue, 26 Jun 2018 08:43:08 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=3014</guid>
+				<description><![CDATA[<p>In March IBM announced Deep Learning as a Service (DLaaS) which is part of IBM Watson Studio. Below I describe how to use this service to train models and how to optimize hyperparameters to easily find the best quality model. I&#8217;m not a data scientist, but have been told that finding the right hyperparameters is [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/hyperparameter-optimization-ibm-watson-studio">Hyperparameter Optimization with IBM Watson Studio</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>In March IBM announced <a href="https://www.ibm.com/blogs/watson/2018/03/deep-learning-service-ibm-makes-advanced-ai-accessible-users-everywhere/" rel="noopener" target="_blank">Deep Learning as a Service</a> (DLaaS) which is part of IBM Watson Studio. Below I describe how to use this service to train models and how to optimize hyperparameters to easily find the best quality model.<span id="more-3014"></span></p>
+<p>I&#8217;m not a data scientist, but have been told that finding the right hyperparameters is often a tedious task with a lot of trial and error. Here is the intro of the service from the <a href="https://dataplatform.ibm.com/docs/content/analyze-data/ml_dlaas.html?audience=wdp&#038;context=analytics" rel="noopener" target="_blank">documentation</a>:</p>
+<blockquote style="font-size:medium"><p>As a data scientist, you need to train numerous models to identify the right combination of data in conjunction with hyperparameters to optimize the performance of your neural networks. You want to perform more experiments faster. You want to train deeper networks and explore broader hyperparameters spaces. IBM Watson Machine Learning accelerates this iterative cycle by simplifying the process to train models in parallel with an on-demand GPU compute cluster.</p></blockquote>
+<p>To learn the ability to optimize hyperparameters (HPO), I&#8217;ve used <a href="https://codelabs.developers.google.com/codelabs/tensorflow-for-poets/#6" rel="noopener" target="_blank">TensorFlow For Poets</a> to classify images of flowers via transfer learning. Via HPO the number of training steps is optimized.</p>
+<p>This is a screenshot of IBM Watson Studio with a training definition and one hyperparamter &#8216;how_many_training_steps&#8217; with values between 100 and 2000.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/06/trainingdef.png"><img src="http://heidloff.net/wp-content/uploads/2018/06/trainingdef.png" alt="trainingdef" width="2396" height="1822" class="alignnone size-full wp-image-3012" srcset="http://heidloff.net/wp-content/uploads/2018/06/trainingdef.png 2396w, http://heidloff.net/wp-content/uploads/2018/06/trainingdef-300x228.png 300w, http://heidloff.net/wp-content/uploads/2018/06/trainingdef-1024x779.png 1024w" sizes="(max-width: 2396px) 100vw, 2396px" /></a></p>
+<p>This is the <a href="https://github.com/nheidloff/hyperparameter-optimization-ibm-watson-studio/blob/master/screenshots/result.png" rel="noopener" target="_blank">result</a> of the experiment. It shows that you should use at least 700 training runs.</p>
+<p>I&#8217;ve <a href="https://github.com/nheidloff/hyperparameter-optimization-ibm-watson-studio" rel="noopener" target="_blank">open sourced the sample</a> on GitHub.</p>
+<p>Most of the code can be re-used from the original sample. There are only two things that need to be changed in the code:</p>
+<ul>
+<li>Obtaining Hyperparameter Values from Watson</li>
+<li>Storing Results</li>
+</ul>
+<p><strong>Obtaining Hyperparameter Values from Watson</strong></p>
+<p>The values of the hyperparameters are stored in a JSON file:</p>
+<pre class="brush: python; title: ; notranslate">
+from random import randint
+import json
+
+test_metrics = []
+how_many_training_steps = 4000
+instance_id = randint(0,9999)
+
+try:
+    with open(&quot;config.json&quot;, 'r') as f:
+        json_obj = json.load(f)
+
+    how_many_training_steps = int(json_obj[&quot;how_many_training_steps&quot;])
+except:
+    pass
+
+print('how_many_training_steps: ' + str(how_many_training_steps))
+</pre>
+<p><strong>Storing Results</strong></p>
+<p>At the end of the training run another JSON file needs to be created which contains the test metrics. For every epoch the <a href="https://github.com/nheidloff/hyperparameter-optimization-ibm-watson-studio/blob/master/model/retrain.py#L1260" rel="noopener" target="_blank">metrics</a> are added:</p>
+<pre class="brush: python; title: ; notranslate">
+test_metrics.append((i, {&quot;accuracy&quot;: float(validation_accuracy)}))
+</pre>
+<p>This is the code to save the JSON file:</p>
+<pre class="brush: python; title: ; notranslate">
+training_out =[]
+for test_metric in test_metrics:
+  out = {'steps':test_metric[0]}
+  for (metric,value) in test_metric[1].items():
+    out[metric] = value
+    training_out.append(out)
+
+  with open('{}/val_dict_list.json'.format(os.environ['RESULT_DIR']), 'w') as f:
+    json.dump(training_out, f)
+</pre>
+<p>If you want to run this example yourself, get the code from <a href="https://github.com/nheidloff/hyperparameter-optimization-ibm-watson-studio" rel="noopener" target="_blank">GitHub</a> and get a free <a href="https://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud account</a>. To learn more about HPO in Watson Studio, check out the <a href="https://dataplatform.ibm.com/docs/content/analyze-data/ml_dlaas_hpo.html?audience=wdp&#038;context=analytics" rel="noopener" target="_blank">documentation</a>. </p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/hyperparameter-optimization-ibm-watson-studio">Hyperparameter Optimization with IBM Watson Studio</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/hyperparameter-optimization-ibm-watson-studio/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">3014</post-id>	</item>
+		<item>
+		<title>Training TensorFlow.js Models with IBM Watson</title>
+		<link>http://heidloff.net/article/tensorflowjs-ibm-watson-web-browsers-dl</link>
+				<comments>http://heidloff.net/article/tensorflowjs-ibm-watson-web-browsers-dl#respond</comments>
+				<pubDate>Mon, 18 Jun 2018 12:49:02 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=2994</guid>
+				<description><![CDATA[<p>Recently Google introduced TensorFlow.js, which is a JavaScript library for training and deploying machine learning models in browsers and on Node.js. I like especially the ability to run predictions in browsers. Since running this code locally saves the remote calls to servers, the performance is amazing! TensorFlow.js even allows the training of models in browsers [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/tensorflowjs-ibm-watson-web-browsers-dl">Training TensorFlow.js Models with IBM Watson</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>Recently Google introduced <a href="https://js.tensorflow.org/" rel="noopener" target="_blank">TensorFlow.js</a>, which is a JavaScript library for training and deploying machine learning models in browsers and on Node.js. I like especially the ability to run predictions in browsers. Since running this code locally saves the remote calls to servers, the performance is amazing!<span id="more-2994"></span></p>
+<p>TensorFlow.js even allows the training of models in browsers via WebGL. While for smaller models the training is fast, <a href="https://js.tensorflow.org/faq/" rel="noopener" target="_blank">it doesn&#8217;t work well for larger models</a>. That&#8217;s why I describe in this article how to use Watson Machine Learning which is part of <a href="https://www.ibm.com/cloud/watson-studio" rel="noopener" target="_blank">Watson Studio</a> to train models in the cloud leveraging multiple GPUs.</p>
+<p>As example I use a web application provided by the TensorFlow.js team, called <a href="https://github.com/google/emoji-scavenger-hunt" rel="noopener" target="_blank">Emoji Scavenger Hunt</a>. The goal of this game is to find real objects with phone cameras that look similar to certain emojis.</p>
+<p>Try out the <a href="https://emojiscavengerhunt.withgoogle.com/" rel="noopener" target="_blank">live demo</a> of the original application. In order to see how fast the predictions are run, append <a href="https://emojiscavengerhunt.withgoogle.com/?debug=true" rel="noopener" target="_blank">?debug=true</a> to the URL. In my case the experience feels real time.</p>
+<p>You can also try my <a href="https://nh-hunt.mybluemix.net/" rel="noopener" target="_blank">modified version</a> of this application on the IBM Cloud, but it will only work for you if you have items that look similar.</p>
+<p>Check out the <a href="https://youtu.be/4WTpMmqraXI" rel="noopener" target="_blank">video</a> for a quick demo.</p>
+<p>In order to train the model I&#8217;ve taken pictures from seven items: plug, soccer ball, mouse, hat, truck, banana and headphones. Here is how the emojis map to the real objects. </p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/06/items-annotated-small.jpeg"><img src="http://heidloff.net/wp-content/uploads/2018/06/items-annotated-small.jpeg" alt="items-annotated-small" width="1000" height="1000" class="alignnone size-full wp-image-2995" srcset="http://heidloff.net/wp-content/uploads/2018/06/items-annotated-small.jpeg 1000w, http://heidloff.net/wp-content/uploads/2018/06/items-annotated-small-150x150.jpeg 150w, http://heidloff.net/wp-content/uploads/2018/06/items-annotated-small-300x300.jpeg 300w" sizes="(max-width: 1000px) 100vw, 1000px" /></a></p>
+<p>This is a screenshot from the app running on an iPhone where currently a hat is recognized:</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/06/iphone-1-small.jpeg"><img src="http://heidloff.net/wp-content/uploads/2018/06/iphone-1-small.jpeg" alt="iphone-1-small" width="500" height="889" class="alignnone size-full wp-image-2996" srcset="http://heidloff.net/wp-content/uploads/2018/06/iphone-1-small.jpeg 500w, http://heidloff.net/wp-content/uploads/2018/06/iphone-1-small-169x300.jpeg 169w" sizes="(max-width: 500px) 100vw, 500px" /></a></p>
+<p>Let me now explain how a model with your own pictures can be trained and how the model can be used in web applications. You can get the complete code of this example from <a href="https://github.com/nheidloff/watson-deep-learning-javascript" rel="noopener" target="_blank">GitHub</a>.</p>
+<p><strong>Training the Model</strong></p>
+<p>In order to train the model I&#8217;ve used <a href="https://dataplatform.ibm.com/docs/content/analyze-data/ml_dlaas.html" rel="noopener" target="_blank">Watson Deep Learning</a> which is part of IBM Watson Studio. You can get a free <a href="https://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud account</a> (no time restriction, no credit card required).</p>
+<p>Watson Deep Learning supports several <a href="https://dataplatform.ibm.com/docs/content/analyze-data/pm_service_supported_frameworks.html" rel="noopener" target="_blank">machine learning frameworks</a>. I have used TensorFlow, since TensorFlow.js can import <a href="https://github.com/tensorflow/tfjs-converter" rel="noopener" target="_blank">TensorFlow SavedModel</a> (in addition to Keras HDF5 models). </p>
+<p>Before running the training, data needs to be uploaded to <a href="https://dataplatform.ibm.com/docs/content/analyze-data/ml_dlaas_object_store.html" rel="noopener" target="_blank">Cloud Object Storage</a>. This includes the pictures of the objects you want to recognize as well as MobileNet. <a href="https://github.com/tensorflow/models/tree/master/research/slim#Pretrained" rel="noopener" target="_blank">MobileNet</a> is a pre-trained visual recognition model which is optimized for mobile devices. </p>
+<p>In order to run the training, two things need to be provided: A yaml file with the <a href="https://dataplatform.ibm.com/docs/content/analyze-data/ml_dlaas_working_with_training_definitions.html" rel="noopener" target="_blank">training configuration</a> and a <a href="https://github.com/nheidloff/watson-deep-learning-javascript/blob/master/model/retrain.py" rel="noopener" target="_blank">python file</a> with the actual training code.</p>
+<p>In the training configuration file <a href="https://github.com/nheidloff/watson-deep-learning-javascript/blob/master/model/tf-train.yaml" rel="noopener" target="_blank">train.yaml</a> you need to define <a href="https://dataplatform.ibm.com/docs/content/analyze-data/ml_dlaas_gpus.html?audience=wdp&#038;context=analytics" rel="noopener" target="_blank">compute tiers</a> and the credentials to access Cloud Object Storage. In this sample I&#8217;ve used the configuration k80x2 which includes two GPUs.</p>
+<p>In the train.yaml file you also need to define which <a href="https://github.com/nheidloff/watson-deep-learning-javascript/blob/master/model/tf-train.yaml#L14" rel="noopener" target="_blank">code</a> to trigger when the training is invoked. I&#8217;ve reused <a href="https://github.com/tensorflow/tensorflow/blob/r1.7/tensorflow/examples/image_retraining/retrain.py" rel="noopener" target="_blank">code</a> from the TensorFlow retrain example. Here is a snippet that shows how to save the model after the training. Read the <a href="https://dataplatform.ibm.com/docs/content/analyze-data/ml_dlaas_tensorflow_deploy_score.html" rel="noopener" target="_blank">documentation</a> to understand the prerequisites for deploying and serving TensorFlow models in IBM Watson Studio.</p>
+<pre class="brush: python; title: ; notranslate">
+def export_model(model_info, class_count, saved_model_dir):
+  sess, _, _, _, _ = build_eval_session(model_info, class_count)
+  graph = sess.graph
+  with graph.as_default():
+    input_tensor = model_info['resized_input_tensor_name']
+    in_image = sess.graph.get_tensor_by_name(input_tensor)
+    inputs = {'image': tf.saved_model.utils.build_tensor_info(in_image)}
+
+    out_classes = sess.graph.get_tensor_by_name('final_result:0')
+    outputs = {
+        'prediction': tf.saved_model.utils.build_tensor_info(out_classes)
+    }
+
+    signature = tf.saved_model.signature_def_utils.build_signature_def(
+        inputs=inputs,
+        outputs=outputs,
+        method_name=tf.saved_model.signature_constants.PREDICT_METHOD_NAME)
+    legacy_init_op = tf.group(tf.tables_initializer(), name='legacy_init_op')
+
+    builder = tf.saved_model.builder.SavedModelBuilder(saved_model_dir)
+    builder.add_meta_graph_and_variables(
+        sess, [tf.saved_model.tag_constants.SERVING],
+        signature_def_map={
+            tf.saved_model.signature_constants.
+            DEFAULT_SERVING_SIGNATURE_DEF_KEY:
+                signature
+        },
+        legacy_init_op=legacy_init_op)
+    builder.save()
+</pre>
+<p>Check out <a href="https://github.com/nheidloff/watson-deep-learning-javascript" rel="noopener" target="_blank">README.md</a> how to trigger the training and how to download the model.</p>
+<p><strong>Usage of the Model in a Web Application</strong></p>
+<p>Once the training is done, you can download the <a href="https://github.com/nheidloff/watson-deep-learning-javascript/tree/master/saved-model/training-qBnjUqImR/model" rel="noopener" target="_blank">saved model</a>. Before the model can be used in a web application, it needs to be converted into a web-friendly format converted by the <a href="https://github.com/tensorflow/tfjs-converter" rel="noopener" target="_blank">TensorFlow.js converter</a>. Since I&#8217;ve had some issues to run the converter on my Mac, I&#8217;ve created a little Docker image to do this. Again, check out the README.md for details.</p>
+<p>The converted model needs to be copied into the <a href="https://github.com/nheidloff/watson-deep-learning-javascript/tree/master/emoji-scavenger-hunt/dist" rel="noopener" target="_blank">dist</a> directory of the web application. Before running predictions the model is <a href="https://github.com/nheidloff/watson-deep-learning-javascript/blob/master/emoji-scavenger-hunt/src/js/mobilenet.ts#L26-L42">loaded</a>, in this case from the files that are part of the web application. Alternatively the model can also be <a href="https://js.tensorflow.org/api/0.11.6/#loadModel" rel="noopener" target="_blank">loaded</a> from remote URLs and stored in the browser.</p>
+<pre class="brush: jscript; title: ; notranslate">
+const MODEL_FILE_URL = '/model/tensorflowjs_model.pb';
+const WEIGHT_MANIFEST_FILE_URL = '/model/weights_manifest.json';
+
+export class MobileNet {
+  model: FrozenModel;
+  async load() {
+    this.model = await loadFrozenModel(
+      MODEL_FILE_URL,
+      WEIGHT_MANIFEST_FILE_URL
+    );
+  }
+</pre>
+<p>In order to run the predictions, the <a href="https://github.com/tensorflow/tfjs-converter#step-2-loading-and-running-in-the-browser" rel="noopener" target="_blank">execute</a> function of the model is invoked:</p>
+<pre class="brush: jscript; title: ; notranslate">
+import {loadFrozenModel, FrozenModel} from '@tensorflow/tfjs-converter';
+...
+model: FrozenModel;
+...
+const OUTPUT_NODE_NAME = 'final_result';
+...
+predict(input: tfc.Tensor): tfc.Tensor1D {
+    const preprocessedInput = tfc.div(tfc.sub(input.asType('float32'), PREPROCESS_DIVISOR), PREPROCESS_DIVISOR);
+    const reshapedInput = preprocessedInput.reshape([1, ...preprocessedInput.shape]);
+    const dict: TensorMap = {};
+    dict[INPUT_NODE_NAME] = reshapedInput;
+    return this.model.execute(dict, OUTPUT_NODE_NAME) as tfc.Tensor1D;
+  }
+</pre>
+<p>If you want to run this example yourself, get the code from <a href="https://github.com/nheidloff/watson-deep-learning-javascript" rel="noopener" target="_blank">GitHub</a> and get a free <a href="https://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud account</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/tensorflowjs-ibm-watson-web-browsers-dl">Training TensorFlow.js Models with IBM Watson</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/tensorflowjs-ibm-watson-web-browsers-dl/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">2994</post-id>	</item>
+		<item>
+		<title>Building VR Applications with Unity and IBM Watson</title>
+		<link>http://heidloff.net/article/vr-virtual-reality-unity-ibm-watson</link>
+				<comments>http://heidloff.net/article/vr-virtual-reality-unity-ibm-watson#respond</comments>
+				<pubDate>Wed, 06 Jun 2018 09:20:39 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=2985</guid>
+				<description><![CDATA[<p>I&#8217;ve continued to play with Unity and the IBM Watson SDK, which allows using cognitive services like speech recognition in Unity projects. With this technology you can not only build games, but also other exciting scenarios. I&#8217;ve changed my Augmented Reality sample slightly to run it as a Virtual Reality app that can be experienced [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/vr-virtual-reality-unity-ibm-watson">Building VR Applications with Unity and IBM Watson</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>I&#8217;ve continued to play with <a href="https://unity3d.com/unity" rel="noopener" target="_blank">Unity</a> and the <a href="https://github.com/watson-developer-cloud/unity-sdk" rel="noopener" target="_blank">IBM Watson SDK</a>, which allows using cognitive services like speech recognition in Unity projects. With this technology you can not only build games, but also other exciting scenarios. I&#8217;ve changed my <a href="http://heidloff.net/article/ar-applications-unity-ibm-watson" rel="noopener" target="_blank">Augmented Reality sample</a> slightly to run it as a Virtual Reality app that can be experienced via <a href="https://vr.google.com/cardboard/" rel="noopener" target="_blank">Google Cardboard</a> and an iPhone.<span id="more-2985"></span></p>
+<p>The picture shows the two screens showing the 3D character. Users can move the player (themselves) via voice commands and can have conversations with the character, for example:</p>
+<ul>
+<li><strong>User</strong>: Start to walk</li>
+<li><strong>User</strong>: Stop</li>
+<li><strong>User</strong>: How is the weather?</li>
+<li><strong>Virtual character</strong>: In which location?</li>
+<li><strong>User</strong>: Munich</li>
+<li><strong>Virtual character</strong>: The temperature in Munich is currently 24 degrees.</li>
+<li><strong>User</strong>: How is the weather in Berlin?</li>
+<li><strong>Virtual character</strong>: The temperature in Berlin is currently 28 degrees.</li>
+</ul>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/06/demo.png"><img src="http://heidloff.net/wp-content/uploads/2018/06/demo.png" alt="demo" width="2300" height="1380" class="alignnone size-full wp-image-2987" srcset="http://heidloff.net/wp-content/uploads/2018/06/demo.png 2300w, http://heidloff.net/wp-content/uploads/2018/06/demo-300x180.png 300w, http://heidloff.net/wp-content/uploads/2018/06/demo-1024x614.png 1024w" sizes="(max-width: 2300px) 100vw, 2300px" /></a></p>
+<p>Check out the <a href="https://www.youtube.com/watch?v=dAgqvRs0ZaQ" rel="noopener" target="_blank">video</a> for a short demo. In order to see both screens, open the link on a smartphone and choose &#8216;3D&#8217; as viewing option. To experience the video in 3D, you need a VR device like the Google Cardboard.</p>
+<p><a href="https://github.com/nheidloff/unity-watson-vr-sample" rel="noopener" target="_blank">Get the code from GitHub.</a> The setup should be pretty straight forward. All you need to do, is to open the project in Unity (it comes with the Watson SDK and Cardboard SDK) and enter your Watson credentials. To run it on an iPhone, check out the README.</p>
+<p>Technically the following services and tools are used:</p>
+<ul>
+<li><a href="https://unity3d.com/unity" rel="noopener" target="_blank">Unity</a></li>
+<li><a href="https://github.com/watson-developer-cloud/unity-sdk" rel="noopener" target="_blank">IBM Watson SDK for Unity</a></li>
+<li><a href="https://www.ibm.com/watson/services/speech-to-text/" rel="noopener" target="_blank">IBM Watson Speech To Text</a></li>
+<li><a href="https://www.ibm.com/watson/services/conversation/" rel="noopener" target="_blank">IBM Watson Assistant</a></li>
+<li><a href="https://www.ibm.com/watson/services/text-to-speech/" rel="noopener" target="_blank">IBM Watson Text To Speech</a></li>
+<li><a href="https://console.bluemix.net/catalog/services/weather-company-data" rel="noopener" target="_blank">Weather Company Data</a></li>
+<li><a href="https://developers.google.com/vr/develop/unity/get-started-ios" rel="noopener" target="_blank">Google Cardboard</a></li>
+</ul>
+<p>Most of the functionality is identical to my previous Augmented Reality sample. For example here are some snippets how to use Watson Speech To Text. First you need to initialize the service with credentials you can get from the <a href="https://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a>. The lite account offers access to the Watson services, doesn&#8217;t cost anything and you don&#8217;t even have to provide a credit card.</p>
+<pre class="brush: cpp; title: ; notranslate">
+SpeechToText _speechToText;
+Credentials credentials = new Credentials(WATSON_SPEECH_TO_TEXT_USER, WATSON_SPEECH_TO_TEXT_PASSWORD, &quot;https://stream.watsonplatform.net/speech-to-text/api&quot;);
+_speechToText = new SpeechToText(credentials);
+</pre>
+<p>Next you start listening by invoking StartListening and defining some options:</p>
+<pre class="brush: cpp; title: ; notranslate">
+_speechToText.DetectSilence = true;
+_speechToText.EnableWordConfidence = false;
+_speechToText.EnableTimestamps = false;
+_speechToText.SilenceThreshold = 0.03f;
+_speechToText.MaxAlternatives = 1;
+...
+_speechToText.StartListening(OnSpeechToTextResultReceived, OnRecognizeSpeaker);
+</pre>
+<p>The callback OnSpeechToTextResultReceived gets the spoken text as input:</p>
+<pre class="brush: cpp; title: ; notranslate">
+private void OnSpeechToTextResultReceived(SpeechRecognitionEvent result, Dictionary&lt;string, object&gt; customData) {
+  if (result != null &amp;&amp; result.results.Length &gt; 0) {
+    foreach (var res in result.results) {
+      foreach (var alt in res.alternatives) { 
+        SendMessageToConversation(alt.transcript);                    
+      }
+    }
+  }
+}
+</pre>
+<p>The biggest change from my previous AR sample is the ability to move the player/user with voice commands. In order to do this, I could have added intents like &#8216;walk&#8217; and &#8216;stop&#8217; to Watson Assistant. To save the additional roundtrip to Watson Assistant however, I simply check for a hardcoded list of words. For example if the user input contains the word &#8216;walk&#8217;, the player/user starts to walk until the user says &#8216;stop&#8217;. While walking, the direction can simply be changed by looking in another direction. </p>
+<pre class="brush: cpp; title: ; notranslate">
+Camera camera = Camera.main;
+GameObject player = GameObject.Find(&quot;Player&quot;);
+NavMeshAgent navMeshAgent = player.GetComponent&lt;NavMeshAgent&gt;();
+navMeshAgent.SetDestination(player.transform.position + camera.transform.forward);
+</pre>
+<p>Want to run this sample yourself? Try it out on the <a href="https://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/vr-virtual-reality-unity-ibm-watson">Building VR Applications with Unity and IBM Watson</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/vr-virtual-reality-unity-ibm-watson/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">2985</post-id>	</item>
+	</channel>
+</rss>

@@ -1,0 +1,6 @@
+Data Flows in Serverless Cloud-Native Applications.
+Serverless platforms like Apache OpenWhisk are gaining more and more traction.
+Rather than building only single functions, developers are starting to develop cloud-native applications with many serverless functions/microservices.
+The challenge when building serverless cloud-native applications is how to orchestrate the different functions and how to manage the data flows between the functions.
+Especially if you […]
+The post Data Flows in Serverless Cloud-Native Applications [http://heidloff.net/article/serverless-data-flows] appeared first on Niklas Heidloff [http://heidloff.net].

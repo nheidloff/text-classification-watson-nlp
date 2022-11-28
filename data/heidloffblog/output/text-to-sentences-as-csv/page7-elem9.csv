@@ -1,0 +1,6 @@
+page7-elem9,Developing OpenWhisk Functions with Kotlin in IntelliJ.
+page7-elem9,I’ve implemented some code that shows how Apache OpenWhisk functions can be developed with Kotlin.
+page7-elem9,The Java code is built via Gradle and put into a Docker image which can be deployed to OpenWhisk cloud providers like the IBM Cloud.
+page7-elem9,Get the code from GitHub.
+page7-elem9,There are different approaches to write OpenWhisk functions with Kotlin.
+page7-elem9,The post Developing OpenWhisk Functions with Kotlin in IntelliJ [http://heidloff.net/article/openwhisk-kotlin-intellij-docker] appeared first on Niklas Heidloff [http://heidloff.net].

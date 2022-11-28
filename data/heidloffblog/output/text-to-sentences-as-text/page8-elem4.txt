@@ -1,0 +1,9 @@
+Slides: When to use Serverless?
+When to use Kubernetes?.
+Many developers want to know whether they should use Serverless or Kubernetes to build cloud-native applications.
+Both computing options have pros and cons and it depends on your needs which option you should choose.
+I blogged about when to use Serverless and when to use Kubernetes.
+Use Serverless if you have the following needs: Variable […]
+The post Slides: When to use Serverless?
+When to use Kubernetes?
+[http://heidloff.net/article/serverless-or-kubernetes] appeared first on Niklas Heidloff [http://heidloff.net].

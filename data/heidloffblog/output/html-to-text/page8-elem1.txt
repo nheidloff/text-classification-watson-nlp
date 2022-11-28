@@ -1,0 +1,5 @@
+Transforming JSON Data in Serverless Applications.
+
+Serverless platforms like Apache OpenWhisk are gaining more and more traction. Rather than building only single functions, developers are starting to develop cloud-native applications with many serverless functions/microservices. The challenge when building serverless applications is how to manage the data flows between the functions, especially if you want loosely coupled functions without dependencies between each […]
+
+The post Transforming JSON Data in Serverless Applications [http://heidloff.net/article/transforming-json-serverless] appeared first on Niklas Heidloff [http://heidloff.net].

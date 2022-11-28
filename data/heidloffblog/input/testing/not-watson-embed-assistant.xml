@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Thu, 24 Nov 2022 10:47:53 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item>
+	
+	
+	<title>The new Watson Assistant is awesome</title>
+	
+	
+	<link>http://heidloff.net/article/building-custom-ibm-watson-nlp-images-models/</link><pubDate>Wed, 23 Nov 2022 13:45:24 +0000</pubDate><dc:creator>
+	<![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=x</guid><description>
+	<![CDATA[...
+]]></description><content:encoded>
+<![CDATA[
+
+
+<header class="entry-header">
+		<h1 class="entry-title">The new Watson Assistant is awesome</h1>
+            
+		<div class="entry-meta">
+			<span class="posted-on">Posted on <a href="http://heidloff.net/article/the-new-watson-assistant-is-awesome/" rel="bookmark"><time class="entry-date published" datetime="2022-11-14T08:42:31+00:00">November 14, 2022</time><time class="updated" datetime="2022-11-14T09:30:45+00:00">November 14, 2022</time></a></span><span class="byline"> by <span class="author vcard"><a class="url fn n" href="http://heidloff.net/author/niklasheidloff/">Niklas Heidloff</a></span></span>		</div><!-- .entry-meta -->
+	</header>
+
+	<div class="entry-content">
+		<p><em>IBM Watson Assistant is a SaaS offering from IBM to build conversational user experiences. The first version was already good, but the new(ish) version is just awesome!</em><span id="more-5297"></span></p>
+<p>Over the last years Watson Assistant has successfully been used by many IBM clients and partners. Based on the feedback from clients, the IBM development and design team has created a brand new experience. This second version was released at the end of 2021. I was only able to try it recently and was positively surprised how much the offering has evolved. Below are some of my highlights.</p>
+<p><strong>1. Actions</strong></p>
+<p>The new Watson Assistant uses a more natural way to define conversations. The old ‘dialog’ experience was replaced with a more intuitive concept which is more goal oriented. For example Assistant users don’t use intents anymore, but actions. Intents still exist internally, but users want to define actions so that end users can reach their goals.</p>
+<p>Similarly Assistant users don’t have to define entities anymore. Again, they still exist internally, but as far as users are concerned they just define types (e.g. free text) in the actions experience and the entities are created automatically.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-08.57.43.png" alt="" width="3026" height="1676" class="alignnone size-full wp-image-5298" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-08.57.43.png 3026w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-08.57.43-300x166.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-08.57.43-768x425.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-08.57.43-1024x567.png 1024w" sizes="(max-width: 3026px) 100vw, 3026px"></p>
+<p><strong>2. Integration of Watson Discovery</strong></p>
+<p>With the Assistant the most typical conversation flows are covered. However, for advanced topics Assistant can call out to other services like Watson Discovery. This is useful if you have FAQs or other data stored in other systems that you want to expose to end users. </p>
+<p>The following screenshot shows how Assistant can return articles from my blog. It only takes five minutes to implement this.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-09.07.44.png" alt="" width="3034" height="1616" class="alignnone size-full wp-image-5299" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-09.07.44.png 3034w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-09.07.44-300x160.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-09.07.44-768x409.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-11-at-09.07.44-1024x545.png 1024w" sizes="(max-width: 3034px) 100vw, 3034px"></p>
+<p><strong>3. Much more</strong></p>
+<p>There are so many more cool features and improvements.</p>
+<ul>
+<li>Via REST APIs services can be queried or perform business logic</li>
+<li>Integrations with phone</li>
+<li>Integrations with chat clients and SMS</li>
+<li>Custom integrations</li>
+<li>Embeddable web chat widget</li>
+<li>Hand over to agent</li>
+<li>Free text responses</li>
+<li>Integrated debugger in preview chat window</li>
+<li>Clarifying question to identify the right action</li>
+<li>Change conversation topics (switch between actions)</li>
+<li>Built in analytics</li>
+<li>User authentication and secure traffic</li>
+<li>Private endpoints</li>
+<li>Different plans for different needs including isolated deployments</li>
+<li>High availability mechanisms</li>
+<li>Multiple languages</li>
+<li>Templates with lots of predefined reusable actions</li>
+<li>Production and development environments</li>
+<li>APIs for most common languages</li>
+<li>…</li>
+</ul>
+<p><strong>Getting started</strong></p>
+<p>To get started, try it out yourselves. There is a <a href="https://cloud.ibm.com/catalog/services/watson-assistant" rel="noopener noreferrer" target="_blank">free lite plan</a>.</p>
+<p>The first time you log in, a guided tour is offered. I’m usually not a fan of those, but it worked very well for me to learn a lot in a short amout of time. The tour is also documented in a <a href="https://cloud.ibm.com/docs/assistant?topic=assistant-getting-started" rel="noopener noreferrer" target="_blank">blog series</a>.</p>
+<p>The <a href="https://cloud.ibm.com/docs/watson-assistant?topic=watson-assistant-about" rel="noopener noreferrer" target="_blank">documentation</a> is well structured, complete and easy to read.</p>
+<div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-official sd-sharing"><h3 class="sd-title">Share this:</h3><div class="sd-content"><ul><li class="share-twitter"><iframe id="twitter-widget-1" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" class="twitter-share-button twitter-share-button-rendered twitter-tweet-button" style="position: static; visibility: visible; width: 73px; height: 20px;" title="Twitter Tweet Button" src="https://platform.twitter.com/widgets/tweet_button.644279d1635fd969e87af94a98bd232b.en.html#dnt=false&amp;id=twitter-widget-1&amp;lang=en&amp;original_referer=http%3A%2F%2Fheidloff.net%2Farticle%2Fthe-new-watson-assistant-is-awesome%2F&amp;partner=tfwp&amp;size=m&amp;text=The%20new%20Watson%20Assistant%20is%20awesome&amp;time=1669388437667&amp;type=share&amp;url=http%3A%2F%2Fheidloff.net%2Farticle%2Fthe-new-watson-assistant-is-awesome%2F" data-url="http://heidloff.net/article/the-new-watson-assistant-is-awesome/"></iframe></li><li class="share-linkedin"><div class="linkedin_button"><span class="IN-widget" data-lnkd-debug="<script type=&quot;in/share+init&quot; data-url=&quot;http://heidloff.net/article/the-new-watson-assistant-is-awesome/&quot; data-counter=&quot;right&quot;></script>" style="display: inline-block; line-height: 1; vertical-align: bottom; padding: 0px; margin: 0px; text-indent: 0px; text-align: center;"><span style="padding: 0px !important; margin: 0px !important; text-indent: 0px !important; display: inline-block !important; vertical-align: bottom !important; font-size: 1px !important;"><button class="IN-36f20d8e-4c6e-4cef-bba0-83622a7a0637-1G9ISYhSF8XoOmdcl0yKDu"><xdoor-icon aria-hidden="true"><svg viewBox="0 0 24 24" width="24px" height="24px" x="0" y="0" preserveAspectRatio="xMinYMin meet">
+      <g style="fill: currentColor">
+        <rect x="-0.003" style="fill:none;" width="24" height="24"></rect>
+        <path style="" d="M20,2h-16c-1.1,0-2,0.9-2,2v16c0,1.1,0.9,2,2,2h16c1.1,0,2-0.9,2-2V4C22,2.9,21.1,2,20,2zM8,19h-3v-9h3V19zM6.5,8.8C5.5,8.8,4.7,8,4.7,7s0.8-1.8,1.8-1.8S8.3,6,8.3,7S7.5,8.8,6.5,8.8zM19,19h-3v-4c0-1.4-0.6-2-1.5-2c-1.1,0-1.5,0.8-1.5,2.2V19h-3v-9h2.9v1.1c0.5-0.7,1.4-1.3,2.6-1.3c2.3,0,3.5,1.1,3.5,3.7V19z"></path>
+      </g>
+    </svg></xdoor-icon>Share</button></span></span></div></li><li class="share-facebook"><div class="fb-share-button fb_iframe_widget" data-href="http://heidloff.net/article/the-new-watson-assistant-is-awesome/" data-layout="button_count" fb-xfbml-state="rendered" fb-iframe-plugin-query="app_id=249643311490&amp;container_width=0&amp;href=http%3A%2F%2Fheidloff.net%2Farticle%2Fthe-new-watson-assistant-is-awesome%2F&amp;layout=button_count&amp;locale=en_US&amp;sdk=joey"><span style="vertical-align: bottom; width: 77px; height: 20px;"><iframe name="f194a88c9e40f88" width="1000px" height="1000px" data-testid="fb:share_button Facebook Social Plugin" title="fb:share_button Facebook Social Plugin" frameborder="0" allowtransparency="true" allowfullscreen="true" scrolling="no" allow="encrypted-media" src="https://web.facebook.com/v2.3/plugins/share_button.php?app_id=249643311490&amp;channel=https%3A%2F%2Fstaticxx.facebook.com%2Fx%2Fconnect%2Fxd_arbiter%2F%3Fversion%3D46%23cb%3Df2fc5305d7d0f84%26domain%3Dheidloff.net%26is_canvas%3Dfalse%26origin%3Dhttp%253A%252F%252Fheidloff.net%252Ff1417c9da6d47c%26relation%3Dparent.parent&amp;container_width=0&amp;href=http%3A%2F%2Fheidloff.net%2Farticle%2Fthe-new-watson-assistant-is-awesome%2F&amp;layout=button_count&amp;locale=en_US&amp;sdk=joey" style="border: none; visibility: visible; width: 77px; height: 20px;" class=""></iframe></span></div></li><li class="share-google-plus-1 share-deprecated"><a rel="nofollow" data-shared="" class="share-google-plus-1 sd-button" href="http://heidloff.net/article/the-new-watson-assistant-is-awesome/" title="The Google+ service has shut down. This sharing button is not displayed to your visitors and should be removed."><span>Google+ has shut down</span></a></li><li class="share-end"></li></ul></div></div></div>			</div>
+
+
+
+
+]]></content:encoded><post-id xmlns="com-wordpress:feed-additions:1">5378</post-id></item></channel></rss>

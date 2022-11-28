@@ -1,0 +1,548 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	
+xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+>
+
+<channel>
+	<title>Page 21 &#8211; Niklas Heidloff</title>
+	<atom:link href="http://heidloff.net/feed/?paged=21" rel="self" type="application/rss+xml" />
+	<link>http://heidloff.net</link>
+	<description></description>
+	<lastBuildDate>
+	Fri, 25 Nov 2022 07:22:15 +0000	</lastBuildDate>
+	<language>en-US</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=5.1.15</generator>
+<site xmlns="com-wordpress:feed-additions:1">102773794</site>	<item>
+		<title>Building AR Applications with Unity and IBM Watson</title>
+		<link>http://heidloff.net/article/ar-applications-unity-ibm-watson</link>
+				<comments>http://heidloff.net/article/ar-applications-unity-ibm-watson#comments</comments>
+				<pubDate>Tue, 29 May 2018 12:28:11 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=2978</guid>
+				<description><![CDATA[<p>Over the last days I&#8217;ve enjoyed playing with Unity and the IBM Watson SDK, which allows using cognitive services like speech recognition in Unity projects. With this technology you can not only build games, but also other exciting scenarios. I&#8217;ve extended an Augmented Reality application from my colleague Amara Keller which allows iOS users to [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/ar-applications-unity-ibm-watson">Building AR Applications with Unity and IBM Watson</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>Over the last days I&#8217;ve enjoyed playing with <a href="https://unity3d.com/unity" rel="noopener" target="_blank">Unity</a> and the <a href="https://github.com/watson-developer-cloud/unity-sdk" rel="noopener" target="_blank">IBM Watson SDK</a>, which allows using cognitive services like speech recognition in Unity projects. With this technology you can not only build games, but also other exciting scenarios. I&#8217;ve extended an Augmented Reality application from my colleague <a href="https://medium.com/@MissAmaraKay/build-your-first-ai-ar-app-on-unity-8c12895687fa" rel="noopener" target="_blank">Amara Keller</a> which allows iOS users to have conversations with a virtual character.<span id="more-2978"></span></p>
+<p>The <a href="https://raw.githubusercontent.com/nheidloff/unity-watson-ar-sample/master/photo1.png" rel="noopener" target="_blank">picture</a> shows a printed piece of paper with a pattern. When using the app, the 3D character shows up on the paper. Users can have conversations with the character, for example:</p>
+<ul>
+<li><strong>User</strong>: How is the weather?</li>
+<li><strong>Virtual character</strong>: In which location?</li>
+<li><strong>User</strong>: Munich</li>
+<li><strong>Virtual character</strong>: The temperature in Munich is currently 24 degrees.</li>
+<li><strong>User</strong>: How is the weather in Berlin?</li>
+<li><strong>Virtual character</strong>: The temperature in Berlin is currently 28 degrees.</li>
+</ul>
+<p>Check out the <a href="https://www.youtube.com/watch?v=u8c0fPQOqMU" rel="noopener" target="_blank">video</a> for a short demo.</p>
+<p><iframe width="853" height="480" src="//www.youtube.com/embed/u8c0fPQOqMU" frameborder="0" allowfullscreen></iframe> </p>
+<p><a href="https://github.com/nheidloff/unity-watson-ar-sample" rel="noopener" target="_blank">Get the code from GitHub.</a></p>
+<p>Technically the following services and tools are used:</p>
+<ul>
+<li><a href="https://unity3d.com/unity" rel="noopener" target="_blank">Unity</a></li>
+<li><a href="https://developer.vuforia.com/" rel="noopener" target="_blank">Vuforia</a></li>
+<li><a href="https://github.com/watson-developer-cloud/unity-sdk" rel="noopener" target="_blank">IBM Watson SDK for Unity</a></li>
+<li><a href="https://www.ibm.com/watson/services/speech-to-text/" rel="noopener" target="_blank">IBM Watson Speech To Text</a></li>
+<li><a href="https://www.ibm.com/watson/services/conversation/" rel="noopener" target="_blank">IBM Watson Assistant</a></li>
+<li><a href="https://www.ibm.com/watson/services/text-to-speech/" rel="noopener" target="_blank">IBM Watson Text To Speech</a></li>
+<li><a href="https://console.bluemix.net/catalog/services/weather-company-data" rel="noopener" target="_blank">Weather Company Data</a></li>
+</ul>
+<p>The main logic is in this <a href="https://github.com/nheidloff/unity-watson-ar-sample/blob/master/SoldierConvo.cs" rel="noopener" target="_blank">file</a>. Let&#8217;s take a look how to use the Speech To Text service as an example. First you need to initialize the service with credentials you can get from the <a href="https://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a>. The lite account offers access to the Watson services, doesn&#8217;t cost anything and you don&#8217;t even have to provide a credit card.</p>
+<pre class="brush: cpp; title: ; notranslate">
+SpeechToText _speechToText;
+Credentials credentials = new Credentials(WATSON_SPEECH_TO_TEXT_USER, WATSON_SPEECH_TO_TEXT_PASSWORD, &quot;https://stream.watsonplatform.net/speech-to-text/api&quot;);
+_speechToText = new SpeechToText(credentials);
+</pre>
+<p>Next you start listening by invoking StartListening and defining some options:</p>
+<pre class="brush: cpp; title: ; notranslate">
+_speechToText.DetectSilence = true;
+_speechToText.EnableWordConfidence = false;
+_speechToText.EnableTimestamps = false;
+_speechToText.SilenceThreshold = 0.03f;
+_speechToText.MaxAlternatives = 1;
+...
+_speechToText.StartListening(OnSpeechToTextResultReceived, OnRecognizeSpeaker);
+</pre>
+<p>The callback OnSpeechToTextResultReceived gets the spoken text as input:</p>
+<pre class="brush: cpp; title: ; notranslate">
+private void OnSpeechToTextResultReceived(SpeechRecognitionEvent result, Dictionary&lt;string, object&gt; customData) {
+  if (result != null &amp;&amp; result.results.Length &gt; 0) {
+    foreach (var res in result.results) {
+      foreach (var alt in res.alternatives) { 
+        SendMessageToConversation(alt.transcript);                    
+      }
+    }
+  }
+}
+</pre>
+<p>The application also showcases how to use Watson Assistant and Watson Text To Speech in addition to Watson Speech To Text. Check out the <a href="https://github.com/nheidloff/unity-watson-ar-sample" rel="noopener" target="_blank">open source project</a> for details.</p>
+<p>One important thing to keep in mind when using the three Watson services together is the timing. For example you should stop recording before playing an audio clip received from Watson Text To Speech so that Watson doesn&#8217;t listen to itself. Also you need to make sure to only play one clip at a time.</p>
+<p>I&#8217;m neither a Unity, nor a C# expert. So I&#8217;m sure there are better ways to do this. Below is how I&#8217;ve solved this. I start the recording again only after the duration of the audio clip.</p>
+<pre class="brush: cpp; title: ; notranslate">
+private void OnSynthesize(AudioClip clip, Dictionary&lt;string, object&gt; customData) {      
+  GameObject audioObject = new GameObject(&quot;AudioObject&quot;);
+  AudioSource source = audioObject.AddComponent&lt;AudioSource&gt;();
+  source.loop = false;
+  source.clip = clip;
+  source.Play();
+  Invoke(&quot;RecordAgain&quot;, source.clip.length);
+  Destroy(audioObject, clip.length);
+}
+</pre>
+<p>Want to run this sample yourself? Try it out on the <a href="https://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/ar-applications-unity-ibm-watson">Building AR Applications with Unity and IBM Watson</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/ar-applications-unity-ibm-watson/feed/</wfw:commentRss>
+		<slash:comments>3</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">2978</post-id>	</item>
+		<item>
+		<title>Pictures from We Are Developers in Vienna</title>
+		<link>http://heidloff.net/article/pictures-wearedevs2018</link>
+				<comments>http://heidloff.net/article/pictures-wearedevs2018#respond</comments>
+				<pubDate>Tue, 22 May 2018 09:51:45 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=2970</guid>
+				<description><![CDATA[<p>Last week my colleagues and I attended We Are Developers in Vienna, a developer conference with 8000 attendees. We presented and demonstrated the IBM Cloud and the IBM Code developer site. Below are some pictures. Some of my colleagues: Andrea Overthun, Fernando Cejas, Miriam Oglesby, Niklas Heidloff, Jonas Jacobi, Joe Sepi Crane-Messina, Christine Mayer Jonas [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/pictures-wearedevs2018">Pictures from We Are Developers in Vienna</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>Last week my colleagues and I attended <a href="https://www.wearedevelopers.com/" rel="noopener" target="_blank">We Are Developers</a> in Vienna, a developer conference with 8000 attendees. We presented and demonstrated the IBM Cloud and the IBM Code developer site. Below are some pictures.<span id="more-2970"></span></p>
+<p>Some of my colleagues: Andrea Overthun, Fernando Cejas, Miriam Oglesby, Niklas Heidloff, Jonas Jacobi, Joe Sepi Crane-Messina, Christine Mayer</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/05/wearedevs2.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/05/wearedevs2.jpg" alt="wearedevs2" width="640" height="444" class="alignnone size-full wp-image-2966" srcset="http://heidloff.net/wp-content/uploads/2018/05/wearedevs2.jpg 640w, http://heidloff.net/wp-content/uploads/2018/05/wearedevs2-300x208.jpg 300w" sizes="(max-width: 640px) 100vw, 640px" /></a></p>
+<p>Jonas Jacobi in his keynote about developer advocacy and IBM&#8217;s emphasize on open source:</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/05/wearedevs3.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/05/wearedevs3.jpg" alt="wearedevs3" width="1000" height="564" class="alignnone size-full wp-image-2967" srcset="http://heidloff.net/wp-content/uploads/2018/05/wearedevs3.jpg 1000w, http://heidloff.net/wp-content/uploads/2018/05/wearedevs3-300x169.jpg 300w" sizes="(max-width: 1000px) 100vw, 1000px" /></a></p>
+<p>I gave a session <a href="http://heidloff.net/article/when-to-use-serverless-kubernetes" rel="noopener" target="_blank">When to use Serverless? When to use Kubernetes?</a>. I&#8217;m very happy that so many people (800+) attended it. It was a lot of fun and I had great discussions with attendees after it.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/05/wearedevs1.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/05/wearedevs1.jpg" alt="wearedevs1" width="1000" height="318" class="alignnone size-full wp-image-2964" srcset="http://heidloff.net/wp-content/uploads/2018/05/wearedevs1.jpg 1000w, http://heidloff.net/wp-content/uploads/2018/05/wearedevs1-300x95.jpg 300w" sizes="(max-width: 1000px) 100vw, 1000px" /></a></p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/05/wearedevs1b.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/05/wearedevs1b.jpg" alt="wearedevs1b" width="1000" height="612" class="alignnone size-full wp-image-2965" srcset="http://heidloff.net/wp-content/uploads/2018/05/wearedevs1b.jpg 1000w, http://heidloff.net/wp-content/uploads/2018/05/wearedevs1b-300x184.jpg 300w" sizes="(max-width: 1000px) 100vw, 1000px" /></a></p>
+<p>Hannes Hoettinger explaining how the <a href="http://heidloff.net/article/visual-recognition-for-cozmo-with-tensorflow" rel="noopener" target="_blank">Anki Cozmo robot can recognize toys</a> via TensorFlow, Kubernetes and OpenWhisk:</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/05/wearedevs5.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/05/wearedevs5.jpg" alt="wearedevs5" width="1000" height="750" class="alignnone size-full wp-image-2969" srcset="http://heidloff.net/wp-content/uploads/2018/05/wearedevs5.jpg 1000w, http://heidloff.net/wp-content/uploads/2018/05/wearedevs5-300x225.jpg 300w, http://heidloff.net/wp-content/uploads/2018/05/wearedevs5-135x100.jpg 135w" sizes="(max-width: 1000px) 100vw, 1000px" /></a></p>
+<p>Joe Sepi Crane-Messina in his session about how to contribute to open source projects:</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/05/wearedevs4.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/05/wearedevs4.jpg" alt="wearedevs4" width="1000" height="750" class="alignnone size-full wp-image-2968" srcset="http://heidloff.net/wp-content/uploads/2018/05/wearedevs4.jpg 1000w, http://heidloff.net/wp-content/uploads/2018/05/wearedevs4-300x225.jpg 300w, http://heidloff.net/wp-content/uploads/2018/05/wearedevs4-135x100.jpg 135w" sizes="(max-width: 1000px) 100vw, 1000px" /></a></p>
+<p>Ansgar Schmidt gave two booked out workshops about IoT, Kubernetes and Serverless.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/05/wearedevs6.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/05/wearedevs6.jpg" alt="wearedevs6" width="1000" height="750" class="alignnone size-full wp-image-2975" srcset="http://heidloff.net/wp-content/uploads/2018/05/wearedevs6.jpg 1000w, http://heidloff.net/wp-content/uploads/2018/05/wearedevs6-300x225.jpg 300w, http://heidloff.net/wp-content/uploads/2018/05/wearedevs6-135x100.jpg 135w" sizes="(max-width: 1000px) 100vw, 1000px" /></a></p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/pictures-wearedevs2018">Pictures from We Are Developers in Vienna</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/pictures-wearedevs2018/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">2970</post-id>	</item>
+		<item>
+		<title>Pictures from JAX 2018</title>
+		<link>http://heidloff.net/article/pictures-jax-2018</link>
+				<comments>http://heidloff.net/article/pictures-jax-2018#respond</comments>
+				<pubDate>Mon, 30 Apr 2018 08:46:10 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=2951</guid>
+				<description><![CDATA[<p>Last week my colleagues and I attended JAX, which is a developer conference with 2000 attendees with a focus on Java and enterprise technologies. My colleagues and I presented and demonstrated the IBM Cloud and the IBM Code developer site. Below are some pictures. The team: Denis Ley, Miriam Oglesby, Fernando Cejas, Niklas Heidloff and [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/pictures-jax-2018">Pictures from JAX 2018</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>Last week my colleagues and I attended <a href="https://jax.de/" rel="noopener" target="_blank">JAX</a>, which is a developer conference with 2000 attendees with a focus on Java and enterprise technologies. My colleagues and I presented and demonstrated the <a href="https://www.ibm.com/cloud/" rel="noopener" target="_blank">IBM Cloud</a> and the <a href="https://developer.ibm.com/code/" rel="noopener" target="_blank">IBM Code developer</a> site. Below are some pictures.<span id="more-2951"></span></p>
+<p>The team: Denis Ley, Miriam Oglesby, Fernando Cejas, Niklas Heidloff and Jamie Coleman</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/04/jax2018-4.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/04/jax2018-4.jpg" alt="jax2018-4" width="1024" height="615" class="alignnone size-full wp-image-2955" srcset="http://heidloff.net/wp-content/uploads/2018/04/jax2018-4.jpg 1024w, http://heidloff.net/wp-content/uploads/2018/04/jax2018-4-300x180.jpg 300w" sizes="(max-width: 1024px) 100vw, 1024px" /></a></p>
+<p>My sessions <a href="https://jax.de/cloud-container-serverless/serverless-oder-kubernetes-wie-soll-ich-meine-applikationen-bauen/" rel="noopener" target="_blank">Serverless oder Kubernetes? Wie soll ich meine Applikationen bauen?</a> und <a href="https://jax.de/cloud-container-serverless/entwicklung-serverloser-applikationen-mit-apache-openwhisk/" rel="noopener" target="_blank">Entwicklung serverloser Applikationen mit Apache OpenWhisk</a>:</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/04/jax2018-5.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/04/jax2018-5.jpg" alt="jax2018-5" width="1024" height="594" class="alignnone size-full wp-image-2956" srcset="http://heidloff.net/wp-content/uploads/2018/04/jax2018-5.jpg 1024w, http://heidloff.net/wp-content/uploads/2018/04/jax2018-5-300x174.jpg 300w" sizes="(max-width: 1024px) 100vw, 1024px" /></a></p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/04/jax2018-6.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/04/jax2018-6.jpg" alt="jax2018-6" width="1024" height="576" class="alignnone size-full wp-image-2957" srcset="http://heidloff.net/wp-content/uploads/2018/04/jax2018-6.jpg 1024w, http://heidloff.net/wp-content/uploads/2018/04/jax2018-6-300x169.jpg 300w" sizes="(max-width: 1024px) 100vw, 1024px" /></a></p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/04/jax2018-8.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/04/jax2018-8.jpg" alt="jax2018-8" width="1000" height="563" class="alignnone size-full wp-image-2959" srcset="http://heidloff.net/wp-content/uploads/2018/04/jax2018-8.jpg 1000w, http://heidloff.net/wp-content/uploads/2018/04/jax2018-8-300x169.jpg 300w" sizes="(max-width: 1000px) 100vw, 1000px" /></a></p>
+<p>Fernando&#8217;s keynote <a href="https://jax.de/big-data-machine-learning/the-art-of-coding-disasters-and-failures/" rel="noopener" target="_blank">The Art of Coding Disasters and Failures</a>:</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/04/jax2018-1.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/04/jax2018-1.jpg" alt="jax2018-1" width="1024" height="566" class="alignnone size-full wp-image-2952" srcset="http://heidloff.net/wp-content/uploads/2018/04/jax2018-1.jpg 1024w, http://heidloff.net/wp-content/uploads/2018/04/jax2018-1-300x166.jpg 300w" sizes="(max-width: 1024px) 100vw, 1024px" /></a></p>
+<p>At the booth we demonstrated collision prevention with Anki Overdrive cars which I <a href="http://heidloff.net/article/ibm-bluemix-anki-overdrive-cars" rel="noopener" target="_blank">open sourced</a> two years ago. Very similar demonstrations were given by two other companies. As it turned out they used my Node.js API as well. The power of open source. So cool!</p>
+<p>At our booth visitors could steer the cars via Kinect:</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/04/jax2018-3.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/04/jax2018-3.jpg" alt="jax2018-3" width="1000" height="750" class="alignnone size-full wp-image-2954" srcset="http://heidloff.net/wp-content/uploads/2018/04/jax2018-3.jpg 1000w, http://heidloff.net/wp-content/uploads/2018/04/jax2018-3-300x225.jpg 300w, http://heidloff.net/wp-content/uploads/2018/04/jax2018-3-135x100.jpg 135w" sizes="(max-width: 1000px) 100vw, 1000px" /></a></p>
+<p>Another company demonstrated how trees on the track can be detected:</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/04/jax2018-2.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/04/jax2018-2.jpg" alt="jax2018-2" width="1000" height="750" class="alignnone size-full wp-image-2953" srcset="http://heidloff.net/wp-content/uploads/2018/04/jax2018-2.jpg 1000w, http://heidloff.net/wp-content/uploads/2018/04/jax2018-2-300x225.jpg 300w, http://heidloff.net/wp-content/uploads/2018/04/jax2018-2-135x100.jpg 135w" sizes="(max-width: 1000px) 100vw, 1000px" /></a></p>
+<p>Yet another company demonstrated how cars can drive over a crossroad without colliding. The latest version of their demo also includes Node-RED.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/04/jax2018-7.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/04/jax2018-7.jpg" alt="jax2018-7" width="1000" height="750" class="alignnone size-full wp-image-2958" srcset="http://heidloff.net/wp-content/uploads/2018/04/jax2018-7.jpg 1000w, http://heidloff.net/wp-content/uploads/2018/04/jax2018-7-300x225.jpg 300w, http://heidloff.net/wp-content/uploads/2018/04/jax2018-7-135x100.jpg 135w" sizes="(max-width: 1000px) 100vw, 1000px" /></a></p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/pictures-jax-2018">Pictures from JAX 2018</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/pictures-jax-2018/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">2951</post-id>	</item>
+		<item>
+		<title>Developing Polyglot Applications with OpenWhisk</title>
+		<link>http://heidloff.net/article/polyglot-openwhisk-serverless</link>
+				<pubDate>Mon, 16 Apr 2018 12:48:04 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=2945</guid>
+				<description><![CDATA[<p>As serverless platforms mature, more and more sophisticated cloud-native applications are built with serverless technologies. I&#8217;ve created a sample application which uses multiple functions which have been developed with JavaScript, TypeScript, Java and Kotlin. Get the code from GitHub. Functions in a serverless application can be developed by different teams and might be reused in [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/polyglot-openwhisk-serverless">Developing Polyglot Applications with OpenWhisk</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>As serverless platforms mature, more and more sophisticated cloud-native applications are built with serverless technologies. I&#8217;ve created a sample application which uses multiple functions which have been developed with JavaScript, TypeScript, Java and Kotlin.<span id="more-2945"></span></p>
+<p><a href="https://github.com/nheidloff/openwhisk-polyglot" rel="noopener" target="_blank">Get the code from GitHub.</a></p>
+<p>Functions in a serverless application can be developed by different teams and might be reused in different applications. The functions are rather easy and stateless, the interesting question is how to build applications which handle the invocations of functions and the flows of data between the functions. The way <a href="https://openwhisk.apache.org/" rel="noopener" target="_blank">OpenWhisk</a> solves this is by providing an extension called <a href="https://github.com/ibm-functions/composer" rel="noopener" target="_blank">Composer</a> which is also available as open source. </p>
+<p>In my sample application I&#8217;ve used several programming languages because the bigger applications get, the more likely it is that you want to use different languages. For example you might want to reuse existing code or libraries in serverless functions or you want to leverage certain skills in your team. Additionally certain languages might allow you to implement functions more efficiently.</p>
+<p>OpenWhisk supports several programming languages out of the box. In the sample I&#8217;ve often used Docker which might be important for your requirements as well. For example with Docker you can develop and test the same image locally, which is deployed onto the cloud. This minimizes the risk of running into issues due to different environments. Docker also allows you to use programming languages your cloud function provider doesn&#8217;t support natively or newer version of languages and runtimes than the ones supported by your cloud function provider.</p>
+<p>For a demo check out the video starting at <a href="https://youtu.be/N0T8jkfkuEg?t=2m18s" rel="noopener" target="_blank">2:18 min</a>.</p>
+<p><iframe width="853" height="480" src="//www.youtube.com/embed/N0T8jkfkuEg?start=138" frameborder="0" allowfullscreen></iframe> </p>
+<p>This is the screenshot of the sample application in the IBM Cloud Shell.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/04/polyglot-serverless.png"><img src="http://heidloff.net/wp-content/uploads/2018/04/polyglot-serverless.png" alt="polyglot-serverless" width="1534" height="1674" class="alignnone size-full wp-image-2944" srcset="http://heidloff.net/wp-content/uploads/2018/04/polyglot-serverless.png 1534w, http://heidloff.net/wp-content/uploads/2018/04/polyglot-serverless-275x300.png 275w, http://heidloff.net/wp-content/uploads/2018/04/polyglot-serverless-938x1024.png 938w" sizes="(max-width: 1534px) 100vw, 1534px" /></a></p>
+<p>Want to run this sample yourself? Try it out on the <a href="https://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/polyglot-openwhisk-serverless">Developing Polyglot Applications with OpenWhisk</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">2945</post-id>	</item>
+		<item>
+		<title>Serverless and Kubernetes Demos</title>
+		<link>http://heidloff.net/article/serverless-kubernetes-demos</link>
+				<comments>http://heidloff.net/article/serverless-kubernetes-demos#respond</comments>
+				<pubDate>Thu, 12 Apr 2018 07:28:47 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=2936</guid>
+				<description><![CDATA[<p>Over the next weeks I&#8217;ll repeat my session &#8220;When to use Serverless? When to use Kubernetes?&#8221; several times. As backup and for people who won&#8217;t attend the sessions I&#8217;ve recorded the demos. Read the summary of the session and get the slides. Demo 1 &#8211; 0:33 min Developing and debugging OpenWhisk Node.js functions in Visual [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/serverless-kubernetes-demos">Serverless and Kubernetes Demos</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>Over the next weeks I&#8217;ll repeat my session &#8220;<a href="http://heidloff.net/article/when-to-use-serverless-kubernetes" rel="noopener" target="_blank">When to use Serverless? When to use Kubernetes?</a>&#8221; several times. As backup and for people who won&#8217;t attend the sessions I&#8217;ve recorded the demos.<span id="more-2936"></span></p>
+<p>Read the <a href="http://heidloff.net/article/when-to-use-serverless-kubernetes" rel="noopener" target="_blank">summary</a> of the session and get the <a href="https://www.slideshare.net/niklasheidloff/when-to-use-serverless-when-to-use-kubernetes" rel="noopener" target="_blank">slides</a>.</p>
+<p>Demo 1 &#8211; <a href="https://www.youtube.com/watch?v=Wqy2AHvhDGs&#038;t=33s" rel="noopener" target="_blank">0:33 min</a><br />
+<strong>Developing and debugging OpenWhisk Node.js functions in Visual Studio Code</strong></p>
+<p>Demo 2 &#8211; <a href="https://www.youtube.com/watch?v=Wqy2AHvhDGs&#038;t=156s" rel="noopener" target="_blank">2:36 min</a><br />
+<strong>Developing and debugging Docker based functions and microservices  in Visual Studio Code</strong></p>
+<p>Demo 3 &#8211; <a href="https://www.youtube.com/watch?v=Wqy2AHvhDGs&#038;t=348s" rel="noopener" target="_blank">5:48 min</a><br />
+<strong>A/B testing of Kubernetes applications with Istio</strong></p>
+<p>Demo 4a &#8211; <a href="https://www.youtube.com/watch?v=Wqy2AHvhDGs&#038;t=510s" rel="noopener" target="_blank">8:30 min</a><br />
+<strong>Deploying OpenWhisk functions to the IBM Cloud via CLI</strong></p>
+<p>Demo 4b &#8211; <a href="https://www.youtube.com/watch?v=Wqy2AHvhDGs&#038;t=623s" rel="noopener" target="_blank">10:23 min</a><br />
+<strong>Deploying nginx to Kubernetes via CLI and yaml configuration files and scaling pods</strong></p>
+<p>Demo 4c &#8211; <a href="https://www.youtube.com/watch?v=Wqy2AHvhDGs&#038;t=767s" rel="noopener" target="_blank">12:47 min</a><br />
+<strong>Deploying Jenkins to Kubernetes via Helm</strong></p>
+<p>Demo 5 &#8211; <a href="https://www.youtube.com/watch?v=Wqy2AHvhDGs&#038;t=858s" rel="noopener" target="_blank">14:18 min</a><br />
+<strong>Monitoring Kubernetes applications via Kubernetes Dashboard and Istio Dashboard<br />
+</strong><br />
+<iframe width="853" height="480" src="//www.youtube.com/embed/Wqy2AHvhDGs" frameborder="0" allowfullscreen></iframe></p>
+<p>Here is the summary slide of the session:</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/02/kube-vs-serverless.png"><img src="http://heidloff.net/wp-content/uploads/2018/02/kube-vs-serverless.png" alt="kube-vs-serverless" width="2450" height="1370" class="alignnone size-full wp-image-2812" srcset="http://heidloff.net/wp-content/uploads/2018/02/kube-vs-serverless.png 2450w, http://heidloff.net/wp-content/uploads/2018/02/kube-vs-serverless-300x168.png 300w, http://heidloff.net/wp-content/uploads/2018/02/kube-vs-serverless-1024x573.png 1024w" sizes="(max-width: 2450px) 100vw, 2450px" /></a></p>
+<p>Want to run these demos yourself? Try it out on the <a href="https://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/serverless-kubernetes-demos">Serverless and Kubernetes Demos</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/serverless-kubernetes-demos/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">2936</post-id>	</item>
+		<item>
+		<title>Developing Polyglot Serverless Applications</title>
+		<link>http://heidloff.net/article/polyglot-serverless-applications</link>
+				<comments>http://heidloff.net/article/polyglot-serverless-applications#respond</comments>
+				<pubDate>Wed, 28 Mar 2018 06:46:20 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=2923</guid>
+				<description><![CDATA[<p>As serverless platforms mature, more and more sophisticated cloud-native applications are built with serverless technologies. These applications are assembled with potentially many functions that are loosely-coupled and can be developed by different teams. Teams might choose different languages for the following reasons: Reuse existing code or libraries Leverage available skills in the team Implement more [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/polyglot-serverless-applications">Developing Polyglot Serverless Applications</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>As serverless platforms mature, more and more sophisticated cloud-native applications are built with serverless technologies. These applications are assembled with potentially many functions that are loosely-coupled and can be developed by different teams.<span id="more-2923"></span></p>
+<p>Teams might choose different languages for the following reasons:</p>
+<ul>
+<li>Reuse existing code or libraries</li>
+<li>Leverage available skills in the team</li>
+<li>Implement more efficient functions</li>
+</ul>
+<p>In this article I&#8217;m not going to describe how to implement the most efficient functions and when to use which programming language, but certain languages may be better for specific requirements. Some languages might be faster to start, faster to execute code at runtime, require less memory, etc.</p>
+<p>I&#8217;ve open sourced a sample that shows how to use JavaScript, TypeScript, Java and Kotlin together in a serverless application.</p>
+<p><a href="https://github.com/nheidloff/openwhisk-polyglot" target="_blank" rel="noopener">Get the code from GitHub.</a></p>
+<p>The polyglot &#8216;send notification&#8217; application sends either emails or text messages to certain users, depending on the information provided in their profiles. Here is the data flow used in this sample, as visualized by <a href="https://github.com/ibm-functions/composer" target="_blank" rel="noopener">OpenWhisk Composer</a>.</p>
+<ul>
+<li>The application is triggered with a person ID and a subject.</li>
+<li>The function &#8216;read-person-profile&#8217; returns the profile for the specific user. The profile contains email addresses and can contain phone numbers.</li>
+<li>If the profile has a phone number, the function &#8216;send-text-message&#8217; is invoked, otherwise the application proceeds to the &#8216;send-mail&#8217; function.</li>
+<li>The other functions transfer the data in the format expected by the loosely coupled business logic functions.</li>
+</ul>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/03/flow-polyglot.png"><img class="alignnone size-full wp-image-2922" src="http://heidloff.net/wp-content/uploads/2018/03/flow-polyglot.png" alt="flow-polyglot" width="1593" height="1688" srcset="http://heidloff.net/wp-content/uploads/2018/03/flow-polyglot.png 1593w, http://heidloff.net/wp-content/uploads/2018/03/flow-polyglot-283x300.png 283w, http://heidloff.net/wp-content/uploads/2018/03/flow-polyglot-966x1024.png 966w" sizes="(max-width: 1593px) 100vw, 1593px" /></a></p>
+<p>The sample uses <a href="https://www.ibm.com/cloud/functions" target="_blank" rel="noopener">IBM Cloud Functions</a> which is based on <a href="http://openwhisk.org/" target="_blank" rel="noopener">Apache OpenWhisk</a>. While the functions are stateless, applications defined with <a href="https://github.com/ibm-functions/composer" target="_blank" rel="noopener">OpenWhisk Composer </a>manage the state and are responsible for how the data flows between functions. Read my previous <a href="http://heidloff.net/article/serverless-data-flows" target="_blank" rel="noopener">article</a> to learn more about the data flows and function schemas.</p>
+<p>OpenWhisk supports several different programming languages out of the box: JavaScript, Java, Python and <a href="https://console.bluemix.net/docs/openwhisk/openwhisk_actions.html#openwhisk_actions" target="_blank" rel="noopener">more</a>. You can also use Docker to implement functions, which is what I&#8217;m using in this sample.</p>
+<p>Docker provides some advantages that might be important for your requirements:</p>
+<ul>
+<li>You can develop and test the same Docker image locally, which is later deployed and run in the cloud. This minimizes the chance of running into issues due to different environments.</li>
+<li>You can choose the programming languages that your cloud functions provider does not support out of the box.</li>
+<li>You can use new run-time versions sooner than your cloud functions provider might support, for example use Java 9 today in OpenWhisk.</li>
+</ul>
+<p>Here are links to the code how to implement OpenWhisk functions with Docker and different languages.</p>
+<ul>
+<li><a href="https://github.com/nheidloff/openwhisk-debug-nodejs/blob/master/functions/docker/function.js" target="_blank" rel="noopener">JavaScript</a></li>
+<li><a href="https://github.com/nheidloff/openwhisk-polyglot/blob/master/functions/typescript/src/function.ts" target="_blank" rel="noopener">TypeScript</a></li>
+<li><a href="https://github.com/nheidloff/openwhisk-polyglot/blob/master/functions/java/spring/src/main/java/docker/Function.java" target="_blank" rel="noopener">Java</a></li>
+<li><a href="https://github.com/nheidloff/openwhisk-polyglot/blob/master/functions/kotlin/kotlin/src/main/kotlin/main.kt" target="_blank" rel="noopener">Kotlin</a></li>
+</ul>
+<p>This is the Kotlin function used in the sample. Essentially only one &#8216;/run&#8217; endpoint needs to be implemented.</p>
+<pre class="brush: java; title: ; notranslate">
+package openwhisk
+
+import io.javalin.Javalin
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
+data class InputObject(val phone: String  = &quot;&quot;, val subject: String  = &quot;&quot;)
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class InputFunction(val input: InputObject = InputObject())
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class InputBody(val value: InputFunction = InputFunction())
+
+data class OutputObject(val phone: String = &quot;&quot;, val subject: String = &quot;&quot;, val ok: Boolean = true)
+data class OutputFunction(val outputsendtextmessage: OutputObject = OutputObject())
+
+fun main(args: Array&amp;lt;String&amp;gt;) {
+    val app = Javalin.create().apply {
+        port(8080)
+        exception(Exception::class.java) { e, ctx -&amp;gt; e.printStackTrace() }
+    }.start()
+
+    app.post(&quot;/init&quot;) { ctx -&amp;gt; ctx.status(200) }
+
+    app.post(&quot;/run&quot;) { ctx -&amp;gt;
+        val body = ctx.bodyAsClass(InputBody::class.java)
+        val inputFunction = body.value
+        val inputObject = inputFunction.input
+        val phone = inputObject.phone
+        val subject = inputObject.subject
+
+        // real implementation goes here
+
+        val outputObject = OutputObject(phone, subject)
+        val outputFunction = OutputFunction(outputObject)
+
+        ctx.json(outputFunction)
+        ctx.status(200)
+    }
+}
+</pre>
+<p>Want to run this sample? Try it out on the IBM Cloud; get an account <a href="https://ibm.biz/nheidloff" rel="noopener" target="_blank">here</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/polyglot-serverless-applications">Developing Polyglot Serverless Applications</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/polyglot-serverless-applications/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">2923</post-id>	</item>
+		<item>
+		<title>Developing protected Serverless Web Applications</title>
+		<link>http://heidloff.net/article/serverless-web-applications-oauth</link>
+				<comments>http://heidloff.net/article/serverless-web-applications-oauth#respond</comments>
+				<pubDate>Tue, 27 Mar 2018 06:26:10 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=2907</guid>
+				<description><![CDATA[<p>Serverless platforms are often used to build APIs for web and mobile apps. I&#8217;ve open sourced a pattern that shows how to implement protected APIs with IBM Cloud Functions and how to invoke them from Angular web applications. Get the code from GitHub. IBM Cloud Functions comes with an API Gateway. Developers can grant access [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/serverless-web-applications-oauth">Developing protected Serverless Web Applications</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>Serverless platforms are often used to build APIs for web and mobile apps. I&#8217;ve open sourced a <a href="https://developer.ibm.com/code/patterns/develop-protected-serverless-web-applications/" rel="noopener" target="_blank">pattern</a> that shows how to implement protected APIs with <a href="https://console.bluemix.net/openwhisk/" rel="noopener" target="_blank">IBM Cloud Functions</a> and how to invoke them from Angular web applications.<span id="more-2907"></span></p>
+<p><a href="https://github.com/IBM/IBM-function-webapp" rel="noopener" target="_blank">Get the code from GitHub.</a></p>
+<p>IBM Cloud Functions comes with an <a href="https://console.bluemix.net/docs/openwhisk/openwhisk_apigateway.html#openwhisk_apigateway" rel="noopener" target="_blank">API Gateway</a>. Developers can grant access to their APIs via application keys and they can track usage via graphical dashboards. For user authentication Google, Facebook and GitHub accounts can be used via OAuth. </p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/03/serverless-webapp-1.png"><img src="http://heidloff.net/wp-content/uploads/2018/03/serverless-webapp-1.png" alt="serverless-webapp (1)" width="2586" height="852" class="alignnone size-full wp-image-2910" srcset="http://heidloff.net/wp-content/uploads/2018/03/serverless-webapp-1.png 2586w, http://heidloff.net/wp-content/uploads/2018/03/serverless-webapp-1-300x99.png 300w, http://heidloff.net/wp-content/uploads/2018/03/serverless-webapp-1-1024x337.png 1024w" sizes="(max-width: 2586px) 100vw, 2586px" /></a></p>
+<p>The static resources of web applications can be hosted in various ways, for example on <a href="https://console.bluemix.net/docs/tutorials/serverless-api-webapp.html?pos=2#serverless-web-application-and-api" rel="noopener" target="_blank">GitHub pages</a>. Since the JavaScript files are loaded in browsers, for security reasons they must not include the credentials to access the APIs. Instead OAuth is used to authenticate users before invoking the protected APIs. Read the <a href="https://console.bluemix.net/docs/apis/management/manage_apis.html#settings_api" rel="noopener" target="_blank">documentation</a> for more information.</p>
+<p>The following diagram describes the flow of authenticating and authorizing a user in the sample application:</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/03/pattern-protected-app.png"><img src="http://heidloff.net/wp-content/uploads/2018/03/pattern-protected-app.png" alt="pattern-protected-app" width="1746" height="1132" class="alignnone size-full wp-image-2908" srcset="http://heidloff.net/wp-content/uploads/2018/03/pattern-protected-app.png 1746w, http://heidloff.net/wp-content/uploads/2018/03/pattern-protected-app-300x195.png 300w, http://heidloff.net/wp-content/uploads/2018/03/pattern-protected-app-1024x664.png 1024w" sizes="(max-width: 1746px) 100vw, 1746px" /></a></p>
+<ol>
+<li>User opens the Angular web application via web browser and clicks the &#8216;login&#8217; button.</li>
+<li>Web application opens the Google OAuth web page, where users authenticate and grant the application access.</li>
+<li>Google page redirects to OpenWhisk sequence &#8216;oauth-login-and-redirect&#8217; with a code parameter in the URL.</li>
+<li>The sequence is triggered. The first OpenWhisk function &#8216;oauth-login&#8217; reads the code and invokes a Google API endpoint to exchange the code against a token.</li>
+<li>The same &#8216;oauth-login&#8217; function invokes with the token another Google API endpoint to read user profile information, such as the user name.</li>
+<li>The sequence invokes the next OpenWhisk function redirect, which invokes the Angular app with the token and the user name in the URL.</li>
+<li>When users click on the &#8216;invoke protected action&#8217; button in the Angular app, a REST API to the API management is invoked. The request contains the token.
+</li>
+<li>API management validates the token. If valid, the OpenWhisk function protected-action is invoked. If the token is invalid, the request will be rejected and response code 401 will be returned.</li>
+<li>The response from &#8216;protected-action&#8217; is displayed in the Angular application.</li>
+</ol>
+<p>This is the <a href="https://github.com/IBM/IBM-function-webapp/blob/master/openwhisk-oauth/oauth-login.js" rel="noopener" target="_blank">code</a> of step (4) which reads the access token. The OAuth client id and secret are only accessible in this code and not in the client side JavaScript code.</p>
+<pre class="brush: jscript; title: ; notranslate">
+function main(params) {
+   return new Promise((resolve, reject) =&gt; {
+      const providers = params.providers;
+      const code = params.code;
+      var providerName = params.provider || params.providerName;
+      var provider = providers[providerName];
+      var form = {
+         client_id: provider.credentials.client_id,
+         client_secret: provider.credentials.client_secret,
+         code: code
+      };
+      ...
+      var options = {
+         url: provider.endpoints.token,
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json'
+         }
+      };
+      ...
+      request(options, function (err, response, body) {
+         if (err || response.statusCode &gt;= 400) {
+            ...
+         } else {
+            body = JSON.parse(body);
+            var accessToken = body.access_token;
+...
+</pre>
+<p>Thanks a lot to my colleague Andy Shi who converted this sample into a <a href="https://developer.ibm.com/code/patterns/" rel="noopener" target="_blank">code pattern</a>.</p>
+<p>If you want to try out OpenWhisk in the cloud, you can get an account on the <a href="http://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/serverless-web-applications-oauth">Developing protected Serverless Web Applications</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/serverless-web-applications-oauth/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">2907</post-id>	</item>
+		<item>
+		<title>Pictures from JavaLand 2018</title>
+		<link>http://heidloff.net/article/pictures-javaland-2018</link>
+				<comments>http://heidloff.net/article/pictures-javaland-2018#respond</comments>
+				<pubDate>Mon, 26 Mar 2018 12:21:27 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=2903</guid>
+				<description><![CDATA[<p>Earlier this month I attended JavaLand in Brühl, Germany. JavaLand took place for the fifth time and has grown to 1900 developers from 20 countries. It&#8217;s always a lot of fun at JavaLand; this was the third time I attended. What was great this year was that we had even more developers visiting our booth [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/pictures-javaland-2018">Pictures from JavaLand 2018</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>Earlier this month I attended <a href="https://www.javaland.eu/de/javaland-2018/" rel="noopener" target="_blank">JavaLand</a> in Brühl, Germany. JavaLand took place for the fifth time and has grown to 1900 developers from 20 countries.<span id="more-2903"></span></p>
+<p>It&#8217;s always a lot of fun at JavaLand; this was the third time I attended. What was great this year was that we had even more developers visiting our booth than in previous years. Those who I talked to particularly appreciated IBM&#8217;s emphasize on open source and the huge progress we have made over the last few years in cloud-related technologies.</p>
+<p>My colleague Holly Cummins gave the keynote. Unfortunately the room was too small for everyone to attend and when I arrived the doors were closed. </p>
+<p>Here is a picture from our team Miriam Oglesby, Holly Cummins, Fernando Cejas and myself.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/03/javaland18-2.png"><img src="http://heidloff.net/wp-content/uploads/2018/03/javaland18-2.png" alt="javaland18-2" width="1000" height="562" class="alignnone size-full wp-image-2900" srcset="http://heidloff.net/wp-content/uploads/2018/03/javaland18-2.png 1000w, http://heidloff.net/wp-content/uploads/2018/03/javaland18-2-300x169.png 300w" sizes="(max-width: 1000px) 100vw, 1000px" /></a></p>
+<p>At the booth we demonstrated Anki Overdrive cars which are connected to the <a href="http://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Watson IoT</a> platform and can be steered via <a href="http://heidloff.net/article/anki-overdrive-cars-kinect-bluemix" rel="noopener" target="_blank">Kinect</a>. The next picture shows Fernando giving a demo.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/03/javaland18-3.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/03/javaland18-3.jpg" alt="javaland18-3" width="1000" height="750" class="alignnone size-full wp-image-2901" srcset="http://heidloff.net/wp-content/uploads/2018/03/javaland18-3.jpg 1000w, http://heidloff.net/wp-content/uploads/2018/03/javaland18-3-300x225.jpg 300w, http://heidloff.net/wp-content/uploads/2018/03/javaland18-3-135x100.jpg 135w" sizes="(max-width: 1000px) 100vw, 1000px" /></a></p>
+<p>Our booth right after the setup:</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/03/javaland18-1.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/03/javaland18-1.jpg" alt="javaland18-1" width="1000" height="750" class="alignnone size-full wp-image-2899" srcset="http://heidloff.net/wp-content/uploads/2018/03/javaland18-1.jpg 1000w, http://heidloff.net/wp-content/uploads/2018/03/javaland18-1-300x225.jpg 300w, http://heidloff.net/wp-content/uploads/2018/03/javaland18-1-135x100.jpg 135w" sizes="(max-width: 1000px) 100vw, 1000px" /></a></p>
+<p>Miriam, Fernando and I having fun:</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/03/javaland18-4.png"><img src="http://heidloff.net/wp-content/uploads/2018/03/javaland18-4.png" alt="javaland18-4" width="1000" height="562" class="alignnone size-full wp-image-2902" srcset="http://heidloff.net/wp-content/uploads/2018/03/javaland18-4.png 1000w, http://heidloff.net/wp-content/uploads/2018/03/javaland18-4-300x169.png 300w" sizes="(max-width: 1000px) 100vw, 1000px" /></a></p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/pictures-javaland-2018">Pictures from JavaLand 2018</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/pictures-javaland-2018/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">2903</post-id>	</item>
+		<item>
+		<title>IBM Think 2018 Highlights for Developers</title>
+		<link>http://heidloff.net/article/think2018-highlights-developers</link>
+				<comments>http://heidloff.net/article/think2018-highlights-developers#respond</comments>
+				<pubDate>Fri, 23 Mar 2018 14:45:14 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=2885</guid>
+				<description><![CDATA[<p>Last week IBM hosted the Think 2018 conference in Las Vegas which is IBM&#8217;s flagship conference that combines previous conferences like InterConnect and World of Watson. Below is a list of announcements and news that I, as a developer, like most. For more information about IBM Think topics, check out these sites: IBM THINK Blog [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/think2018-highlights-developers">IBM Think 2018 Highlights for Developers</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>Last week IBM hosted the <a href="https://www.ibm.com/events/think/" rel="noopener" target="_blank">Think 2018</a> conference in Las Vegas which is IBM&#8217;s flagship conference that combines previous conferences like InterConnect and World of Watson. Below is a list of announcements and news that I, as a developer, like most.<span id="more-2885"></span></p>
+<p>For more information about IBM Think topics, check out these sites:</p>
+<ul>
+<li><a href="https://www.ibm.com/blogs/think/" rel="noopener" target="_blank">IBM THINK Blog</a></li>
+<li><a href="https://www.ibm.com/blogs/bluemix/" rel="noopener" target="_blank">IBM Cloud Blog</a></li>
+<li><a href="https://www.ibm.com/blogs/watson/" rel="noopener" target="_blank">IBM Watson Blog</a></li>
+<li><a href="https://medium.com/ibm-watson" rel="noopener" target="_blank">IBM Watson on Medium</a></li>
+<li><a href="https://developer.ibm.com/code/blogs/" rel="noopener" target="_blank">IBM Code Blog</a></li>
+<li><a href="https://www.ibm.com/blogs/cloud-computing/" rel="noopener" target="_blank">IBM Cloud Computing Blog</a></li>
+</ul>
+<p>The list is far from being complete, it doesn’t include topics like Blockchain and Quantum Computing, for example.</p>
+<p><strong>Watson Studio</strong><br />
+IBM Watson Studio was announced, a superset of the functionality that used to be available in the IBM Data Science experience plus many new features. Data scientists, data engineers and developers can use Watson Studio for the end to end AI workflow from accessing and preparing data, building models and deploying models up to building cognitive applications. Read <a href="https://medium.com/ibm-watson/introducing-ibm-watson-studio-e93638f0bb47" rel="noopener" target="_blank">Introducing IBM Watson Studio</a> for more details.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/03/think2018-studio2.png"><img src="http://heidloff.net/wp-content/uploads/2018/03/think2018-studio2.png" alt="think2018-studio2" width="2000" height="1082" class="alignnone size-full wp-image-2886" srcset="http://heidloff.net/wp-content/uploads/2018/03/think2018-studio2.png 2000w, http://heidloff.net/wp-content/uploads/2018/03/think2018-studio2-300x162.png 300w, http://heidloff.net/wp-content/uploads/2018/03/think2018-studio2-1024x554.png 1024w" sizes="(max-width: 2000px) 100vw, 2000px" /></a></p>
+<p><strong>Neural Network Modeler</strong><br />
+With the new Neural Network Modeler, you can define neural networks graphically and declaratively. The Modeler generates generic training definitions which can be translated into TensorFlow, PyTorch and Caffe2 models. Read <a href="https://medium.com/ibm-watson/accelerate-your-deep-learning-experiments-with-ibms-neural-network-modeler-dd0c92fba814" rel="noopener" target="_blank">Accelerate Your Deep Learning Experiments with IBM’s Neural Network Modeler</a> for more details.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/03/think2018-modeler.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/03/think2018-modeler.jpg" alt="think2018-modeler" width="2000" height="1144" class="alignnone size-full wp-image-2883" srcset="http://heidloff.net/wp-content/uploads/2018/03/think2018-modeler.jpg 2000w, http://heidloff.net/wp-content/uploads/2018/03/think2018-modeler-300x172.jpg 300w, http://heidloff.net/wp-content/uploads/2018/03/think2018-modeler-1024x586.jpg 1024w" sizes="(max-width: 2000px) 100vw, 2000px" /></a></p>
+<p><strong>Deep Learning as a Service and Hyperparameter Optimization</strong><br />
+With the new deep learning service, data scientists can design neural networks with the popular deep learning frameworks TensorFlow, Caffe and PyTorch. The service comes with an experiment assistant to optimize hyperparameters. The workloads are run on Kubernetes clusters supporting GPUs. Read <a href="https://medium.com/ibm-watson/deep-learning-now-in-ibm-watson-studio-d8ba311e4ff1" rel="noopener" target="_blank">Deep Learning as a service now in IBM Watson Studio</a> for more details.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/03/think2018-hyper.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/03/think2018-hyper.jpg" alt="think2018-hyper" width="1200" height="676" class="alignnone size-full wp-image-2879" srcset="http://heidloff.net/wp-content/uploads/2018/03/think2018-hyper.jpg 1200w, http://heidloff.net/wp-content/uploads/2018/03/think2018-hyper-300x169.jpg 300w, http://heidloff.net/wp-content/uploads/2018/03/think2018-hyper-1024x577.jpg 1024w" sizes="(max-width: 1200px) 100vw, 1200px" /></a></p>
+<p><strong>Open Source Project: Fabric for Deep Learning</strong><br />
+IBM has contributed the core of Watson Studio’s Deep Learning Service as an open source project: Fabric for Deep Learning. The trainings for various open source frameworks can be run in distributed Kubernetes environments including GPU support. After this, models can be deployed in Watson Studio. Read <a href="https://developer.ibm.com/code/2018/03/20/fabric-for-deep-learning/" rel="noopener" target="_blank">Fabric for Deep Learning</a> for more details.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/03/think2018-f.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/03/think2018-f.jpg" alt="think2018-f" width="1740" height="992" class="alignnone size-full wp-image-2878" srcset="http://heidloff.net/wp-content/uploads/2018/03/think2018-f.jpg 1740w, http://heidloff.net/wp-content/uploads/2018/03/think2018-f-300x171.jpg 300w, http://heidloff.net/wp-content/uploads/2018/03/think2018-f-1024x584.jpg 1024w" sizes="(max-width: 1740px) 100vw, 1740px" /></a></p>
+<p><strong>Watson Visual Recognition supports Apple Core ML</strong><br />
+The Watson Visual Recognition service can be used to train custom models which can be consumed by iOS apps locally. The Watson Swift SDK allows downloading the Core ML models and running predictions. Read <a href="https://developer.ibm.com/code/2018/03/21/ibm-watson-visual-recognition-service-to-support-apple-core-ml/" rel="noopener" target="_blank">IBM’s Watson Visual Recognition service to support Apple Core ML technology</a> for more details.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/03/think2018-coreml.png"><img src="http://heidloff.net/wp-content/uploads/2018/03/think2018-coreml.png" alt="think2018-coreml" width="2048" height="1168" class="alignnone size-full wp-image-2877" srcset="http://heidloff.net/wp-content/uploads/2018/03/think2018-coreml.png 2048w, http://heidloff.net/wp-content/uploads/2018/03/think2018-coreml-300x171.png 300w, http://heidloff.net/wp-content/uploads/2018/03/think2018-coreml-1024x584.png 1024w" sizes="(max-width: 2048px) 100vw, 2048px" /></a></p>
+<p><strong>Model Asset Exchange</strong><br />
+The Model Asset Exchange is a site for developers to find and use free and open source deep learning models. The models are wrapped in Docker containers and they provide REST APIs to run predictions. Read <a href="https://developer.ibm.com/code/2018/03/20/igniting-a-community-around-deep-learning-models-with-model-asset-exchange-max/" rel="noopener" target="_blank">Igniting a community around deep learning models with Model Asset eXchange</a> for more details.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/03/think2018-max.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/03/think2018-max.jpg" alt="think2018-max" width="836" height="411" class="alignnone size-full wp-image-2881" srcset="http://heidloff.net/wp-content/uploads/2018/03/think2018-max.jpg 836w, http://heidloff.net/wp-content/uploads/2018/03/think2018-max-300x147.jpg 300w" sizes="(max-width: 836px) 100vw, 836px" /></a></p>
+<p><strong>Watson Assistant</strong><br />
+Watson Conversation and Watson Virtual Agent have been merged and rebranded to IBM Watson Assistant with lots of new features. Most importantly prebuilt content is provided, for example for typical support bots. From the content catalog intents can simply be added to custom bots. Read <a href="https://www.ibm.com/blogs/watson/2018/03/the-future-of-watson-conversation-watson-assistant" rel="noopener" target="_blank">Introducing Watson Assistant</a> for more details.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/03/think2018-assistant.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/03/think2018-assistant.jpg" alt="think2018-assistant" width="1200" height="752" class="alignnone size-full wp-image-2874" srcset="http://heidloff.net/wp-content/uploads/2018/03/think2018-assistant.jpg 1200w, http://heidloff.net/wp-content/uploads/2018/03/think2018-assistant-300x188.jpg 300w, http://heidloff.net/wp-content/uploads/2018/03/think2018-assistant-1024x642.jpg 1024w" sizes="(max-width: 1200px) 100vw, 1200px" /></a></p>
+<p><strong>OpenWhisk Extensions</strong><br />
+Several new capabilities have been added to IBM Cloud Functions. I like that the usage of Composer, a tool to build serverless applications, has been simplified by not having to configure Redis anymore. For logging Kibana which comes as part of IBM Cloud Log Analysis can be used now. Read the <a href="http://Viewing activation logs in the IBM Cloud" rel="noopener" target="_blank">documentation</a> for more details.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/03/think2018-kibana.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/03/think2018-kibana.jpg" alt="think2018-kibana" width="2048" height="1283" class="alignnone size-full wp-image-2880" srcset="http://heidloff.net/wp-content/uploads/2018/03/think2018-kibana.jpg 2048w, http://heidloff.net/wp-content/uploads/2018/03/think2018-kibana-300x188.jpg 300w, http://heidloff.net/wp-content/uploads/2018/03/think2018-kibana-1024x642.jpg 1024w" sizes="(max-width: 2048px) 100vw, 2048px" /></a></p>
+<p><strong>Bare Metal Kubernetes</strong><br />
+IBM enables developers and data science teams to create and run Kubernetes containers as a managed service directly on bare metal cloud infrastructure. Read <a href="https://www.ibm.com/blogs/cloud-computing/2018/03/managed-kubernetes-bare-metal/" rel="noopener" target="_blank">IBM brings the ease of containers to complex workloads with managed Kubernetes on bare metal</a> for more details.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/03/think2018-bare.png"><img src="http://heidloff.net/wp-content/uploads/2018/03/think2018-bare.png" alt="think2018-bare" width="1366" height="952" class="alignnone size-full wp-image-2876" srcset="http://heidloff.net/wp-content/uploads/2018/03/think2018-bare.png 1366w, http://heidloff.net/wp-content/uploads/2018/03/think2018-bare-300x209.png 300w, http://heidloff.net/wp-content/uploads/2018/03/think2018-bare-1024x714.png 1024w, http://heidloff.net/wp-content/uploads/2018/03/think2018-bare-350x245.png 350w" sizes="(max-width: 1366px) 100vw, 1366px" /></a></p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/think2018-highlights-developers">IBM Think 2018 Highlights for Developers</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/think2018-highlights-developers/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">2885</post-id>	</item>
+		<item>
+		<title>Developing OpenWhisk Functions with Kotlin in IntelliJ</title>
+		<link>http://heidloff.net/article/openwhisk-kotlin-intellij-docker</link>
+				<comments>http://heidloff.net/article/openwhisk-kotlin-intellij-docker#respond</comments>
+				<pubDate>Fri, 09 Mar 2018 10:22:47 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=2869</guid>
+				<description><![CDATA[<p>I&#8217;ve implemented some code that shows how Apache OpenWhisk functions can be developed with Kotlin. The Java code is built via Gradle and put into a Docker image which can be deployed to OpenWhisk cloud providers like the IBM Cloud. Get the code from GitHub. There are different approaches to write OpenWhisk functions with Kotlin. [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/openwhisk-kotlin-intellij-docker">Developing OpenWhisk Functions with Kotlin in IntelliJ</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>I&#8217;ve implemented some code that shows how <a href="http://openwhisk.org/" rel="noopener" target="_blank">Apache OpenWhisk</a> functions can be developed with <a href="https://kotlinlang.org/" rel="noopener" target="_blank">Kotlin</a>. The Java code is built via Gradle and put into a Docker image which can be deployed to OpenWhisk cloud providers like the <a href="https://bluemix.net/" rel="noopener" target="_blank">IBM Cloud</a>.<span id="more-2869"></span></p>
+<p><a href="https://github.com/nheidloff/openwhisk-docker-kotlin" rel="noopener" target="_blank">Get the code from GitHub.</a></p>
+<p>There are different approaches to write OpenWhisk functions with Kotlin. Check out this separate <a href="https://medium.com/openwhisk/serverless-kotlin-how-to-run-a-kotlin-action-on-openwhisk-3986963f2dd0" rel="noopener" target="_blank">article</a> which describes how to generate a jar file which is directly deployed on OpenWhisk.</p>
+<p>The approach taken in my sample is slightly different. Rather than deploying a jar file to the <a href="https://github.com/apache/incubator-openwhisk-runtime-java" rel="noopener" target="_blank">OpenWhisk Java runtime</a>, a Docker image that contains the jar file is used instead. The advantage of this approach is that it allows to use different Java versions and you can develop and test the same Docker image locally which is later deployed and run in the cloud. This minimizes the chances to run into issues because of different environments.</p>
+<p>Here is a screenshot that shows the Kotlin code in IntelliJ:</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/03/kotlin-openwhisk.png"><img src="http://heidloff.net/wp-content/uploads/2018/03/kotlin-openwhisk.png" alt="kotlin-openwhisk" width="1974" height="1074" class="alignnone size-full wp-image-2868" srcset="http://heidloff.net/wp-content/uploads/2018/03/kotlin-openwhisk.png 1974w, http://heidloff.net/wp-content/uploads/2018/03/kotlin-openwhisk-300x163.png 300w, http://heidloff.net/wp-content/uploads/2018/03/kotlin-openwhisk-1024x557.png 1024w" sizes="(max-width: 1974px) 100vw, 1974px" /></a></p>
+<p>The sample function can be invoked locally via this command.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ curl --request POST \
+  --url http://localhost:8080/run \
+  --header 'Cache-Control: no-cache' \
+  --header 'Content-Type: application/json' \  
+  --data '{ &quot;value&quot;: {&quot;parameter1&quot;:&quot;Niklas&quot;,&quot;parameter2&quot;:&quot;Heidloff&quot;}}'
+</pre>
+<p>This is the response of the function:</p>
+<pre class="brush: jscript; title: ; notranslate">
+{
+   &quot;param1&quot;: &quot;value1 Niklas&quot;,
+   &quot;param2&quot;: &quot;value2&quot;
+}
+</pre>
+<p>Let&#8217;s take a look at the <a href="https://github.com/nheidloff/openwhisk-docker-kotlin/blob/master/kotlin/src/main/kotlin/main.kt" rel="noopener" target="_blank">code</a>:</p>
+<pre class="brush: java; title: ; notranslate">
+import io.javalin.Javalin
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
+data class InputObject(val parameter1: String  = &quot;&quot;, val parameter2: String  = &quot;&quot;)
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class InputBody(val value: InputObject = InputObject())
+data class OutputObject(val param1: String, val param2: String)
+
+fun main(args: Array&lt;String&gt;) {
+    val app = Javalin.create().apply {
+        port(8080)
+        exception(Exception::class.java) { e, ctx -&gt; e.printStackTrace() }
+    }.start()
+
+    app.post(&quot;/init&quot;) { ctx -&gt; ctx.status(200) }
+
+    app.post(&quot;/run&quot;) { ctx -&gt;
+        val body = ctx.bodyAsClass(InputBody::class.java)
+        val inputObject = body.value
+
+        val outputObject = OutputObject(&quot;value1 &quot; + inputObject.parameter1, &quot;value2&quot;)
+        ctx.json(outputObject)
+        ctx.status(200)
+    }
+}
+</pre>
+<p>As web framework I&#8217;ve picked <a href="https://javalin.io/" rel="noopener" target="_blank">Javalin</a> and I&#8217;ve implemented two endpoints &#8216;/init&#8217; and &#8216;/run&#8217;. The actual implementation of the function goes in the run function.</p>
+<p>The inputs and the outputs of the function are defined in data classes at the top. The mapping between classes and JSON data is done automatically by Kotlin/Jackson.</p>
+<p>I like that the code has only 27 lines. The <a href="https://github.com/nheidloff/openwhisk-debug-java" rel="noopener" target="_blank">same function that I developed with Java</a> has more than 100 lines of code.</p>
+<p>If you want to try out OpenWhisk in the cloud, you can get an account on the <a href="http://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/openwhisk-kotlin-intellij-docker">Developing OpenWhisk Functions with Kotlin in IntelliJ</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/openwhisk-kotlin-intellij-docker/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">2869</post-id>	</item>
+	</channel>
+</rss>

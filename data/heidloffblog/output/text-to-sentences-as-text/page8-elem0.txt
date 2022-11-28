@@ -1,0 +1,6 @@
+Developing OpenWhisk Functions with Spring Boot.
+I’ve open sourced some code that shows how Apache OpenWhisk functions can be developed with Spring Boot and how the functions, which run in Docker, can be debugged in Eclipse IDEs.
+Get the code from GitHub.
+Apache OpenWhisk is an open source serverless platform.
+One of the great OpenWhisk features is the capability to build […]
+The post Developing OpenWhisk Functions with Spring Boot [http://heidloff.net/article/openwhisk-spring-boot-eclipse] appeared first on Niklas Heidloff [http://heidloff.net].

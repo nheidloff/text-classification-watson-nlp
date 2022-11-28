@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Thu, 24 Nov 2022 10:47:53 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item>
+	
+
+	<title>Cool new Capabilities</title>
+	
+	
+	<link>http://heidloff.net/article/building-custom-ibm-watson-nlp-images-models/</link><pubDate>Wed, 23 Nov 2022 13:45:24 +0000</pubDate><dc:creator>
+	<![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=x</guid><description>
+	<![CDATA[...
+]]></description><content:encoded>
+<![CDATA[
+
+
+IBM Watson NLP (Natural Language Understanding) and Watson Speech containers can be run locally, on-premises or Kubernetes and OpenShift clusters. 
+Via REST and gRCP APIs AI can easily be embedded in applications. 
+This post describes how to package custom models in container images for deployments.
+
+
+]]></content:encoded><post-id xmlns="com-wordpress:feed-additions:1">5378</post-id></item></channel></rss>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 4 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=4" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Thu, 24 Nov 2022 10:47:53 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>Exporting Metrics from Kubernetes Apps for Prometheus</title><link>http://heidloff.net/article/exporting-metrics-kubernetes-applications-prometheus/</link><pubDate>Wed, 13 Apr 2022 05:45:48 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=5043</guid><description><![CDATA[<p>Operators automate day 2 operations for Kubernetes based software. Operators need to know the state of their operands. One way to find out the state is to check metrics information stored in Prometheus. This article describes how to export metrics from applications running on Kubernetes to make them accessible by Prometheus. The complete source code [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/exporting-metrics-kubernetes-applications-prometheus/">Exporting Metrics from Kubernetes Apps for Prometheus</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p><em>Operators automate day 2 operations for Kubernetes based software. Operators need to know the state of their operands. One way to find out the state is to check metrics information stored in Prometheus. This article describes how to export metrics from applications running on Kubernetes to make them accessible by Prometheus.</em><span id="more-5043"></span></p>
+<p>The complete source code from this article is available in the <a href="https://github.com/IBM/operator-sample-go" rel="noopener noreferrer" target="_blank">ibm/operator-sample-go</a> repo. The repo includes operator samples that demonstrate patterns and best practises.</p>
+<p>Let&#8217;s look how Prometheus can be deployed on Kubernetes and how Go and Java based applications can export metrics so that Prometheus is able to read and store it.</p>
+<p><strong>1. Setup of Prometheus</strong></p>
+<p>An easy way to install Prometheus is to utilize the <a href="https://operatorhub.io/operator/prometheus" rel="noopener noreferrer" target="_blank">Prometheus operator</a>. Before it can be installed, the Operator Lifecycle Manager (OLM) needs to be deployed. When you develop operators with the <a href="https://sdk.operatorframework.io/" rel="noopener noreferrer" target="_blank">Operator SDK</a>, it is possible to deploy OLM with just one command:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ operator-sdk olm install
+or
+$ curl -sL https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.20.0/install.sh | bash -s v0.20.0
+</pre>
+<p>Next the Prometheus operator can be installed.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl create -f https://operatorhub.io/install/prometheus.yaml
+</pre>
+<p><strong>2. Configuration of Prometheus</strong></p>
+<p>To set up the actual Prometheus instance on Kubernetes, RBAC access rights need to be defined. Read the <a href="https://book.kubebuilder.io/reference/metrics.html" rel="noopener noreferrer" target="_blank">documentation</a> for details. In summary the following four files handle the minimal setup.</p>
+<ul>
+<li><a href="https://github.com/IBM/operator-sample-go/blob/2a00d28cd40bf0c877589feb3fc636a7fa1e69f9/prometheus/prometheus/service-account.yaml" rel="noopener noreferrer" target="_blank">service-account.yaml</a></li>
+<li><a href="https://github.com/IBM/operator-sample-go/blob/2a00d28cd40bf0c877589feb3fc636a7fa1e69f9/prometheus/prometheus/cluster-role.yaml" rel="noopener noreferrer" target="_blank">cluster-role.yaml</a></li>
+<li><a href="https://github.com/IBM/operator-sample-go/blob/2a00d28cd40bf0c877589feb3fc636a7fa1e69f9/prometheus/prometheus/cluster-role-binding.yaml" rel="noopener noreferrer" target="_blank">cluster-role-binding.yaml</a></li>
+<li><a href="https://github.com/IBM/operator-sample-go/blob/2a00d28cd40bf0c877589feb3fc636a7fa1e69f9/prometheus/prometheus/prometheus.yaml" rel="noopener noreferrer" target="_blank">prometheus.yaml</a></li>
+</ul>
+<p><strong>3. Linkage between Prometheus and custom Applications</strong></p>
+<p>Applications can export data in the format Prometheus expects. The applications don&#8217;t push this data, but they provide endpoints that Prometheus pulls on a scheduled basis. To tell Prometheus these endpoints, the custom resource &#8216;ServiceMonitor&#8217; is used.</p>
+<p>Here is a simple <a href="https://github.com/IBM/operator-sample-go/blob/2a00d28cd40bf0c877589feb3fc636a7fa1e69f9/simple-microservice/kubernetes/service-monitor.yaml" rel="noopener noreferrer" target="_blank">sample</a>. The trick is the correct usage of labels and selectors. The selector in the service monitor finds the appropriate service. The selector in the service links to pods.</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: myapplication
+  name: myapplication-metrics-monitor
+  namespace: application-beta
+spec:
+  endpoints:
+    - path: /q/metrics
+  selector:
+    matchLabels:
+      app: myapplication
+</pre>
+<p>When building operators with the Operator SDK, the SDK creates this <a href="https://github.com/IBM/operator-sample-go/blob/2a00d28cd40bf0c877589feb3fc636a7fa1e69f9/operator-application/config/prometheus/monitor.yaml" rel="noopener noreferrer" target="_blank">service monitor</a> automatically. All you need to do is to <a href="https://github.com/IBM/operator-sample-go/blob/2a00d28cd40bf0c877589feb3fc636a7fa1e69f9/operator-application/config/default/kustomization.yaml#L24-L25" rel="noopener noreferrer" target="_blank">uncomment one line</a>.</p>
+<p><strong>4. Writing Metrics</strong></p>
+<p>There are several libraries and frameworks for different languages available. Here is a <a href="https://github.com/IBM/operator-sample-go/blob/2a00d28cd40bf0c877589feb3fc636a7fa1e69f9/operator-application/controllers/application/controller.go#L23-L33" rel="noopener noreferrer" target="_blank">sample</a> how to write metrics from a Golang application.</p>
+<pre class="brush: plain; title: ; notranslate">
+import (
+  &quot;github.com/prometheus/client_golang/prometheus&quot;
+)
+var countReconcileLaunched = prometheus.NewCounter(
+  prometheus.CounterOpts{
+    Name: &quot;reconcile_launched_total&quot;,
+    Help: &quot;reconcile_launched_total&quot;,
+  },
+)
+func (reconciler *ApplicationReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+  countReconcileLaunched.Inc()
+  ...
+</pre>
+<p>To learn more about operator patterns and best practices, check out the repo <a href="https://github.com/IBM/operator-sample-go" rel="noopener noreferrer" target="_blank">operator-sample-go</a>. The repo shows how to export metrics from a Quarkus application and a Go based operator. The screenshot shows the two registered service monitors.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/04/Screenshot-2022-04-12-at-17.53.07.png" alt="" width="2436" height="1474" class="alignnone size-full wp-image-5051" srcset="http://heidloff.net/wp-content/uploads/2022/04/Screenshot-2022-04-12-at-17.53.07.png 2436w, http://heidloff.net/wp-content/uploads/2022/04/Screenshot-2022-04-12-at-17.53.07-300x182.png 300w, http://heidloff.net/wp-content/uploads/2022/04/Screenshot-2022-04-12-at-17.53.07-768x465.png 768w, http://heidloff.net/wp-content/uploads/2022/04/Screenshot-2022-04-12-at-17.53.07-1024x620.png 1024w" sizes="(max-width: 2436px) 100vw, 2436px" /></p>
+<p>Finally the data can be queried, for example in the Prometheus user interface. </p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/04/Screenshot-2022-04-12-at-17.52.02.png" alt="" width="1824" height="854" class="alignnone size-full wp-image-5049" srcset="http://heidloff.net/wp-content/uploads/2022/04/Screenshot-2022-04-12-at-17.52.02.png 1824w, http://heidloff.net/wp-content/uploads/2022/04/Screenshot-2022-04-12-at-17.52.02-300x140.png 300w, http://heidloff.net/wp-content/uploads/2022/04/Screenshot-2022-04-12-at-17.52.02-768x360.png 768w, http://heidloff.net/wp-content/uploads/2022/04/Screenshot-2022-04-12-at-17.52.02-1024x479.png 1024w" sizes="(max-width: 1824px) 100vw, 1824px" /></p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/exporting-metrics-kubernetes-applications-prometheus/">Exporting Metrics from Kubernetes Apps for Prometheus</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><post-id xmlns="com-wordpress:feed-additions:1">5043</post-id></item></channel></rss>

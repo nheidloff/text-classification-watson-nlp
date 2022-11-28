@@ -1,0 +1,83 @@
+Running IBM Watson NLP in Minikube. <p><em>IBM Watson NLP (Natural Language Understanding) and Watson Speech containers can be run locally, on-premises or Kubernetes and OpenShift clusters. Via REST and gRCP APIs AI can easily be embedded in applications. This post describes how to run Watson NLP locally in Minikube.</em><span id="more-5328"></span></p>
+<p>To set some context, check out the landing page <a href="https://www.ibm.com/products/ibm-watson-natural-language-processing" rel="noopener noreferrer" target="_blank">IBM Watson NLP Library for Embed</a>. The Watson NLP containers can be run on different container platforms, they provide REST and gRCP interfaces, they can be extended with custom models and they can easily be embedded in solutions.</p>
+<p>To try it, a <a href="https://www.ibm.com/account/reg/us-en/signup?formid=urx-51726" rel="noopener noreferrer" target="_blank">trial</a> is available. The container images are stored in an IBM container registry that is accessed via an <a href="https://www.ibm.com/account/reg/signup?formid=urx-51726" rel="noopener noreferrer" target="_blank">IBM Entitlement Key</a>.</p>
+<p><strong>How to run NLP locally in Minikube</strong></p>
+<p>My post <a href="http://heidloff.net/article/running-ibm-watson-nlp-locally-in-containers/" rel="noopener noreferrer" target="_blank">Running IBM Watson NLP locally in Containers</a> explained how to run Watson NLP locally in Docker. The instructions below describe how to deploy Watson NLP locally to Minikube via the <a href="https://github.com/IBM/watson-automation/blob/90e61e05a5d0eacd268c97fc3c8b67e285c99241/documentation/NLPHelmChart.md" rel="noopener noreferrer" target="_blank">Watson NLP Helm chart</a>.</p>
+<p>First you need to install Minikube, for example via brew on MacOS. Next Minikube needs to be started with more memory and disk size than the Minikube defaults. I&#8217;ve used the settings below which is more than required, but I wanted to leave space for other applications. Note that you also need to give your container runtime more resources. For example if you use Docker Desktop, go to Preferences-Resources and define your settings.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ brew install minikube 
+$ minikube start --cpus 12 --memory 16000 --disk-size 50g
+</pre>
+<p>For some reason in my setup the watson-nlp-runtime image couldn&#8217;t be pulled by the Deployment resource/operator. I guess it&#8217;s related to the big size of the image. I&#8217;ve found this workaround:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ eval $(minikube docker-env)
+$ docker login cp.icr.io --username cp --password &lt;entitlement_key&gt; 
+$ docker pull cp.icr.io/cp/ai/watson-nlp-runtime:1.0.18
+</pre>
+<p>Next the namespace and secret need to be created.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl create namespace watson-demo
+$ kubectl config set-context --current --namespace=watson-demo
+$ kubectl create secret docker-registry \
+--docker-server=cp.icr.io \
+--docker-username=cp \
+--docker-password=&lt;your IBM Entitlement Key&gt; \
+-n watson-demo \
+ibm-entitlement-key
+</pre>
+<p>After this a repo with the Helm chart and another repo with a sample <a href="https://github.com/IBM/watson-automation/blob/94f28f12a58608f7b7fe355d36f101ddf7cd8cb8/helm-nlp/values.yaml" rel="noopener noreferrer" target="_blank">values.yaml</a> file are cloned and the license needs to be accepted.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ git clone https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp
+$ git clone https://github.com/IBM/watson-automation.git
+$ code watson-automation/helm-nlp/values.yaml #change acceptLicense to true
+$ cp watson-automation/helm-nlp/values.yaml terraform-gitops-watson-nlp/chart/watson-nlp/values.yaml
+</pre>
+<pre class="brush: plain; title: ; notranslate">
+componentName: watson-nlp
+acceptLicense: true
+serviceType: ClusterIP
+imagePullSecrets:
+  - ibm-entitlement-key
+registries:
+  - name: watson
+    url: cp.icr.io/cp/ai
+runtime:
+  registry: watson
+  image: watson-nlp-runtime:1.0.18
+models:
+  - registry: watson
+    image: watson-nlp_syntax_izumo_lang_en_stock:1.0.7
+</pre>
+<p>Finally the chart can be installed.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ cd terraform-gitops-watson-nlp/chart/watson-nlp
+$ helm install -f values.yaml watson-embedded .
+$ kubectl get pods -n watson-demo --watch
+$ kubectl get deployment/watson-embedded-watson-nlp -n watson-demo
+$ kubectl get svc/watson-embedded-watson-nlp -n watson-demo
+</pre>
+<p>When you open the Kubernetes Dashboard (via &#8216;minikube dashboard&#8217;), you&#8217;ll see the deployed resources. The Watson NLP pod contains the watson-nlp-runtime container and a simple syntax model container.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-15-at-08.56.39.png" alt="" width="2866" height="1550" class="alignnone size-full wp-image-5329" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-15-at-08.56.39.png 2866w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-15-at-08.56.39-300x162.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-15-at-08.56.39-768x415.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-15-at-08.56.39-1024x554.png 1024w" sizes="(max-width: 2866px) 100vw, 2866px" /></p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-15-at-08.57.27.png" alt="" width="2846" height="1940" class="alignnone size-full wp-image-5330" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-15-at-08.57.27.png 2846w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-15-at-08.57.27-300x204.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-15-at-08.57.27-768x524.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-15-at-08.57.27-1024x698.png 1024w" sizes="(max-width: 2846px) 100vw, 2846px" /></p>
+<p>To invoke Watson NLP via REST, you need to find out the IP address and port. Alternatively you could use port forwarding.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ minikube service watson-embedded-watson-nlp -n watson-demo --url
+$ curl -X POST &quot;http://&lt;ip-and-port&gt;/v1/watson.runtime.nlp.v1/NlpService/SyntaxPredict&quot; \
+  -H &quot;accept: application/json&quot; \
+  -H &quot;grpc-metadata-mm-model-id: syntax_izumo_lang_en_stock&quot; \
+  -H &quot;content-type: application/json&quot; \
+  -d &quot; { \&quot;rawDocument\&quot;: { \&quot;text\&quot;: \&quot;It is so easy to embed Watson NLP in applications. Very cool.\&quot; }}&quot;
+</pre>
+<p>The NLP containers also provides a <a href="https://github.com/IBM/watson-automation#grpc" rel="noopener noreferrer" target="_blank">gRCP interface</a>.</p>
+<p>To find out more about Watson NLP, check out these resources:</p>
+<ul>
+<li><a href="https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home" rel="noopener noreferrer" target="_blank">Documentation</a></li>
+<li><a href="https://www.ibm.com/docs/en/watson-libraries?topic=models-catalog" rel="noopener noreferrer" target="_blank">Model catalog</a></li>
+<li><a href="https://www.ibm.com/products/ibm-watson-natural-language-processing" rel="noopener noreferrer" target="_blank">Trial</a></li>
+<li><a href="https://www.ibm.com/account/reg/us-en/subscribe?formid=urx-51726" rel="noopener noreferrer" target="_blank">Entitlement key</a></li>
+<li><a href="https://github.com/IBM/watson-automation" rel="noopener noreferrer" target="_blank">Automation for Watson NLP Deployments</a></li>
+<li><a href="http://heidloff.net/article/running-ibm-watson-nlp-locally-in-containers/" rel="noopener noreferrer" target="_blank">Running IBM Watson NLP locally in Containers</a></li>
+<li><a href="http://heidloff.net/article/running-ibm-watson-speech-to-text-in-containers/" rel="noopener noreferrer" target="_blank">Running IBM Watson Speech to Text in Containers</a></li>
+<li><a href="http://heidloff.net/article/running-ibm-watson-text-to-speech-in-containers/" rel="noopener noreferrer" target="_blank">Running IBM Watson Text to Speech in Containers</a></li>
+</ul>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/running-ibm-watson-nlp-in-minikube/">Running IBM Watson NLP in Minikube</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>

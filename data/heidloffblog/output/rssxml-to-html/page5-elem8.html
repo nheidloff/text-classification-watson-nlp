@@ -1,0 +1,43 @@
+Defining Dependencies in Kubernetes Operators. <p><em>Operators can automate the deployment and operations of custom Kubernetes resources. These resources might dependent on other third party resources. This article describes how to define these dependencies.</em><span id="more-4882"></span></p>
+<p>I’m working on a <a href="https://github.com/nheidloff/operator-sample-go" rel="noopener noreferrer" target="_blank">sample</a> that describes different patterns and best practices to build operators with Golang. The repo demonstrates how a custom resource ‘Application’ uses internally a third party ‘Database’ resource which is managed by another controller. This is a simplified version of the typical scenario to use a managed database in the cloud. Read my previous <a href="http://heidloff.net/article/accessing-third-party-custom-resources-go-operators/" rel="noopener noreferrer" target="_blank">blog</a> that explains how to access third party resources in controllers&#8217; Go code.</p>
+<p>Additionally you need to ensure that the dependent operator (in my sample the database operator) exists when an operator (in my sample the application operator) is deployed. This can be done in the cluster service version (CSV). The CSV is the operator bundle/package which contains the definition of a specific operator version.</p>
+<p>Here is the <a href="https://github.com/nheidloff/operator-sample-go/blob/1280fe242726a329642a6a3950d1a8b9990e14d0/operator-application/bundle/manifests/operator-application.clusterserviceversion.yaml#L26-L38" rel="noopener noreferrer" target="_blank">CSV</a> of the application operator. The dependency is defined in the &#8216;required&#8217; section of the spec.</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - displayName: Application
+      kind: Application
+      name: applications.application.sample.ibm.com
+      version: v1alpha1
+    required:
+    - displayName: Database
+      kind: Database
+      name: databases.database.sample.third.party
+      version: v1alpha1    
+</pre>
+<p>When you try to deploy the application operator, but the database operator doesn&#8217;t exist, you get an error.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ operator-sdk run bundle &quot;$REGISTRY/$ORG/$BUNDLEIMAGE&quot; -n operators
+INFO[0040] Successfully created registry pod: docker-io-nheidloff-application-controller-bundle-v15 
+INFO[0041] Created CatalogSource: operator-application-catalog 
+INFO[0041] Created Subscription: operator-application-v0-0-1-sub 
+FATA[0120] Failed to run bundle: install plan is not available for the subscription operator-application-v0-0-1-sub: timed out waiting for the condition 
+</pre>
+<p>The logs in the catalog pod describe the error.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl get pods -n olm
+$ kubectl logs catalog-operator-b4dfcff47-55plr -n olm
+Event(v1.ObjectReference{Kind:&quot;Namespace&quot;, Namespace:&quot;&quot;, Name:&quot;operators&quot;, ... type: 'Warning' reason: 'ResolutionFailed' constraints not satisfiable: bundle operator-application.v0.0.1 requires an operator providing an API with group: database.sample.third.party, version: v1alpha1, kind: Database
+</pre>
+<p>The following resources describe more details.</p>
+<ul>
+<li><a href="https://operator-framework.github.io/olm-book/docs/operator-dependencies-and-requirements.html" rel="noopener noreferrer" target="_blank">Operator Dependency and Requirement Resolution</a></li>
+<li><a href="https://olm.operatorframework.io/docs/tasks/creating-operator-manifests/" rel="noopener noreferrer" target="_blank">Creating operator manifests</a></li>
+<li><a href="https://github.com/nheidloff/operator-sample-go/blob/1280fe242726a329642a6a3950d1a8b9990e14d0/operator-application/SetupDeploymentViaOLM.md" rel="noopener noreferrer" target="_blank">Setup and Deployment via Operator Lifecycle Manager</a></li>
+</ul>
+<p>Check out the <a href="https://github.com/nheidloff/operator-sample-go" rel="noopener noreferrer" target="_blank">repo</a> and keep an eye on my blog. I’ll write more about other operator patterns soon.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/defining-dependencies-kubernetes-operators/">Defining Dependencies in Kubernetes Operators</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>

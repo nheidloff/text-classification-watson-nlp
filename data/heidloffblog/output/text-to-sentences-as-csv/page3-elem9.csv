@@ -1,0 +1,41 @@
+page3-elem9,New Era of Software Development: Operations Automation.
+page3-elem9,Check out this 40 mins video [https://youtu.be/D6njEyXPieg] to learn about the power of Kubernetes Operators to automate day 2 operation tasks.
+page3-elem9,20 Years ago
+page3-elem9,When I started my career 20+ years ago usually developers only wrote code some even without writing tests because that was supposed to be done by separate teams.
+page3-elem9,10 Years ago
+page3-elem9,10 years ago developers and technical leads realized that this was not sufficient.
+page3-elem9,The concept of DevOps was born and over the last years most companies adopted it.
+page3-elem9,Developers work now together with Ops engineers and are together responsible for the whole software development lifecycle including operations.
+page3-elem9,For example DevOps teams write automation for deployments of software in different environments via CI/CD.
+page3-elem9,Today
+page3-elem9,Now a new era of software development has started.
+page3-elem9,Rather than ‘only’ automating the deployments of software operation tasks are automated.
+page3-elem9,This is usually referred to as day 2 tasks while day 1 tasks are focussed on deployments.
+page3-elem9,Operating software in custom clusters no matter what clouds on premises or on edge devices can become quite expensive since issues are often hard to discover debug and analyse especially if people need to do this who are not SRE (service reliability engineers) for specific software.
+page3-elem9,Kubernetes Operators
+page3-elem9,The solution?
+page3-elem9,Kubernetes Operators.
+page3-elem9,An incredibly powerful technology to automate operations.
+page3-elem9,The main concept behind it is GitOps.
+page3-elem9,Custom logic synchronizes the ‘to be state’ with the ‘as is state’.
+page3-elem9,This concept is used intensively within Kubernetes and can be used for custom applications as well.
+page3-elem9,I like the Software as a Service approach a lot since it is the easiest way to consume services.
+page3-elem9,However in some cases this doesn’t work for example since certain data needs to reside at certain locations or services need to be customized.
+page3-elem9,I think using the Kubernetes Operators technology is the next best way to consume software.
+page3-elem9,Plus Kubernetes Operators allow companies to reliably host software which manages itself.
+page3-elem9,Operators Reference Architecture
+page3-elem9,My team has created a reference architecture how to build Kubernetes Operators which goes above and beyond what the Operator SDK and Kubebuilder tutorials provide.
+page3-elem9,Check it out!
+page3-elem9,* Operators Sample Architecture – Source Code [https://github.com/ibm/operator-sample-go]
+page3-elem9,* Operators Sample Architecture – Documentation [https://ibm.github.io/operator-sample-go-documentation/]
+page3-elem9,We’ve created a 40 minutes video [https://youtu.be/D6njEyXPieg] that describes the project on a high level.
+page3-elem9,If you are an IBM partner who is interested in building operators reach out to us!
+page3-elem9,We can help.
+page3-elem9,Authors:
+page3-elem9,* Adam de Leeuw [https://www.linkedin.com/in/deleeuwa/]
+page3-elem9,* Thomas Südbröcker [https://twitter.com/tsuedbroecker]
+page3-elem9,* Alain Airom [https://twitter.com/AAairom]
+page3-elem9,* Diwakar Tiwari [https://twitter.com/diwakarptiwari]
+page3-elem9,* Vishal Ramani [https://www.linkedin.com/in/vishalramani/]
+page3-elem9,* Niklas Heidloff [https://twitter.com/nheidloff]
+page3-elem9,The post New Era of Software Development: Operations Automation [http://heidloff.net/article/new-era-software-development-automation-operations/] appeared first on Niklas Heidloff [http://heidloff.net].

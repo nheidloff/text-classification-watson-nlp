@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 21 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=21" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Fri, 25 Nov 2022 07:22:15 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>Developing protected Serverless Web Applications</title><link>http://heidloff.net/article/serverless-web-applications-oauth</link><comments>http://heidloff.net/article/serverless-web-applications-oauth#respond</comments><pubDate>Tue, 27 Mar 2018 06:26:10 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=2907</guid><description><![CDATA[<p>Serverless platforms are often used to build APIs for web and mobile apps. I&#8217;ve open sourced a pattern that shows how to implement protected APIs with IBM Cloud Functions and how to invoke them from Angular web applications. Get the code from GitHub. IBM Cloud Functions comes with an API Gateway. Developers can grant access [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/serverless-web-applications-oauth">Developing protected Serverless Web Applications</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p>Serverless platforms are often used to build APIs for web and mobile apps. I&#8217;ve open sourced a <a href="https://developer.ibm.com/code/patterns/develop-protected-serverless-web-applications/" rel="noopener" target="_blank">pattern</a> that shows how to implement protected APIs with <a href="https://console.bluemix.net/openwhisk/" rel="noopener" target="_blank">IBM Cloud Functions</a> and how to invoke them from Angular web applications.<span id="more-2907"></span></p>
+<p><a href="https://github.com/IBM/IBM-function-webapp" rel="noopener" target="_blank">Get the code from GitHub.</a></p>
+<p>IBM Cloud Functions comes with an <a href="https://console.bluemix.net/docs/openwhisk/openwhisk_apigateway.html#openwhisk_apigateway" rel="noopener" target="_blank">API Gateway</a>. Developers can grant access to their APIs via application keys and they can track usage via graphical dashboards. For user authentication Google, Facebook and GitHub accounts can be used via OAuth. </p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/03/serverless-webapp-1.png"><img src="http://heidloff.net/wp-content/uploads/2018/03/serverless-webapp-1.png" alt="serverless-webapp (1)" width="2586" height="852" class="alignnone size-full wp-image-2910" srcset="http://heidloff.net/wp-content/uploads/2018/03/serverless-webapp-1.png 2586w, http://heidloff.net/wp-content/uploads/2018/03/serverless-webapp-1-300x99.png 300w, http://heidloff.net/wp-content/uploads/2018/03/serverless-webapp-1-1024x337.png 1024w" sizes="(max-width: 2586px) 100vw, 2586px" /></a></p>
+<p>The static resources of web applications can be hosted in various ways, for example on <a href="https://console.bluemix.net/docs/tutorials/serverless-api-webapp.html?pos=2#serverless-web-application-and-api" rel="noopener" target="_blank">GitHub pages</a>. Since the JavaScript files are loaded in browsers, for security reasons they must not include the credentials to access the APIs. Instead OAuth is used to authenticate users before invoking the protected APIs. Read the <a href="https://console.bluemix.net/docs/apis/management/manage_apis.html#settings_api" rel="noopener" target="_blank">documentation</a> for more information.</p>
+<p>The following diagram describes the flow of authenticating and authorizing a user in the sample application:</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/03/pattern-protected-app.png"><img src="http://heidloff.net/wp-content/uploads/2018/03/pattern-protected-app.png" alt="pattern-protected-app" width="1746" height="1132" class="alignnone size-full wp-image-2908" srcset="http://heidloff.net/wp-content/uploads/2018/03/pattern-protected-app.png 1746w, http://heidloff.net/wp-content/uploads/2018/03/pattern-protected-app-300x195.png 300w, http://heidloff.net/wp-content/uploads/2018/03/pattern-protected-app-1024x664.png 1024w" sizes="(max-width: 1746px) 100vw, 1746px" /></a></p>
+<ol>
+<li>User opens the Angular web application via web browser and clicks the &#8216;login&#8217; button.</li>
+<li>Web application opens the Google OAuth web page, where users authenticate and grant the application access.</li>
+<li>Google page redirects to OpenWhisk sequence &#8216;oauth-login-and-redirect&#8217; with a code parameter in the URL.</li>
+<li>The sequence is triggered. The first OpenWhisk function &#8216;oauth-login&#8217; reads the code and invokes a Google API endpoint to exchange the code against a token.</li>
+<li>The same &#8216;oauth-login&#8217; function invokes with the token another Google API endpoint to read user profile information, such as the user name.</li>
+<li>The sequence invokes the next OpenWhisk function redirect, which invokes the Angular app with the token and the user name in the URL.</li>
+<li>When users click on the &#8216;invoke protected action&#8217; button in the Angular app, a REST API to the API management is invoked. The request contains the token.
+</li>
+<li>API management validates the token. If valid, the OpenWhisk function protected-action is invoked. If the token is invalid, the request will be rejected and response code 401 will be returned.</li>
+<li>The response from &#8216;protected-action&#8217; is displayed in the Angular application.</li>
+</ol>
+<p>This is the <a href="https://github.com/IBM/IBM-function-webapp/blob/master/openwhisk-oauth/oauth-login.js" rel="noopener" target="_blank">code</a> of step (4) which reads the access token. The OAuth client id and secret are only accessible in this code and not in the client side JavaScript code.</p>
+<pre class="brush: jscript; title: ; notranslate">
+function main(params) {
+   return new Promise((resolve, reject) =&gt; {
+      const providers = params.providers;
+      const code = params.code;
+      var providerName = params.provider || params.providerName;
+      var provider = providers[providerName];
+      var form = {
+         client_id: provider.credentials.client_id,
+         client_secret: provider.credentials.client_secret,
+         code: code
+      };
+      ...
+      var options = {
+         url: provider.endpoints.token,
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json'
+         }
+      };
+      ...
+      request(options, function (err, response, body) {
+         if (err || response.statusCode &gt;= 400) {
+            ...
+         } else {
+            body = JSON.parse(body);
+            var accessToken = body.access_token;
+...
+</pre>
+<p>Thanks a lot to my colleague Andy Shi who converted this sample into a <a href="https://developer.ibm.com/code/patterns/" rel="noopener" target="_blank">code pattern</a>.</p>
+<p>If you want to try out OpenWhisk in the cloud, you can get an account on the <a href="http://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/serverless-web-applications-oauth">Developing protected Serverless Web Applications</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><wfw:commentRss>http://heidloff.net/article/serverless-web-applications-oauth/feed/</wfw:commentRss><slash:comments>0</slash:comments><post-id xmlns="com-wordpress:feed-additions:1">2907</post-id></item></channel></rss>

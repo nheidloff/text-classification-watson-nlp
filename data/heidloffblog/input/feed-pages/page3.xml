@@ -1,0 +1,602 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	
+xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+>
+
+<channel>
+	<title>Page 3 &#8211; Niklas Heidloff</title>
+	<atom:link href="http://heidloff.net/feed/?paged=3" rel="self" type="application/rss+xml" />
+	<link>http://heidloff.net</link>
+	<description></description>
+	<lastBuildDate>
+	Thu, 24 Nov 2022 10:47:53 +0000	</lastBuildDate>
+	<language>en-US</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=5.1.15</generator>
+<site xmlns="com-wordpress:feed-additions:1">102773794</site>	<item>
+		<title>Interface Descriptions of TechZone Toolkit Modules</title>
+		<link>http://heidloff.net/article/interface-descriptions-of-techzone-toolkit-modules/</link>
+				<pubDate>Thu, 03 Nov 2022 08:44:42 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=5228</guid>
+				<description><![CDATA[<p>With the TechZone Accelerator Toolkit IBM software, open source projects and custom applications can easily be deployed to various clouds. This article explains how input and output variables of modules are defined. Check out my earlier blog that introduces the toolkit: Introducing IBM’s Toolkit to handle Everything as Code. The toolkit leverages Terrafrom and GitOps [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/interface-descriptions-of-techzone-toolkit-modules/">Interface Descriptions of TechZone Toolkit Modules</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>With the TechZone Accelerator Toolkit IBM software, open source projects and custom applications can easily be deployed to various clouds. This article explains how input and output variables of modules are defined.</em><span id="more-5228"></span></p>
+<p>Check out my earlier blog that introduces the toolkit: <a href="http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/" rel="noopener noreferrer" target="_blank">Introducing IBM’s Toolkit to handle Everything as Code</a>. The toolkit leverages Terrafrom and GitOps and is based on best practices from IBM projects with partners and clients.</p>
+<p>Solutions are defined via bill of materials (BOMs) which contain lists of <a href="https://modules.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">modules</a>. In the following <a href="https://github.com/IBM/watson-automation/blob/main/roks-new-nlp/bom.yaml" rel="noopener noreferrer" target="_blank">example</a> an OpenShift cluster is created in the IBM Cloud which comes with Argo CD, a GitOps repo, Watson NLP and a sample application based on ubi.</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: cloudnativetoolkit.dev/v1alpha1
+kind: BillOfMaterial
+metadata:
+  name: cluster-with-watson-nlp
+spec:
+  modules:
+    - name: ibm-ocp-vpc
+    - name: argocd-bootstrap
+    - name: gitops-repo
+    - name: terraform-gitops-ubi
+    - name: terraform-gitops-watson-nlp
+</pre>
+<p>Modules have input and output variables. Read my blog <a href="http://heidloff.net/article/configuring-the-techzone-accelerator-toolkit/" rel="noopener noreferrer" target="_blank">Configuring the TechZone Accelerator Toolkit</a> how to use input variables to configure BOMs for different scenarios.</p>
+<p>The input variables are defined by convention in the <a href="https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp/blob/main/variables.tf" rel="noopener noreferrer" target="_blank">variables.tf</a> files of modules via Terraform and HCL.</p>
+<pre class="brush: plain; title: ; notranslate">
+variable &quot;registries&quot; {
+  type    = list(map(string))
+  default = [{
+    name = &quot;watson&quot;
+    url = &quot;cp.icr.io/cp/ai&quot;
+  }]
+}
+</pre>
+<p>The <a href="https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp#3-example-usage" rel="noopener noreferrer" target="_blank">readme</a> files of the modules also describe how to use modules and pass in variables if you would use Terraform directly and not the toolkit which is useful for module developers to test their modules.</p>
+<pre class="brush: plain; title: ; notranslate">
+module &quot;terraform_gitops_watson_nlp&quot; {
+  source = &quot;github.com/cloud-native-toolkit/terraform-gitops-watson-nlp?ref=v0.0.80&quot;
+  accept_license = var.terraform_gitops_watson_nlp_accept_license
+  ...
+}
+</pre>
+<p>The output variables are defined by convention in <a href="https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp/blob/main/outputs.tf" rel="noopener noreferrer" target="_blank">output.tf</a> files.</p>
+<pre class="brush: plain; title: ; notranslate">
+output &quot;namespace&quot; {
+  description = &quot;The namespace where the module will be deployed&quot;
+  value       = local.namespace
+  depends_on  = [resource.gitops_module.setup_gitops]
+}
+</pre>
+<p>Some variables are defined on a global level which is useful for <a href="https://github.com/IBM/watson-automation/blob/main/roks-new-nlp/output/cluster-with-watson-nlp/variables-template.yaml" rel="noopener noreferrer" target="_blank">common variables</a> like regions, resource group names and common tags.</p>
+<pre class="brush: plain; title: ; notranslate">
+variables:
+  - name: region
+    description: The IBM Cloud region where the instance should be provisioned
+    value: xxx
+  - name: resource_group_name
+    description: The name of the IBM Cloud resource group where the resources should be provisioned
+    value: xxx
+  - name: common_tags 
+    description: The list of tags that should be applied to all resources (does not work)
+    value: []
+</pre>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-03-at-09.36.24.png" alt="" width="2324" height="1256" class="alignnone size-full wp-image-5236" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-03-at-09.36.24.png 2324w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-03-at-09.36.24-300x162.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-03-at-09.36.24-768x415.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-03-at-09.36.24-1024x553.png 1024w" sizes="(max-width: 2324px) 100vw, 2324px" /></p>
+<p>To define the values of variables for certain modules, naming conventions are used. For example to define the value of &#8216;<a href="https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp/blob/main/variables.tf#L110-L113" rel="noopener noreferrer" target="_blank">runtime_image</a>&#8216; &#8230;</p>
+<pre class="brush: plain; title: ; notranslate">
+variable &quot;runtime_image&quot; {
+  description = &quot;runtime_image&quot;
+  default     = &quot;watson-nlp-runtime:1.0.15&quot;
+}
+</pre>
+<p>&#8230; the name of the <a href="https://github.com/IBM/watson-automation/blob/main/roks-new-nlp/output/cluster-with-watson-nlp/variables-template.yaml#L45" rel="noopener noreferrer" target="_blank">module</a> is used followed by &#8216;_&#8217; and the variable name.</p>
+<pre class="brush: plain; title: ; notranslate">
+- name: terraform_gitops_watson_nlp_runtime_image
+  value: watson-nlp-runtime:1.0.18
+</pre>
+<p>To find out more about these capabilities, check out the following resources:</p>
+<ul>
+<li><a href="https://github.com/IBM/watson-automation" rel="noopener noreferrer" target="_blank">Watson Automation Repo</a></li>
+<li><a href="https://operate.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">TechZone Accelerator Toolkit</a></li>
+<li><a href="https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home" rel="noopener noreferrer" target="_blank">Watson NLP</a></li>
+</ul>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/interface-descriptions-of-techzone-toolkit-modules/">Interface Descriptions of TechZone Toolkit Modules</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">5228</post-id>	</item>
+		<item>
+		<title>Handling of Versions of TechZone Toolkit Modules</title>
+		<link>http://heidloff.net/article/versioning-of-techzone-accelerator-toolkit-modules/</link>
+				<pubDate>Wed, 02 Nov 2022 07:43:03 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=5216</guid>
+				<description><![CDATA[<p>With the TechZone Accelerator Toolkit IBM software, open source projects and custom applications can easily be deployed to various clouds. This article explains how to ensure that the right versions of modules are deployed. In an earlier blog I introduced the toolkit: Introducing IBM’s Toolkit to handle Everything as Code. The toolkit leverages Terrafrom and [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/versioning-of-techzone-accelerator-toolkit-modules/">Handling of Versions of TechZone Toolkit Modules</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>With the TechZone Accelerator Toolkit IBM software, open source projects and custom applications can easily be deployed to various clouds. This article explains how to ensure that the right versions of modules are deployed.</em><span id="more-5216"></span></p>
+<p>In an earlier blog I introduced the toolkit: <a href="http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/" rel="noopener noreferrer" target="_blank">Introducing IBM’s Toolkit to handle Everything as Code</a>. The toolkit leverages Terrafrom and GitOps and is based on best practices based on IBM experiences in partner and clients projects.</p>
+<p>Solutions are defined via bill of materials (BOM) which contain lists of <a href="https://modules.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">modules</a>. In the following <a href="https://github.com/IBM/watson-automation/blob/main/roks-new-nlp/bom.yaml" rel="noopener noreferrer" target="_blank">example</a> an OpenShift cluster is created in the IBM Cloud which comes with Argo CD, a GitOps repo, Watson NLP and a sample application based on ubi.</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: cloudnativetoolkit.dev/v1alpha1
+kind: BillOfMaterial
+metadata:
+  name: cluster-with-watson-nlp
+spec:
+  modules:
+    - name: ibm-ocp-vpc
+    - name: argocd-bootstrap
+    - name: gitops-repo
+      alias: gitops_repo
+    - name: terraform-gitops-ubi
+      alias: terraform_gitops_ubi
+    - name: terraform-gitops-watson-nlp
+      alias: terraform_gitops_watson_nlp
+</pre>
+<p>If you don&#8217;t provide any version numbers in the BOMs, the toolkit installs the latest versions.</p>
+<p>Modules can have dependencies which are defined in the <a href="https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp/blob/4c22e5bba2023602bdd8e4a1a1634b4d024ee937/module.yaml#L15" rel="noopener noreferrer" target="_blank">module.yaml</a> files.</p>
+<pre class="brush: plain; title: ; notranslate">
+dependencies:
+  - id: gitops
+    refs:
+      - source: github.com/cloud-native-toolkit/terraform-tools-gitops.git
+        version: '&gt;= 1.1.0'
+  - id: namespace
+    refs:
+      - source: github.com/cloud-native-toolkit/terraform-gitops-namespace.git
+        version: '&gt;= 1.0.0'   
+  - id: setup_clis
+    refs:
+      - source: github.com/cloud-native-toolkit/terraform-util-clis.git
+        version: '&gt;= 1.0.0'   
+</pre>
+<p>As in other frameworks and programming languages like JavaScript, Java, Go, etc. the best practise is to require certain versions of dependencies. Automatic updates of modules can easily break production applications. Before updating dependencies, testing needs to be done. The only exception might be security fixes, but even those need to be tested.</p>
+<p>Let&#8217;s take a look how this can be done with the TechZone Accelerator Toolkit. After you have run &#8216;iascable build &#8230;&#8217; on BOM files which only include high level modules without version numbers like above, you will find a second BOM file (shadow BOM) in the subdirectory &#8216;output/bom-name/bom.yaml&#8217;. </p>
+<p>These shadow BOM files contain not only the high level modules, but a complete list of all modules including dependencies. They also include the latest version numbers. </p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: cloudnativetoolkit.dev/v1alpha1
+kind: BillOfMaterial
+metadata:
+  name: cluster-with-watson-nlp
+spec:
+  modules:
+    - name: gitops-repo
+      alias: gitops_repo
+      version: v1.22.2
+    - name: argocd-bootstrap
+      alias: argocd-bootstrap
+      version: v1.12.0
+    - name: ibm-ocp-vpc
+      alias: cluster
+      version: v1.16.3
+    - name: ibm-vpc
+      alias: ibm-vpc
+      version: v1.17.0
+    - name: ibm-vpc-gateways
+      alias: ibm-vpc-gateways
+      version: v1.10.0
+    - name: terraform-gitops-ubi
+      alias: terraform_gitops_ubi
+      version: v0.0.26
+    - name: terraform-gitops-watson-nlp
+      alias: terraform_gitops_watson_nlp
+      version: v1.0.0
+    - name: olm
+      version: v1.3.5
+    - name: sealed-secret-cert
+      version: v1.0.1
+    - name: ibm-resource-group
+      alias: resource_group
+      version: v3.3.5
+    - name: ibm-object-storage
+      alias: cos
+      version: v4.1.0
+    - name: ibm-vpc-subnets
+      version: v1.14.0
+    - name: gitops-namespace
+      alias: namespace
+      version: v1.14.0
+    - name: util-clis
+      version: v1.18.1
+</pre>
+<p><strong>To &#8216;pin&#8217; the version numbers</strong> of modules for subsequent Terraform runs, a best practise is to replace the original BOM file with the generated shadow BOM file. This approach is similar to JavaScript&#8217;s package-lock.json files and Golang&#8217;s go.sum files.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-03-at-08.41.07.png" alt="" width="2240" height="1582" class="alignnone size-full wp-image-5218" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-03-at-08.41.07.png 2240w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-03-at-08.41.07-300x212.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-03-at-08.41.07-768x542.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-03-at-08.41.07-1024x723.png 1024w" sizes="(max-width: 2240px) 100vw, 2240px" /></p>
+<p>To find out more about these capabilities, check out the following resources:</p>
+<ul>
+<li><a href="https://github.com/IBM/watson-automation" rel="noopener noreferrer" target="_blank">Watson Automation Repo</a></li>
+<li><a href="https://operate.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">TechZone Accelerator Toolkit</a></li>
+<li><a href="https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home" rel="noopener noreferrer" target="_blank">Watson NLP</a></li>
+</ul>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/versioning-of-techzone-accelerator-toolkit-modules/">Handling of Versions of TechZone Toolkit Modules</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">5216</post-id>	</item>
+		<item>
+		<title>Automation for embedded IBM Watson Deployments</title>
+		<link>http://heidloff.net/article/automation-for-ibm-watson-deployments/</link>
+				<pubDate>Tue, 01 Nov 2022 08:37:57 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=5210</guid>
+				<description><![CDATA[<p>Last week IBM announced the general availability of Watson NLP and Watson Speech. You can now run these services via containers everywhere. I&#8217;ve created a short video that describes how complete solutions can be deployed and how automation via Terraform and Argo CD can be used. To find out more about these capabilities, check out [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/automation-for-ibm-watson-deployments/">Automation for embedded IBM Watson Deployments</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>Last week IBM <a href="https://newsroom.ibm.com/2022-10-25-IBM-Helps-Ecosystem-Partners-Accelerate-AI-Adoption-by-Making-it-Easier-to-Embed-and-Scale-AI-Across-Their-Business" rel="noopener noreferrer" target="_blank">announced</a> the general availability of Watson NLP and Watson Speech. You can now run these services via containers everywhere.</em><span id="more-5210"></span></p>
+<p>I&#8217;ve created a short <a href="https://youtu.be/8lbVRAvJgy4" rel="noopener noreferrer" target="_blank">video</a> that describes how complete solutions can be deployed and how automation via Terraform and Argo CD can be used.</p>
+<p><iframe width="853" height="480" src="//www.youtube.com/embed/8lbVRAvJgy4" frameborder="0" allowfullscreen></iframe></p>
+<p>To find out more about these capabilities, check out these resources:</p>
+<ul>
+<li><a href="https://github.com/IBM/watson-automation" rel="noopener noreferrer" target="_blank">Watson Automation Repo</a></li>
+<li><a href="https://operate.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">TechZone Accelerator Toolkit</a></li>
+<li><a href="https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home" rel="noopener noreferrer" target="_blank">Watson NLP</a></li>
+</ul>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/automation-for-ibm-watson-deployments/">Automation for embedded IBM Watson Deployments</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">5210</post-id>	</item>
+		<item>
+		<title>Configuring the TechZone Toolkit</title>
+		<link>http://heidloff.net/article/configuring-the-techzone-accelerator-toolkit/</link>
+				<pubDate>Mon, 31 Oct 2022 08:08:58 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=5203</guid>
+				<description><![CDATA[<p>With the TechZone Toolkit software like OpenShift can be set up in the cloud including custom applications by using automation via Terraform and Argo CD. This article describes how to configure the toolkit or more precisely the solution definitions. In an earlier blog I explained the toolkit: Introducing IBM’s Toolkit to handle Everything as Code. [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/configuring-the-techzone-accelerator-toolkit/">Configuring the TechZone Toolkit</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>With the TechZone Toolkit software like OpenShift can be set up in the cloud including custom applications by using automation via Terraform and Argo CD. This article describes how to configure the toolkit or more precisely the solution definitions.</em><span id="more-5203"></span></p>
+<p>In an earlier blog I explained the toolkit: <a href="http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/" rel="noopener noreferrer" target="_blank">Introducing IBM’s Toolkit to handle Everything as Code</a>. The toolkit leverages Terrafrom and GitOps and is based on best practices based on IBM experiences in partner and clients projects.</p>
+<p>The <a href="https://modules.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">toolkit module catalog</a> provides 200+ modules to install IBM Software and open source components which can be deployed on clouds like AWS, Azure and IBM Cloud. Solutions are defined in yaml files. The bill of materials contain lists of modules, in this <a href="https://github.com/IBM/watson-automation/blob/e92c9cef8acb1bd5c57177dad3d91c42ff9c8aee/roks-new-nlp/bom.yaml#L27" rel="noopener noreferrer" target="_blank">example</a> OpenShift in the IBM Cloud, Argo CD including a GitOps repo, the Watson NLP (natural language processing) container and a custom application.</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: cloudnativetoolkit.dev/v1alpha1
+kind: BillOfMaterial
+metadata:
+  name: cluster-with-watson-nlp
+spec:
+  modules:
+    - name: ibm-ocp-vpc
+      version: v1.16.0
+    - name: argocd-bootstrap
+      version: v1.12.0
+    - name: gitops-repo
+      alias: gitops_repo
+      version: v1.22.2
+    - name: terraform-gitops-ubi
+      alias: terraform_gitops_ubi
+      version: v0.0.8
+    - name: terraform-gitops-watson-nlp
+      alias: terraform_gitops_watson_nlp
+      version: v0.0.80
+</pre>
+<p>Bill of materials can be and should be shared for different scenarios. To customize them two files are used.</p>
+<ol>
+<li><a href="https://github.com/IBM/watson-automation/blob/e92c9cef8acb1bd5c57177dad3d91c42ff9c8aee/roks-new-nlp/output/credentials-template.properties" rel="noopener noreferrer" target="_blank">output/credentials.properties</a>: Contains credentials</li>
+<li><a href="https://github.com/IBM/watson-automation/blob/e92c9cef8acb1bd5c57177dad3d91c42ff9c8aee/roks-new-nlp/output/cluster-with-watson-nlp/variables-template.yaml" rel="noopener noreferrer" target="_blank">output/bom-name/variables.yaml</a>: Contains all other variables</li>
+</ol>
+<p>The following sample shows how to define variables like regions, resource group names, size of the cluster, etc.</p>
+<pre class="brush: plain; title: ; notranslate">
+variables:
+  # overall
+  - name: region
+    description: The IBM Cloud region where the instance should be provisioned
+    value: xxx
+  - name: resource_group_name
+    description: The name of the IBM Cloud resource group where the resources should be provisioned
+    value: xxx
+  # ocp
+  - name: worker_count
+    description: The number of workers that should be provisioned per subnet
+    value: 2
+  - name: cluster_flavor
+    description: The flavor of the worker nodes that will be provisioned
+    value: bx2.4x16
+</pre>
+<p>When ArgoCD is used, a Git token is needed to access the GitOps repo which is stored in credentials.properties. The same mechanism applies for tokens to pull container images from protected registries as well as other credentials.</p>
+<pre class="brush: plain; title: ; notranslate">
+export TF_VAR_gitops_repo_token=xxx
+export TF_VAR_ibmcloud_api_key=xxx
+export TF_VAR_terraform_gitops_watson_nlp_registry_credentials=xxx,xxx,xxx
+</pre>
+<p>With the toolkit&#8217;s CLI the bill of material, the variables and the credentials are converted to Terraform assets in the &#8216;output/bom-name/terraform&#8217; folder. Be careful when managing this folder with Git to prevent your credentials to be exposed. Note that the generated files are usually not touched.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-31-at-09.13.07.png" alt="" width="2512" height="1370" class="alignnone size-full wp-image-5208" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-31-at-09.13.07.png 2512w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-31-at-09.13.07-300x164.png 300w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-31-at-09.13.07-768x419.png 768w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-31-at-09.13.07-1024x558.png 1024w" sizes="(max-width: 2512px) 100vw, 2512px" /></p>
+<p>When the variables and credentials are not predefined, CLI users will get prompted to define them when invoking &#8216;iascable build&#8217;.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-31-at-09.04.40.png" alt="" width="1558" height="658" class="alignnone size-full wp-image-5205" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-31-at-09.04.40.png 1558w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-31-at-09.04.40-300x127.png 300w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-31-at-09.04.40-768x324.png 768w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-31-at-09.04.40-1024x432.png 1024w" sizes="(max-width: 1558px) 100vw, 1558px" /></p>
+<p>To find out more about the toolkit, check out the <a href="https://operate.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">documentation</a> and the <a href="https://github.com/IBM/watson-automation" rel="noopener noreferrer" target="_blank">sample</a> which deploys OpenShift and Watson NLP.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/configuring-the-techzone-accelerator-toolkit/">Configuring the TechZone Toolkit</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">5203</post-id>	</item>
+		<item>
+		<title>IBM announces Embeddable AI</title>
+		<link>http://heidloff.net/article/ibm-announces-embeddable-ai/</link>
+				<pubDate>Fri, 28 Oct 2022 12:36:37 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=5190</guid>
+				<description><![CDATA[<p>Over the last months I have worked on a new initiate from IBM called Embeddable AI. You can now run some of the Watson services via containers everywhere. Watch the short video on the Embeddable AI home page for an introduction or this interview with Rob Thomas. Why embeddable AI? For years, IBM Research has [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/ibm-announces-embeddable-ai/">IBM announces Embeddable AI</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>Over the last months I have worked on a new initiate from IBM called Embeddable AI. You can now run some of the Watson services via containers everywhere.</em><span id="more-5190"></span></p>
+<p>Watch the <a href="https://www.ibm.com/partnerworld/program/embeddableai" rel="noopener noreferrer" target="_blank">short video</a> on the Embeddable AI home page for an introduction or this interview with Rob Thomas.</p>
+<p><iframe width="853" height="480" src="//www.youtube.com/embed/V8oGXnqVZEs" frameborder="0" allowfullscreen></iframe></p>
+<blockquote><p>Why embeddable AI?<br />
+For years, IBM Research has invested in developing AI capabilities which are embedded in IBM software offerings. We are now making the same capabilities available to our partners, providing them a simpler path to create AI-powered solutions.</p></blockquote>
+<p>While it is easy to consume software as a service, certain workloads need to be run on premises. A good example are AI applications where data must not leave certain countries. Containers are a great technology to help running AI services everywhere.</p>
+<p>There are many resources that explain the <a href="https://github.com/IBM/watson-automation/tree/8973caa7f1a4eac6831ffa087c8a5ad1a9195728#resources" rel="noopener noreferrer" target="_blank">Embeddable AI</a> offering. Here are some of the resources that help you getting started.</p>
+<ul>
+<li><a href="https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home" rel="noopener noreferrer" target="_blank">Watson NLP</a></li>
+<li><a href="https://github.com/IBM/watson-automation/blob/8973caa7f1a4eac6831ffa087c8a5ad1a9195728/documentation/NLPHelmChart.md" rel="noopener noreferrer" target="_blank">Watson NLP Helm Chart</a></li>
+<li><a href="https://www.ibm.com/products/watson-speech-embed-libraries" rel="noopener noreferrer" target="_blank">Watson Speech</a></li>
+<li><a href="https://github.com/IBM/watson-automation/" rel="noopener noreferrer" target="_blank">Automation for Watson NLP deployments</a></li>
+<li><a href="https://www.ibm.com/docs/en/cloud-paks/cp-data/4.5.x?topic=information-obtaining-your-entitlement-api-key" rel="noopener noreferrer" target="_blank">IBM entitlement API key</a></li>
+</ul>
+<p>My team has implemented a <a href="https://github.com/IBM/watson-automation/blob/8973caa7f1a4eac6831ffa087c8a5ad1a9195728/documentation/NLPHelmChart.md" rel="noopener noreferrer" target="_blank">Helm chart</a> which makes it easy to deploy Watson NLP in Kubernetes environments like OpenShift.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ oc login --token=sha256~xxx --server=https://xxx
+$ oc new-project watson-demo
+$ oc create secret docker-registry \
+--docker-server=cp.icr.io \
+--docker-username=cp \
+--docker-password=&lt;your IBM Entitlement Key&gt; \
+ibm-entitlement-key
+$ git clone https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp 
+$ git clone https://github.ibm.com/isv-assets/watson-automation
+$ acceptLicense: true # in values.yaml
+$ cp watson-automation/helm-nlp/values.yaml terraform-gitops-watson-nlp/chart/watson-nlp/values.yaml
+$ cd terraform-gitops-watson-nlp/chart/watson-nlp
+$ helm install -f values.yaml watson-embedded .
+</pre>
+<p>As a result you&#8217;ll see the deployed Watson NLP pod in OpenShift.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/10/openshift-15.png" alt="" width="1410" height="578" class="alignnone size-full wp-image-5198" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/10/openshift-15.png 1410w, http://heidloff.net/wp-content/uploads/2022/10/openshift-15-300x123.png 300w, http://heidloff.net/wp-content/uploads/2022/10/openshift-15-768x315.png 768w, http://heidloff.net/wp-content/uploads/2022/10/openshift-15-1024x420.png 1024w" sizes="(max-width: 1410px) 100vw, 1410px" /></p>
+<p>To find out more about the toolkit, check out the <a href="https://operate.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">documentation</a> and the <a href="https://github.com/IBM/watson-automation" rel="noopener noreferrer" target="_blank">sample</a> above.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/ibm-announces-embeddable-ai/">IBM announces Embeddable AI</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">5190</post-id>	</item>
+		<item>
+		<title>Setting up OpenShift and Applications in one Hour</title>
+		<link>http://heidloff.net/article/setting-up-openshift-and-applications-in-one-hour/</link>
+				<pubDate>Thu, 27 Oct 2022 06:13:31 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=5177</guid>
+				<description><![CDATA[<p>With the TechZone Accelerator Toolkit OpenShift can be set up in the cloud including custom applications by using automation via Terraform and Argo CD. In my previous blog I explained the toolkit: Introducing IBM’s Toolkit to handle Everything as Code. The toolkit leverages Terrafrom and GitOps and is based on best practices based on IBM&#8217;s [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/setting-up-openshift-and-applications-in-one-hour/">Setting up OpenShift and Applications in one Hour</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>With the TechZone Accelerator Toolkit OpenShift can be set up in the cloud including custom applications by using automation via Terraform and Argo CD.</em><span id="more-5177"></span></p>
+<p>In my previous blog I explained the toolkit: <a href="http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/" rel="noopener noreferrer" target="_blank">Introducing IBM’s Toolkit to handle Everything as Code</a>. The toolkit leverages Terrafrom and GitOps and is based on best practices based on IBM&#8217;s deployment experiences from partner and client projects.</p>
+<p>Let&#8217;s take a look how the toolkit can be used. The <a href="https://modules.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">module catalog</a> provides 200+ modules to install IBM Software and open source components which can be deployed on clouds like AWS, Azure and IBM Cloud.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-28-at-07.42.02.png" alt="" width="2662" height="1374" class="alignnone size-full wp-image-5184" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-28-at-07.42.02.png 2662w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-28-at-07.42.02-300x155.png 300w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-28-at-07.42.02-768x396.png 768w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-28-at-07.42.02-1024x529.png 1024w" sizes="(max-width: 2662px) 100vw, 2662px" /></p>
+<p>Complete stack solutions are defined in yaml files. These bill of materials contain list of modules, in this <a href="https://github.com/IBM/watson-automation/blob/e92c9cef8acb1bd5c57177dad3d91c42ff9c8aee/roks-new-nlp/bom.yaml#L27" rel="noopener noreferrer" target="_blank">example</a> OpenShift in the IBM Cloud, Argo CD including a GitOps repo, the Watson NLP (natural language processing) container and a custom application.</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: cloudnativetoolkit.dev/v1alpha1
+kind: BillOfMaterial
+metadata:
+  name: cluster-with-watson-nlp
+spec:
+  modules:
+    - name: ibm-ocp-vpc
+      version: v1.16.0
+    - name: argocd-bootstrap
+      version: v1.12.0
+    - name: gitops-repo
+      alias: gitops_repo
+      version: v1.22.2
+    - name: terraform-gitops-ubi
+      alias: terraform_gitops_ubi
+      version: v0.0.8
+    - name: terraform-gitops-watson-nlp
+      alias: terraform_gitops_watson_nlp
+      version: v0.0.80
+</pre>
+<p>The modules can be configured via <a href="https://github.com/IBM/watson-automation/blob/e92c9cef8acb1bd5c57177dad3d91c42ff9c8aee/roks-new-nlp/output/cluster-with-watson-nlp/variables-template.yaml" rel="noopener noreferrer" target="_blank">variables</a>, for example regions, resource group names, sizes of clusters, etc.</p>
+<pre class="brush: plain; title: ; notranslate">
+variables:
+  # overall
+  - name: region
+    description: The IBM Cloud region where the instance should be provisioned
+    value: xxx
+  - name: resource_group_name
+    description: The name of the IBM Cloud resource group where the resources should be provisioned
+    value: xxx
+  # ocp
+  - name: worker_count
+    description: The number of workers that should be provisioned per subnet
+    value: 2
+  - name: cluster_flavor
+    description: The flavor of the worker nodes that will be provisioned
+    value: bx2.4x16
+</pre>
+<p>To run the sample, you need to clone the repo and install the <a href="https://github.com/cloud-native-toolkit/iascable" rel="noopener noreferrer" target="_blank">toolkit&#8217;s CLI</a>, called iascable.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ curl -sL https://iascable.cloudnativetoolkit.dev/install.sh | sh
+$ git clone https://github.com/IBM/watson-automation
+</pre>
+<p>With the CLI the bill of material is converted into Terraform assets.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ cd watson-deployments/roks-new-nlp 
+$ iascable build -i bom.yaml
+$ cd output
+</pre>
+<p>An image is provided which comes with all tools necessary to run Terraform. To start the container, invoke this command in a terminal:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ ./launch.sh
+</pre>
+<p>In the running container invoke these commands:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ cd cluster-with-watson-nlp
+$ ./apply.sh
+</pre>
+<p>The &#8216;apply&#8217; command takes roughly 45 minutes to set up the managed OpenShift cluster in the IBM Cloud and the additional modules. After this, you can find the resources in the <a href="https://github.com/IBM/watson-automation/blob/e92c9cef8acb1bd5c57177dad3d91c42ff9c8aee/documentation/screenshots/openshift-01.png" rel="noopener noreferrer" target="_blank">IBM Cloud console</a>.</p>
+<p>Argo CD has been set up to deploy the Watson NLP container and the custom application.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/10/argocd-03.png" alt="" width="3360" height="2100" class="alignnone size-full wp-image-5185" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/10/argocd-03.png 3360w, http://heidloff.net/wp-content/uploads/2022/10/argocd-03-300x188.png 300w, http://heidloff.net/wp-content/uploads/2022/10/argocd-03-768x480.png 768w, http://heidloff.net/wp-content/uploads/2022/10/argocd-03-1024x640.png 1024w" sizes="(max-width: 3360px) 100vw, 3360px" /></p>
+<p>To find out more about the toolkit, check out the <a href="https://operate.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">documentation</a> and the <a href="https://github.com/IBM/watson-automation" rel="noopener noreferrer" target="_blank">sample</a> above.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/setting-up-openshift-and-applications-in-one-hour/">Setting up OpenShift and Applications in one Hour</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">5177</post-id>	</item>
+		<item>
+		<title>Introducing IBM&#8217;s Toolkit to handle Everything as Code</title>
+		<link>http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/</link>
+				<pubDate>Wed, 26 Oct 2022 07:58:54 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=5159</guid>
+				<description><![CDATA[<p>Terraform is a popular tool to set up infrastructure declaratively. Argo CD is a popular tool to manage Kubernetes resources via GitOps. To set up and manage complete solutions, these tools can be used together. To run applications, you need more than just your application code: Bare metal hardware or VMs in the cloud or [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/">Introducing IBM&#8217;s Toolkit to handle Everything as Code</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>Terraform is a popular tool to set up infrastructure declaratively. Argo CD is a popular tool to manage Kubernetes resources via GitOps. To set up and manage complete solutions, these tools can be used together.</em><span id="more-5159"></span></p>
+<p>To run applications, you need more than just your application code:</p>
+<ul>
+<li>Bare metal hardware or VMs in the cloud or on-premises</li>
+<li>Operating systems</li>
+<li>SaaS or on-premises services like databases</li>
+<li>Container orchestration platforms</li>
+<li>Compiled and optimized applications</li>
+</ul>
+<p><strong>Terraform meets Argo CD</strong></p>
+<p>To be able to deploy and operate applications efficiently, you need automation for the complete stack. </p>
+<ol>
+<li><a href="http://heidloff.net/article/setting-up-ibm-software-with-terraform/" rel="noopener noreferrer" target="_blank">Terraform for infrastructure like Kubernetes</a></li>
+<li><a href="http://heidloff.net/article/deploying-kubernetes-resources-via-gitops/" rel="noopener noreferrer" target="_blank">Argo CD for everything within Kubernetes clusters</a></li>
+</ol>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-26-at-13.26.08.png" alt="" width="2338" height="628" class="alignnone size-full wp-image-5169" srcset="http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-26-at-13.26.08.png 2338w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-26-at-13.26.08-300x81.png 300w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-26-at-13.26.08-768x206.png 768w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-26-at-13.26.08-1024x275.png 1024w" sizes="(max-width: 2338px) 100vw, 2338px" /></p>
+<p>To automate deployments, declarative approaches are often used known as &#8216;<a href="https://en.wikipedia.org/wiki/Infrastructure_as_code" rel="noopener noreferrer" target="_blank">Infrastructure as Code</a>&#8216;.</p>
+<blockquote><p>Infrastructure as code is the process of managing and provisioning computer data centers through machine-readable definition files, rather than physical hardware configuration or interactive configuration tools.</p></blockquote>
+<p>However Infrastructure as Code does not handle the deployments of services and applications which is required for full solutions. What you really need is <strong>Everything as Code</strong>.</p>
+<p>This is why IBM has built a toolkit that combines Terraform and Argo CD. IBM has created a Terraform module which sets up Argo CD in a Kubernetes or OpenShift cluster. The Argo CD bootstrap module uses another module which creates a Git repo which is linked to ArgoCD.</p>
+<ul>
+<li><a href="https://github.com/cloud-native-toolkit/terraform-tools-argocd-bootstrap" rel="noopener noreferrer" target="_blank">terraform-tools-argocd-bootstrap</a></li>
+<li><a href="https://github.com/cloud-native-toolkit/terraform-tools-gitops" rel="noopener noreferrer" target="_blank">terraform-tools-gitops</a></li>
+</ul>
+<p>In GitOps repos all resources can be defined which Argo CD deploys. The following screenshot shows an Argo CD application which deploys IBM Watson NLP (natural language processing) via Helm.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-27-at-08.21.54.png" alt="" width="2594" height="1534" class="alignnone size-full wp-image-5172" srcset="http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-27-at-08.21.54.png 2594w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-27-at-08.21.54-300x177.png 300w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-27-at-08.21.54-768x454.png 768w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-27-at-08.21.54-1024x606.png 1024w" sizes="(max-width: 2594px) 100vw, 2594px" /></p>
+<p><strong>Introducing IBM&#8217;s Toolkit</strong></p>
+<p>The current name of the toolkit is &#8216;IBM Technology Zone Accelerator Toolkit&#8217;, also known as &#8216;TechZone Accelerator Toolkit&#8217;, &#8216;Software Everywhere&#8217;, &#8216;TechZone Automation&#8217; and &#8216;Cloud Native Toolkit&#8217;.</p>
+<p>With the toolkit IBM follows Red Hat&#8217;s successful model to open source projects (&#8216;<a href="https://www.redhat.com/en/blog/what-open-source-upstream" rel="noopener noreferrer" target="_blank">upstream projects</a>&#8216;) and to have supported versions of these open source projects.</p>
+<p>The open source version of the toolkit is available under <a href="https://operate.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">operate.cloudnativetoolkit.dev</a>.</p>
+<p>The toolkit is an opinionated framework which brings together the strengths of Terraform and Argo CD. I&#8217;ll blog more about it, but to get started check out the <a href="https://operate.cloudnativetoolkit.dev/learn/iascable/lab1/" rel="noopener noreferrer" target="_blank">labs</a> in the toolkit documentation.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-27-at-09.42.54.png" alt="" width="2556" height="1248" class="alignnone size-full wp-image-5168" srcset="http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-27-at-09.42.54.png 2556w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-27-at-09.42.54-300x146.png 300w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-27-at-09.42.54-768x375.png 768w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-27-at-09.42.54-1024x500.png 1024w" sizes="(max-width: 2556px) 100vw, 2556px" /></p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/">Introducing IBM&#8217;s Toolkit to handle Everything as Code</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">5159</post-id>	</item>
+		<item>
+		<title>Deploying Kubernetes Resources via GitOps</title>
+		<link>http://heidloff.net/article/deploying-kubernetes-resources-via-gitops/</link>
+				<pubDate>Tue, 25 Oct 2022 11:12:34 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=5142</guid>
+				<description><![CDATA[<p>Infrastructure as Code is an important concept of DevOps. With GitOps tools like Argo CD, not only infrastructure can be handled as code, but also custom applications and other Kubernetes resources. Here is the definition of GitOps from Red Hat. GitOps uses Git repositories as a single source of truth to deliver infrastructure as code. [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/deploying-kubernetes-resources-via-gitops/">Deploying Kubernetes Resources via GitOps</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>Infrastructure as Code is an important concept of DevOps. With GitOps tools like <a href="https://argo-cd.readthedocs.io/en/stable/" rel="noopener noreferrer" target="_blank">Argo CD</a>, not only infrastructure can be handled as code, but also custom applications and other Kubernetes resources.</em><span id="more-5142"></span></p>
+<p>Here is the definition of <a href="https://www.redhat.com/en/topics/devops/what-is-gitops" rel="noopener noreferrer" target="_blank">GitOps</a> from Red Hat.</p>
+<blockquote><p>GitOps uses Git repositories as a single source of truth to deliver infrastructure as code. Submitted code checks the CI process, while the CD process checks and applies requirements for things like security, infrastructure as code, or any other boundaries set for the application framework. All changes to code are tracked, making updates easy while also providing version control should a rollback be needed.</p></blockquote>
+<p>Software development is much more than writing source code. Modern software development also requires automation and CI/CD. One way to implement CI/CD is to use pipelines that build images and other resources and deploy them via scripts whenever the pipelines run. While pipelines are still required to build the artefacts, the actual deployment of resources is done more and more via declarative and event based GitOps mechanisms. </p>
+<p>GitOps uses Git repos to define the desired state of a system. GitOps tools like Argo CD compare the current state with the desired state. If these states don&#8217;t match, synchronisation is triggered automatically to apply, update or delete resources.</p>
+<p>Here are some videos I&#8217;ve used to learn GitOps:</p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=f5EpcWp0THw" rel="noopener noreferrer" target="_blank">What is GitOps, How GitOps works and Why it&#8217;s so useful</a></li>
+<li><a href="https://youtu.be/MeU5_k9ssrs" rel="noopener noreferrer" target="_blank">ArgoCD Tutorial for Beginners | GitOps CD for Kubernetes</a></li>
+<li><a href="https://www.youtube.com/watch?v=qwyRJlmG5ew" rel="noopener noreferrer" target="_blank">What Is GitOps And Why Do We Want It?</a></li>
+<li><a href="https://youtu.be/avPUQin9kzU" rel="noopener noreferrer" target="_blank">GitOps Without Pipelines With ArgoCD Image Updater</a></li>
+<li><a href="https://youtu.be/vpWQeoaiRM4" rel="noopener noreferrer" target="_blank">Argo CD &#8211; Applying GitOps Principles To Manage A Production Environment In Kubernetes</a></li>
+</ul>
+<p>Over the next days I&#8217;d like to blog more about GitOps and Terraform and how my team has used these tools to <a href="https://github.com/IBM/watson-automation" rel="noopener noreferrer" target="_blank">set up Red Hat OpenShift in the IBM Cloud</a> including Watson NLP and a custom application.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-26-at-08.37.01.png" alt="" width="3326" height="944" class="alignnone size-full wp-image-5146" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-26-at-08.37.01.png 3326w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-26-at-08.37.01-300x85.png 300w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-26-at-08.37.01-768x218.png 768w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-26-at-08.37.01-1024x291.png 1024w" sizes="(max-width: 3326px) 100vw, 3326px" /></p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/deploying-kubernetes-resources-via-gitops/">Deploying Kubernetes Resources via GitOps</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">5142</post-id>	</item>
+		<item>
+		<title>Setting up IBM Software with Terraform</title>
+		<link>http://heidloff.net/article/setting-up-ibm-software-with-terraform/</link>
+				<pubDate>Mon, 24 Oct 2022 09:34:53 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=5130</guid>
+				<description><![CDATA[<p>Automation is key when developing and deploying software. Community is key to get support, to find samples and more. This is why I like Terraform which is a great tool to automate infrastructure on any cloud and there is a huge community. Infrastructure as Code While developers have used source control systems for a long [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/setting-up-ibm-software-with-terraform/">Setting up IBM Software with Terraform</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><em>Automation is key when developing and deploying software. Community is key to get support, to find samples and more. This is why I like Terraform which is a great tool to automate infrastructure on any cloud and there is a huge community.</em><br />
+<span id="more-5130"></span></p>
+<p><strong>Infrastructure as Code</strong></p>
+<p>While developers have used source control systems for a long time, more and more DevOps engineers use the same mechanism to deploy and manage infrastructures. The main advantage of handling infrastructure as code is that with a declarative approach changes can be easier tracked and human errors can be reduced. Over the last years <a href="https://www.terraform.io/" rel="noopener noreferrer" target="_blank">Terraform</a> has gained popularity and became an established tool to set up infrastructure.</p>
+<p><strong>Getting started with Terraform</strong></p>
+<p>I&#8217;d like to blog soon more about Terraform. Here are some resources that I have used to learn it.</p>
+<ul>
+<li><a href="https://www.terraform.io/" rel="noopener noreferrer" target="_blank">Terraform</a></li>
+<li><a href="https://www.youtube.com/watch?v=l5k1ai_GBDE" rel="noopener noreferrer" target="_blank">Terraform explained in 15 mins</a></li>
+<li><a href="https://www.youtube.com/watch?v=gxPykhPxRW0" rel="noopener noreferrer" target="_blank">8 Terraform Best Practices that will improve your TF workflow immediately</a></li>
+<li><a href="https://youtu.be/RaoKcJGchKM" rel="noopener noreferrer" target="_blank">Terraform vs. Pulumi vs. Crossplane &#8211; Infrastructure as Code (IaC) Tools Comparison</a></li>
+<li><a href="https://youtu.be/7xngnjfIlK4" rel="noopener noreferrer" target="_blank">Complete Terraform Course</a></li>
+</ul>
+<p><strong>Terraform for IBM Software</strong></p>
+<p>IBM provides a lot of modules to deploy IBM Software.</p>
+<ul>
+<li><a href="https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs" rel="noopener noreferrer" target="_blank">IBM Cloud Provider</a></li>
+<li><a href="https://github.com/terraform-ibm-modules/documentation" rel="noopener noreferrer" target="_blank">IBM Cloud modules</a></li>
+<li><a href="https://github.com/orgs/cloud-native-toolkit/repositories" rel="noopener noreferrer" target="_blank">IBM Cloud Native Toolkit modules</a></li>
+<li><a href="https://cloud.ibm.com/docs/ibm-cloud-provider-for-terraform?topic=ibm-cloud-provider-for-terraform-getting-started" rel="noopener noreferrer" target="_blank">Getting started with Terraform on IBM Cloud</a></li>
+</ul>
+<p>Here is a little sample to deploy a resource group in the IBM Cloud and a namespace in a Kubernetes cluster.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-24-at-10.39.03.png" alt="" width="2680" height="1406" class="alignnone size-full wp-image-5136" srcset="http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-24-at-10.39.03.png 2680w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-24-at-10.39.03-300x157.png 300w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-24-at-10.39.03-768x403.png 768w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-24-at-10.39.03-1024x537.png 1024w" sizes="(max-width: 2680px) 100vw, 2680px" /></p>
+<p>Check out my blog for more information about Terraform, GitOps and IBM Software over the next days.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/setting-up-ibm-software-with-terraform/">Setting up IBM Software with Terraform</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">5130</post-id>	</item>
+		<item>
+		<title>New Era of Software Development: Operations Automation</title>
+		<link>http://heidloff.net/article/new-era-software-development-automation-operations/</link>
+				<pubDate>Mon, 04 Jul 2022 15:13:14 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=5113</guid>
+				<description><![CDATA[<p>Check out this 40 mins video to learn about the power of Kubernetes Operators to automate day 2 operation tasks. 20 Years ago When I started my career 20+ years ago, usually developers only wrote code, some even without writing tests because that was supposed to be done by separate teams. 10 Years ago 10 [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/new-era-software-development-automation-operations/">New Era of Software Development: Operations Automation</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>Check out this 40 mins <a href="https://youtu.be/D6njEyXPieg" rel="noopener noreferrer" target="_blank">video</a> to learn about the power of Kubernetes Operators to automate day 2 operation tasks.<span id="more-5113"></span></p>
+<p><strong>20 Years ago</strong><br />
+When I started my career 20+ years ago, usually developers only wrote code, some even without writing tests because that was supposed to be done by separate teams.</p>
+<p><strong>10 Years ago</strong><br />
+10 years ago developers and technical leads realized that this was not sufficient. The concept of DevOps was born and over the last years most companies adopted it. Developers work now together with Ops engineers and are together responsible for the whole software development lifecycle including operations. For example DevOps teams write automation for deployments of software in different environments via CI/CD.</p>
+<p><strong>Today</strong><br />
+Now a new era of software development has started. Rather than &#8216;only&#8217; automating the deployments of software, operation tasks are automated. This is usually referred to as day 2 tasks, while day 1 tasks are focussed on deployments.</p>
+<p>Operating software in custom clusters, no matter what clouds, on premises or on edge devices can become quite expensive since issues are often hard to discover, debug and analyse, especially if people need to do this who are not SRE (service reliability engineers) for specific software.</p>
+<p><strong>Kubernetes Operators</strong><br />
+The solution? Kubernetes Operators. An incredibly powerful technology to automate operations. The main concept behind it is GitOps. Custom logic synchronizes the &#8216;to be state&#8217; with the &#8216;as is state&#8217;. This concept is used intensively within Kubernetes and can be used for custom applications as well.</p>
+<p>I like the Software as a Service approach a lot, since it is the easiest way to consume services. However, in some cases this doesn&#8217;t work, for example since certain data needs to reside at certain locations or services need to be customized. I think using the Kubernetes Operators technology is the next best way to consume software. Plus Kubernetes Operators allow companies to reliably host software which manages itself.</p>
+<p><strong>Operators Reference Architecture</strong><br />
+My team has created a reference architecture how to build Kubernetes Operators which goes above and beyond what the Operator SDK and Kubebuilder tutorials provide. Check it out!</p>
+<ul>
+<li><a href="https://github.com/ibm/operator-sample-go" rel="noopener noreferrer" target="_blank">Operators Sample Architecture &#8211; Source Code</a></li>
+<li><a href="https://ibm.github.io/operator-sample-go-documentation/" rel="noopener noreferrer" target="_blank">Operators Sample Architecture &#8211; Documentation</a></li>
+</ul>
+<p>We&#8217;ve created a 40 minutes <a href="https://youtu.be/D6njEyXPieg" rel="noopener noreferrer" target="_blank">video</a> that describes the project on a high level. </p>
+<p><iframe width="853" height="480" src="//www.youtube.com/embed/D6njEyXPieg" frameborder="0" allowfullscreen></iframe></p>
+<p>If you are an IBM partner who is interested in building operators, reach out to us! We can help.</p>
+<p>Authors:</p>
+<ul>
+<li><a href="https://www.linkedin.com/in/deleeuwa/" rel="noopener noreferrer" target="_blank">Adam de Leeuw</a></li>
+<li><a href="https://twitter.com/tsuedbroecker" rel="noopener noreferrer" target="_blank">Thomas Südbröcker</a></li>
+<li><a href="https://twitter.com/AAairom" rel="noopener noreferrer" target="_blank">Alain Airom</a></li>
+<li><a href="https://twitter.com/diwakarptiwari" rel="noopener noreferrer" target="_blank">Diwakar Tiwari</a></li>
+<li><a href="https://www.linkedin.com/in/vishalramani/" rel="noopener noreferrer" target="_blank">Vishal Ramani</a></li>
+<li><a href="https://twitter.com/nheidloff" rel="noopener noreferrer" target="_blank">Niklas Heidloff</a></li>
+</ul>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/new-era-software-development-automation-operations/">New Era of Software Development: Operations Automation</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+									<post-id xmlns="com-wordpress:feed-additions:1">5113</post-id>	</item>
+	</channel>
+</rss>

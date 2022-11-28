@@ -1,0 +1,6 @@
+Training TensorFlow Object Detection Models.
+TensorFlow Object Detection is a powerful technology to recognize different objects in images including their positions.
+The trained Object Detection models can be run on mobile and edge devices to execute predictions really fast.
+I’ve used this technology to build a demo where Anki Overdrive cars and obstacles are detected via an iOS app.
+When […]
+The post Training TensorFlow Object Detection Models [http://heidloff.net/article/tensorflow-object-detection-deep-learning] appeared first on Niklas Heidloff [http://heidloff.net].

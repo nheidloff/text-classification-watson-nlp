@@ -1,0 +1,91 @@
+page4-elem7,Automatically Archiving Data with Kubernetes Operators.
+page4-elem7,Kubernetes operators allow the automation of day 2 operational tasks.
+page4-elem7,A good example is the automatic archiving of data.
+page4-elem7,This article describes how data from a simple database can be archived automatically in S3 buckets using CronJobs Jobs and custom resources.
+page4-elem7,The complete source code from this article is available in the ibm/operator-sample-go [https://github.com/IBM/operator-sample-go/tree/43ec9d7e16f97b11ce4aa5b64d2e9a9ce0a9fde9/database-service] repo.
+page4-elem7,The repo comes with a simple implementation of a database system which can be deployed on Kubernetes.
+page4-elem7,Data is persisted in JSON files as outlined in the previous article Building Databases on Kubernetes with Quarkus [http://Building Databases on Kubernetes with Quarkus].
+page4-elem7,To allow operators to backup data automatically you need a custom resource definition first which defines when to do backups and where to store the data.
+page4-elem7,We’ve created a custom resource ‘DatabaseBackup [https://github.com/IBM/operator-sample-go/blob/8ce338d65d2cc9f8db437e3aa635f94a45156922/operator-database/config/samples/database.sample_v1alpha1_databasebackup.yaml]‘ with this information.
+page4-elem7,We use buckets from IBM Cloud Object Storage.
+page4-elem7,apiVersion: database.sample.third.party/v1alpha1
+page4-elem7,kind: DatabaseBackup
+page4-elem7,metadata:
+page4-elem7,name: databasebackup-manual
+page4-elem7,namespace: database
+page4-elem7,spec:
+page4-elem7,repos:
+page4-elem7,- name: ibmcos-repo
+page4-elem7,type: ibmcos
+page4-elem7,secretName: ibmcos-repo
+page4-elem7,serviceEndpoint: "https://s3.fra.eu.cloud-object-storage.appdomain.cloud"
+page4-elem7,authEndpoint: "https://iam.cloud.ibm.com/identity/token"
+page4-elem7,bucketNamePrefix: "database-backup-"
+page4-elem7,manualTrigger:
+page4-elem7,enabled: true
+page4-elem7,time: "2022-12-15T02:59:43.1Z"
+page4-elem7,repo: ibmcos-repo
+page4-elem7,scheduledTrigger:
+page4-elem7,enabled: false
+page4-elem7,schedule: "0 * * * *"
+page4-elem7,repo: ibmcos-repo
+page4-elem7,In order to run the backups on a scheduled basis we use Kubernetes CronJobs.
+page4-elem7,This makes also sense since the backup tasks can take quite some time for large datasets.
+page4-elem7,The CronJob [https://github.com/IBM/operator-sample-go/blob/8ce338d65d2cc9f8db437e3aa635f94a45156922/operator-database-backup/kubernetes/cronjob.yaml] could be applied manually but a cleaner design is to let operators do this.
+page4-elem7,Secrets like the HMAC secret should also be moved to Kubernetes secrets (or security tools).
+page4-elem7,apiVersion: batch/v1
+page4-elem7,kind: CronJob
+page4-elem7,metadata:
+page4-elem7,name: database-backup
+page4-elem7,namespace: database
+page4-elem7,spec:
+page4-elem7,schedule: "0 * * * *"
+page4-elem7,jobTemplate:
+page4-elem7,spec:
+page4-elem7,template:
+page4-elem7,spec:
+page4-elem7,containers:
+page4-elem7,- name: database-backup
+page4-elem7,image: docker.io/nheidloff/operator-database-backup:v1.0.7
+page4-elem7,imagePullPolicy: IfNotPresent
+page4-elem7,env:
+page4-elem7,- name: BACKUP_RESOURCE_NAME
+page4-elem7,value: "databasebackup-manual"
+page4-elem7,- name: NAMESPACE
+page4-elem7,value: "database"
+page4-elem7,- name: CLOUD_OBJECT_STORAGE_HMAC_ACCESS_KEY_ID
+page4-elem7,value: "xxx"
+page4-elem7,- name: CLOUD_OBJECT_STORAGE_HMAC_SECRET_ACCESS_KEY
+page4-elem7,value: "xxx"
+page4-elem7,- name: CLOUD_OBJECT_STORAGE_REGION
+page4-elem7,value: "eu-geo"
+page4-elem7,- name: CLOUD_OBJECT_STORAGE_SERVICE_ENDPOINT
+page4-elem7,value: "s3.eu.cloud-object-storage.appdomain.cloud"
+page4-elem7,restartPolicy: OnFailure
+page4-elem7,For testing purposes the following commands can be invoked to trigger a job manually to run immediately.
+page4-elem7,In status.conditions of the database backup resource feedback is provided whether the backup has been successful.
+page4-elem7,$ kubectl apply -f ../operator-database/config/samples/database.sample_v1alpha1_databasebackup.yaml
+page4-elem7,$ kubectl apply -f kubernetes/role.yaml
+page4-elem7,$ kubectl apply -f kubernetes/cronjob.yaml
+page4-elem7,$ kubectl create job --from=cronjob/database-backup manuallytriggered -n database
+page4-elem7,$ kubectl get databasebackups databasebackup-manual -n database -oyaml
+page4-elem7,...
+page4-elem7,status:
+page4-elem7,conditions:
+page4-elem7,- lastTransitionTime: "2022-04-07T05:16:30Z"
+page4-elem7,message: Database has been archived
+page4-elem7,reason: BackupSucceeded
+page4-elem7,status: "True"
+page4-elem7,type: Succeeded
+page4-elem7,$ kubectl logs -n database $(kubectl get pods -n database | awk '/manuallytriggered/ {print $1;exit}')
+page4-elem7,These screenshots show the deployed CronJob Job and Pod.
+page4-elem7,Data is archived in IBM Cloud Object Storage.
+page4-elem7,The code [https://github.com/IBM/operator-sample-go/blob/0b46e5ee18b892293ce2ff2eb565ea9500de298b/operator-database-backup/backup/backup.go] of the backup job is pretty straight forward.
+page4-elem7,I’ve implemented a Go image with the following functionality.
+page4-elem7,* Get the database backup resource from Kubernetes
+page4-elem7,* Validate input environment variables
+page4-elem7,* Read data from the database system
+page4-elem7,* Write data to object storage
+page4-elem7,* Write status as conditions in database backup resource
+page4-elem7,To learn more about operator patterns and best practices check out the repo operator-sample-go [https://github.com/IBM/operator-sample-go].
+page4-elem7,The post Automatically Archiving Data with Kubernetes Operators [http://heidloff.net/article/automatically-archiving-data-kubernetes-operators/] appeared first on Niklas Heidloff [http://heidloff.net].

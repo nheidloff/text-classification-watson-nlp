@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 3 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=3" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Thu, 24 Nov 2022 10:47:53 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>New Era of Software Development: Operations Automation</title><link>http://heidloff.net/article/new-era-software-development-automation-operations/</link><pubDate>Mon, 04 Jul 2022 15:13:14 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=5113</guid><description><![CDATA[<p>Check out this 40 mins video to learn about the power of Kubernetes Operators to automate day 2 operation tasks. 20 Years ago When I started my career 20+ years ago, usually developers only wrote code, some even without writing tests because that was supposed to be done by separate teams. 10 Years ago 10 [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/new-era-software-development-automation-operations/">New Era of Software Development: Operations Automation</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p>Check out this 40 mins <a href="https://youtu.be/D6njEyXPieg" rel="noopener noreferrer" target="_blank">video</a> to learn about the power of Kubernetes Operators to automate day 2 operation tasks.<span id="more-5113"></span></p>
+<p><strong>20 Years ago</strong><br />
+When I started my career 20+ years ago, usually developers only wrote code, some even without writing tests because that was supposed to be done by separate teams.</p>
+<p><strong>10 Years ago</strong><br />
+10 years ago developers and technical leads realized that this was not sufficient. The concept of DevOps was born and over the last years most companies adopted it. Developers work now together with Ops engineers and are together responsible for the whole software development lifecycle including operations. For example DevOps teams write automation for deployments of software in different environments via CI/CD.</p>
+<p><strong>Today</strong><br />
+Now a new era of software development has started. Rather than &#8216;only&#8217; automating the deployments of software, operation tasks are automated. This is usually referred to as day 2 tasks, while day 1 tasks are focussed on deployments.</p>
+<p>Operating software in custom clusters, no matter what clouds, on premises or on edge devices can become quite expensive since issues are often hard to discover, debug and analyse, especially if people need to do this who are not SRE (service reliability engineers) for specific software.</p>
+<p><strong>Kubernetes Operators</strong><br />
+The solution? Kubernetes Operators. An incredibly powerful technology to automate operations. The main concept behind it is GitOps. Custom logic synchronizes the &#8216;to be state&#8217; with the &#8216;as is state&#8217;. This concept is used intensively within Kubernetes and can be used for custom applications as well.</p>
+<p>I like the Software as a Service approach a lot, since it is the easiest way to consume services. However, in some cases this doesn&#8217;t work, for example since certain data needs to reside at certain locations or services need to be customized. I think using the Kubernetes Operators technology is the next best way to consume software. Plus Kubernetes Operators allow companies to reliably host software which manages itself.</p>
+<p><strong>Operators Reference Architecture</strong><br />
+My team has created a reference architecture how to build Kubernetes Operators which goes above and beyond what the Operator SDK and Kubebuilder tutorials provide. Check it out!</p>
+<ul>
+<li><a href="https://github.com/ibm/operator-sample-go" rel="noopener noreferrer" target="_blank">Operators Sample Architecture &#8211; Source Code</a></li>
+<li><a href="https://ibm.github.io/operator-sample-go-documentation/" rel="noopener noreferrer" target="_blank">Operators Sample Architecture &#8211; Documentation</a></li>
+</ul>
+<p>We&#8217;ve created a 40 minutes <a href="https://youtu.be/D6njEyXPieg" rel="noopener noreferrer" target="_blank">video</a> that describes the project on a high level. </p>
+<p><iframe width="853" height="480" src="//www.youtube.com/embed/D6njEyXPieg" frameborder="0" allowfullscreen></iframe></p>
+<p>If you are an IBM partner who is interested in building operators, reach out to us! We can help.</p>
+<p>Authors:</p>
+<ul>
+<li><a href="https://www.linkedin.com/in/deleeuwa/" rel="noopener noreferrer" target="_blank">Adam de Leeuw</a></li>
+<li><a href="https://twitter.com/tsuedbroecker" rel="noopener noreferrer" target="_blank">Thomas Südbröcker</a></li>
+<li><a href="https://twitter.com/AAairom" rel="noopener noreferrer" target="_blank">Alain Airom</a></li>
+<li><a href="https://twitter.com/diwakarptiwari" rel="noopener noreferrer" target="_blank">Diwakar Tiwari</a></li>
+<li><a href="https://www.linkedin.com/in/vishalramani/" rel="noopener noreferrer" target="_blank">Vishal Ramani</a></li>
+<li><a href="https://twitter.com/nheidloff" rel="noopener noreferrer" target="_blank">Niklas Heidloff</a></li>
+</ul>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/new-era-software-development-automation-operations/">New Era of Software Development: Operations Automation</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><post-id xmlns="com-wordpress:feed-additions:1">5113</post-id></item></channel></rss>

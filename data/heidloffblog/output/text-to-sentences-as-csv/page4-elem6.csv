@@ -1,0 +1,75 @@
+page4-elem6,Accessing Kubernetes from Go Applications.
+page4-elem6,When developing auto-pilot capabilities in Kubernetes operators often CronJobs and Jobs are used to automate operations.
+page4-elem6,This article describes how to implement such jobs with Golang.
+page4-elem6,The complete source code from this article is available in the ibm/operator-sample-go [https://github.com/IBM/operator-sample-go/tree/main/operator-database-backup] repo.
+page4-elem6,My previous article Automatically Archiving Data with Kubernetes Operators [http://heidloff.net/article/automatically-archiving-data-kubernetes-operators/] describes an auto pilot sample scenario to back up data on a scheduled basis.
+page4-elem6,The code [https://github.com/IBM/operator-sample-go/blob/0b46e5ee18b892293ce2ff2eb565ea9500de298b/operator-database-backup/backup/backup.go] of the backup job is pretty straight forward.
+page4-elem6,I’ve implemented a Go image with the following functionality.
+page4-elem6,* Get the database backup resource from Kubernetes
+page4-elem6,* Validate input environment variables
+page4-elem6,* Read data from the database system
+page4-elem6,* Write data to object storage
+page4-elem6,* Write status as conditions in database backup resource
+page4-elem6,Dockerfile
+page4-elem6,To package up the Go application I’ve defined the following Dockerfile [https://github.com/IBM/operator-sample-go/blob/64dac7d036ce81b9ceba3e1dd2dd1f1c83cd2968/operator-database-backup/Dockerfile].
+page4-elem6,Some notes:
+page4-elem6,* Uses two stages one for build and one for runtime
+page4-elem6,* The Go dependencies are downloaded first to cache them in an image layer
+page4-elem6,* With the parameter ‘GOOS=linux’ the application is built for Linux
+page4-elem6,* Uses Red Hat’s UBI image for example in order to also run on OpenShift
+page4-elem6,* The compiled ‘app’ file is a program that ends after it’s done (not a web server)
+page4-elem6,FROM golang:1.18.0 AS builder
+page4-elem6,WORKDIR /app
+page4-elem6,COPY go.mod ./
+page4-elem6,COPY go.sum ./
+page4-elem6,RUN go mod download
+page4-elem6,COPY main.go ./
+page4-elem6,COPY backup ./backup/
+page4-elem6,RUN CGO_ENABLED=0 GOOS=linux go build -a -o app .
+page4-elem6,FROM registry.access.redhat.com/ubi8/ubi-micro:8.5-833
+page4-elem6,WORKDIR /
+page4-elem6,COPY --from=builder /app /
+page4-elem6,CMD ["./app"]
+page4-elem6,Access to Kubernetes
+page4-elem6,Jobs that execute work on behalf of operators usually have to access Kubernetes built-in and custom resources.
+page4-elem6,For example jobs need to store the output of the jobs in the ‘status.conditions’ field of custom resources.
+page4-elem6,Operators built with the Operator SDK provide convenience functionality to get an instance of the Kubernetes client to access resources in clusters.
+page4-elem6,Go applications that are not operators can use the same library but the initialization is slightly different.
+page4-elem6,Let’s take a look at the code [https://github.com/IBM/operator-sample-go/blob/64dac7d036ce81b9ceba3e1dd2dd1f1c83cd2968/operator-database-backup/backup/backup_resource.go].
+page4-elem6,import (
+page4-elem6,databaseoperatorv1alpha1 "github.com/ibm/operator-sample-go/operator-database/api/v1alpha1"
+page4-elem6,"k8s.io/apimachinery/pkg/runtime"
+page4-elem6,"k8s.io/apimachinery/pkg/runtime/schema"
+page4-elem6,"k8s.io/client-go/rest"
+page4-elem6,"k8s.io/client-go/tools/clientcmd"
+page4-elem6,"sigs.k8s.io/controller-runtime/pkg/client"
+page4-elem6,"sigs.k8s.io/controller-runtime/pkg/scheme"
+page4-elem6,func getBackupResource() error {
+page4-elem6,config err := rest.InClusterConfig()
+page4-elem6,if err != nil {
+page4-elem6,kubeconfig := filepath.Join(
+page4-elem6,os.Getenv("HOME") ".kube" "config"
+page4-elem6,fmt.Println("Using kubeconfig file: " kubeconfig)
+page4-elem6,config err = clientcmd.BuildConfigFromFlags("" kubeconfig)
+page4-elem6,if err != nil {
+page4-elem6,return err
+page4-elem6,var GroupVersion = schema.GroupVersion{Group: "database.sample.third.party" Version: "v1alpha1"}
+page4-elem6,var SchemeBuilder = &scheme.Builder{GroupVersion: GroupVersion}
+page4-elem6,var databaseOperatorScheme *runtime.Scheme
+page4-elem6,databaseOperatorScheme err = SchemeBuilder.Build()
+page4-elem6,...
+page4-elem6,err = databaseoperatorv1alpha1.AddToScheme(databaseOperatorScheme)
+page4-elem6,...
+page4-elem6,kubernetesClient err = client.New(config client.Options{Scheme: databaseOperatorScheme})
+page4-elem6,...
+page4-elem6,databaseBackupResource = &databaseoperatorv1alpha1.DatabaseBackup{}
+page4-elem6,err = kubernetesClient.Get(applicationContext types.NamespacedName{Name: backupResourceName Namespace: namespace} databaseBackupResource)
+page4-elem6,...
+page4-elem6,return nil
+page4-elem6,To get an instance of the controller-runtime client a rest.Config object is needed.
+page4-elem6,When running in clusters this config can be read via the API rest.InClusterConfig().
+page4-elem6,When running locally the config can be read from the local file $Home/.kube/config.
+page4-elem6,If you want to access resource definitions defined by a controller (other image and other Go package) you can import [http://heidloff.net/article/importing-go-modules-kubernetes-operators/] them.
+page4-elem6,In the example above the custom resource definition ‘DatabaseBackup’ from the ‘operator-database’ project is used to access database backup resources.
+page4-elem6,To learn more about operator patterns and best practices check out the repo operator-sample-go [https://github.com/IBM/operator-sample-go].
+page4-elem6,The post Accessing Kubernetes from Go Applications [http://heidloff.net/article/accessing-kubernetes-from-go-applications/] appeared first on Niklas Heidloff [http://heidloff.net].

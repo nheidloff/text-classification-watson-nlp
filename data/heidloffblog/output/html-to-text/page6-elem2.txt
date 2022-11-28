@@ -1,0 +1,5 @@
+Training AI Models on Kubernetes.
+
+Early this year IBM announced Deep Learning as a Service within Watson Studio. The core of this service is available as open source and can be run on Kubernetes clusters. This allows developers and data scientists to train models with confidential data on-premises, for example on the Kubernetes-based IBM Cloud Private. The open source version […]
+
+The post Training AI Models on Kubernetes [http://heidloff.net/article/training-ai-models-kubernetes-open-source] appeared first on Niklas Heidloff [http://heidloff.net].

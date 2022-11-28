@@ -1,0 +1,21 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Predict heidloffblog",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "cwd": "${workspaceFolder}/data-prep-and-predictions",
+            "program": "${workspaceFolder}/data-prep-and-predictions/predict.js",
+            "args": [
+                "heidloffblog", "../data/heidloffblog/", "no-embed-training-kubernetes.xml", "ensemble_model_heidloff"
+             ]
+        }
+    ]
+}

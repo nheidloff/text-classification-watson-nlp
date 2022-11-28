@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 20 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=20" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Fri, 25 Nov 2022 07:22:15 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>Building Models with AutoML in IBM Watson Studio</title><link>http://heidloff.net/article/automl-ibm-watson-studio</link><comments>http://heidloff.net/article/automl-ibm-watson-studio#respond</comments><pubDate>Wed, 25 Jul 2018 13:09:27 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=3049</guid><description><![CDATA[<p>Many developers, including myself, want to use AI in their applications. Building machine learning models however, often requires a lot of expertise and time. This article describes a technique called AutoML which can be used by developers to build models without having to be data scientists. While developers only have to provide the data and [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/automl-ibm-watson-studio">Building Models with AutoML in IBM Watson Studio</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p>Many developers, including myself, want to use AI in their applications. Building machine learning models however, often requires a lot of expertise and time. This article describes a technique called AutoML which can be used by developers to build models without having to be data scientists. While developers only have to provide the data and define the goals, AutoML figures out the best model automatically.<span id="more-3049"></span></p>
+<p>There are several ways for developers to use AI without having to be a data scientist:</p>
+<ul>
+<li>Cognitive Services</li>
+<li>Reusable Models</li>
+<li>AutoML</li>
+</ul>
+<p><strong>Cognitive Services</strong></p>
+<p>Cognitive services are provided by most cloud providers these days. For example IBM offers as part of the <a href="https://www.ibm.com/watson/products-services/" rel="noopener" target="_blank">Watson Developer Cloud</a> services for speech recognition, natural language understanding, visual recognition and assistants. Developers can use these services out of the box or customize them declaratively. The services can be accessed via REST APIs or language libraries.</p>
+<p><strong>Reusable Models</strong></p>
+<p>Cognitive services like the Watson services cover common AI scenarios. For more specific scenarios developers can sometimes use existing models that have been open sourced. The <a href="https://ai.googleblog.com/2017/06/mobilenets-open-source-models-for.html" rel="noopener" target="_blank">visual recognition models for mobile devices</a> from Google are a good example. They can be customized via transfer learning without having to write code.</p>
+<p>Another example is the <a href="http://heidloff.net/article/model-asset-exchange-dl-kubernetes-tensorflow" rel="noopener" target="_blank">IBM Model Asset Exchange</a> which comes with two types of models: Models that can be re-used directly and models with instructions how to train and customize them. The models are put in Docker containers and can be invoked via REST APIs.</p>
+<p><strong>AutoML</strong></p>
+<p>While cognitive services and reusable models cover many scenarios, sometimes you need to build your own models for your individual requirements and that is often not a trivial task. Personally I took some ML/DL classes, understand the basics and can run the tutorials, but I have a hard time to create my own models for my own specific requirements.</p>
+<p>This is were AutoML comes in. Basically AutoML is a set of capabilities that allows developers and data scientists to provide data, to define potential features (input) and to define the labels (output). AutoML takes care of the heavy lifting and figures out the best features, the best algorithms and the best hyperparameters. </p>
+<p>To learn more about AutoML I encourage you to watch the <a href="https://youtu.be/kSa3UObNS6o?t=23m32s" rel="noopener" target="_blank">TensorFlow Dev Summit 2018 keynote</a> and the <a href="https://www.youtube.com/watch?v=Wy6EKjJT79M" rel="noopener" target="_blank">talk from Andreas Mueller</a>. I also like the recent series of <a href="http://www.fast.ai/2018/07/16/auto-ml2/" rel="noopener" target="_blank">blog entries on fast.ai</a>.</p>
+<p>There are several different AutoML open source libraries and commercial offerings available which use different approaches to find the best model. For example IBM provides <a href="http://heidloff.net/article/watson-machine-learning-sample" rel="noopener" target="_blank">Watson Machine Learning</a> to identify the best algorithm. Additionally with <a href="http://heidloff.net/article/hyperparameter-optimization-ibm-watson-studio" rel="noopener" target="_blank">Watson Deep Learning</a> hyperparameters can be identified.</p>
+<p><em>auto-sklearn</em></p>
+<p>There seem to be several promising open source libraries. Unfortunately I couldn&#8217;t use a lot of them for license reasons. One AutoML library that looks interesting is <a href="http://automl.github.io/auto-sklearn/stable/" rel="noopener" target="_blank">auto-sklearn</a> which won the <a href="https://www.kdnuggets.com/2016/08/winning-automl-challenge-auto-sklearn.html" rel="noopener" target="_blank">2016 KDnuggets competition</a>. There seems to be an improved successor of this library which won the <a href="https://www.automl.org/blog-2nd-automl-challenge/" rel="noopener" target="_blank">2018 competition</a> but I couldn&#8217;t find that code which is why my sample below uses the publicly available version.</p>
+<p><em>Running auto-sklearn in IBM Watson Studio</em></p>
+<p>auto-sklearn comes with a <a href="https://automl.github.io/auto-sklearn/stable/" rel="noopener" target="_blank">hello world sample</a>. You can use a slightly different version of this sample in a notebook in Watson Studio.</p>
+<p>First you need to define a <a href="https://dataplatform.cloud.ibm.com/docs/content/analyze-data/notebook-environments.html?audience=wdp&#038;context=analytics" rel="noopener" target="_blank">custom Anaconda-based environment</a> with auto-sklearn &#8211; see <a href="http://heidloff.net/wp-content/uploads/2018/07/auto-sklearn11.png" rel="noopener" target="_blank">screenshot</a>.</p>
+<p>When I tried to run the unmodified sample, I ran into permission issues when accessing the file system. It turned out that the library uses absolute paths to which the notebooks don&#8217;t have access. Fortunately auto-sklearn let me change these directories so that I could use relative directories to which notebooks have full access. Here is the modified code:</p>
+<pre class="brush: plain; title: ; notranslate">
+import autosklearn.classification
+import sklearn.model_selection
+import sklearn.datasets
+import sklearn.metrics
+import os
+os.makedirs('tmp')
+os.makedirs('output')
+X, y = sklearn.datasets.load_digits(return_X_y=True)
+X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, random_state=1)
+automl = autosklearn.classification.AutoSklearnClassifier(shared_mode=True, tmp_folder='tmp', output_folder='output', delete_tmp_folder_after_terminate=False, delete_output_folder_after_terminate=False)
+automl.fit(X_train, y_train)
+y_hat = automl.predict(X_test)
+print(&quot;Accuracy score&quot;, sklearn.metrics.accuracy_score(y_test, y_hat))
+automl.sprint_statistics()
+automl.cv_results_
+</pre>
+<p>This is a screenshot of the notebook:</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/07/auto-sklearn2.png"><img src="http://heidloff.net/wp-content/uploads/2018/07/auto-sklearn2-1024x779.png" alt="auto-sklearn2" width="750" height="571" class="alignnone size-large wp-image-3048" srcset="http://heidloff.net/wp-content/uploads/2018/07/auto-sklearn2-1024x779.png 1024w, http://heidloff.net/wp-content/uploads/2018/07/auto-sklearn2-300x228.png 300w" sizes="(max-width: 750px) 100vw, 750px" /></a></p>
+<p>Want to run this sample yourself? All you need to do is to get a free <a href="https://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud account</a> and create a notebook in <a href="https://dataplatform.cloud.ibm.com/home?context=analytics" rel="noopener" target="_blank">Watson Studio</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/automl-ibm-watson-studio">Building Models with AutoML in IBM Watson Studio</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><wfw:commentRss>http://heidloff.net/article/automl-ibm-watson-studio/feed/</wfw:commentRss><slash:comments>0</slash:comments><post-id xmlns="com-wordpress:feed-additions:1">3049</post-id></item></channel></rss>

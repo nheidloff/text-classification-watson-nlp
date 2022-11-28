@@ -1,0 +1,17 @@
+.DS_Store
+models/ensemble_model.zip
+models/ensemble_model
+models/ensemble_model_heidloff.zip
+models/ensemble_model_heidloff
+models-exclude/ensemble_model.zip
+models-exclude/ensemble_model
+models-exclude/ensemble_model_heidloff.zip
+models-exclude/ensemble_model_heidloff
+node_modules
+models-exclude/syntax_izumo_lang_en_stock
+models/syntax_izumo_lang_en_stock
+local-training/test_data.json
+local-training/train_data.json
+local-training/.watson_nlp
+ReadNik.md
+client-env

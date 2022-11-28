@@ -1,0 +1,46 @@
+page2-elem4,Developing TechZone Toolkit Terraform Modules.
+page2-elem4,With the TechZone Accelerator Toolkit IBM software open source projects and custom applications can easily be deployed to various clouds.
+page2-elem4,This article explains on a high level how to develop new modules with Terraform.
+page2-elem4,Check out my earlier blog that introduces the toolkit: Introducing IBM’s Toolkit to handle Everything as Code [http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/].
+page2-elem4,The toolkit leverages Terrafrom and GitOps and is based on best practices from IBM projects with partners and clients.
+page2-elem4,With the toolkit both infrastructure like Kubernetes clusters as well as Kubernetes resources within clusters can be deployed.
+page2-elem4,Infrastructure resources are deployed via Terraform resources within clusters via Argo CD.
+page2-elem4,Custom Modules and custom Catalogs
+page2-elem4,The toolkit is available as open source and it is extensible.
+page2-elem4,Custom modules can be added to deploy more software or to add other target platforms.
+page2-elem4,The TechZone Module Catalog [https://modules.cloudnativetoolkit.dev/] contains a list of curated modules which need to provide automatic testing capabilities.
+page2-elem4,However the curated catalog doesn’t have to be used or can be used in addition to a custom catalog.
+page2-elem4,This is necessary if you want to build modules for internal consumption only and it is necessary for modules while they are being developed.
+page2-elem4,My colleague Thomas Südbröcker has documented how to create your own catalog [https://github.com/cloud-native-toolkit/site-operator-guide/blob/e0f2302f7d67c185edd63d71e2612ddf078bb34f/docs/learn/iascable/lab4/index.md#6-create-an-own-catalog].
+page2-elem4,When running the ‘iascable’ CLI to generate Terraform modules based on BOMs (bill of materials) the locations of the catalogs can be passed in.
+page2-elem4,Alternatively you can also define the catalogs directly in the BOMs.
+page2-elem4,$ BASE_CATALOG=https://modules.cloudnativetoolkit.dev/index.yaml
+page2-elem4,$ CUSTOM_CATALOG=https://raw.githubusercontent.com/Vishal-Ramani/UBI-helm-module-example/main/example/catalog/ubi-helm-catalog.yaml
+page2-elem4,$ iascable build -i ibm-vpc-roks-argocd-ubi.yaml -c $BASE_CATALOG -c $CUSTOM_CATALOG
+page2-elem4,Terraform Modules
+page2-elem4,The TechZone Toolkit provides two types of modules:
+page2-elem4,1.
+page2-elem4,Terraform modules
+page2-elem4,2.
+page2-elem4,GitOps modules
+page2-elem4,Terraform modules are used to create infrastructure like clusters VPCs external resources and more.
+page2-elem4,The GitOps modules are used to deploy and operate different types of software within clusters.
+page2-elem4,The Toolkit Terraform modules are just Terraform modules with some extended conventions how to build them.
+page2-elem4,Modules contain these files [https://modules.cloudnativetoolkit.dev/#/how-to/terraform]:
+page2-elem4,* main.tf: Logic of the module
+page2-elem4,* variables.tf: Input variables
+page2-elem4,* outputs.tf: Output variables which can be passed to child modules
+page2-elem4,* version.tf: Minimum required Terraform version
+page2-elem4,* module.yaml: Metadata descriptor
+page2-elem4,* README.md: Documentation
+page2-elem4,The best way to get started building modules is to look at the available modules in the catalog [https://modules.cloudnativetoolkit.dev/].
+page2-elem4,The module catalog provides a filter ‘Module type’.
+page2-elem4,Browse through the existing modules and pick one which sounds similar to what you want to achieve or simple enough to use it as template or starting point.
+page2-elem4,To find out more about these capabilities check out the following resources:
+page2-elem4,* TechZone Accelerator Toolkit Documentation [https://operate.cloudnativetoolkit.dev/]
+page2-elem4,* TechZone Accelerator Toolkit Modules [https://operate.cloudnativetoolkit.dev/]
+page2-elem4,* TechZone Accelerator Toolkit CLI (iascable) [https://github.com/cloud-native-toolkit/iascable]
+page2-elem4,* Sample GitOps Module: UBI [https://github.com/cloud-native-toolkit/terraform-gitops-ubi]
+page2-elem4,* Sample GitOps Module: Watson NLP [https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp]
+page2-elem4,* Sample BOMs to deploy Watson NLP [https://github.com/IBM/watson-automation]
+page2-elem4,The post Developing TechZone Toolkit Terraform Modules [http://heidloff.net/article/developing-techzone-toolkit-terraform-modules/] appeared first on Niklas Heidloff [http://heidloff.net].

@@ -1,0 +1,4 @@
+page6-elem5,Deploying TensorFlow Models on Edge Devices.
+page6-elem5,While it has been possible to deploy TensorFlow models to mobile and embedded devices via TensorFlow for Mobile for some time Google released an experimental version of TensorFlow Lite as an evolution of TensorFlow for Mobile at the end of last year.
+page6-elem5,This new functionality allows building exciting AI scenarios on edge devices and the […]
+page6-elem5,The post Deploying TensorFlow Models on Edge Devices [http://heidloff.net/article/tensorflow-lite-ibm-watson-ios] appeared first on Niklas Heidloff [http://heidloff.net].

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 21 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=21" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Fri, 25 Nov 2022 07:22:15 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>Developing Polyglot Serverless Applications</title><link>http://heidloff.net/article/polyglot-serverless-applications</link><comments>http://heidloff.net/article/polyglot-serverless-applications#respond</comments><pubDate>Wed, 28 Mar 2018 06:46:20 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=2923</guid><description><![CDATA[<p>As serverless platforms mature, more and more sophisticated cloud-native applications are built with serverless technologies. These applications are assembled with potentially many functions that are loosely-coupled and can be developed by different teams. Teams might choose different languages for the following reasons: Reuse existing code or libraries Leverage available skills in the team Implement more [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/polyglot-serverless-applications">Developing Polyglot Serverless Applications</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p>As serverless platforms mature, more and more sophisticated cloud-native applications are built with serverless technologies. These applications are assembled with potentially many functions that are loosely-coupled and can be developed by different teams.<span id="more-2923"></span></p>
+<p>Teams might choose different languages for the following reasons:</p>
+<ul>
+<li>Reuse existing code or libraries</li>
+<li>Leverage available skills in the team</li>
+<li>Implement more efficient functions</li>
+</ul>
+<p>In this article I&#8217;m not going to describe how to implement the most efficient functions and when to use which programming language, but certain languages may be better for specific requirements. Some languages might be faster to start, faster to execute code at runtime, require less memory, etc.</p>
+<p>I&#8217;ve open sourced a sample that shows how to use JavaScript, TypeScript, Java and Kotlin together in a serverless application.</p>
+<p><a href="https://github.com/nheidloff/openwhisk-polyglot" target="_blank" rel="noopener">Get the code from GitHub.</a></p>
+<p>The polyglot &#8216;send notification&#8217; application sends either emails or text messages to certain users, depending on the information provided in their profiles. Here is the data flow used in this sample, as visualized by <a href="https://github.com/ibm-functions/composer" target="_blank" rel="noopener">OpenWhisk Composer</a>.</p>
+<ul>
+<li>The application is triggered with a person ID and a subject.</li>
+<li>The function &#8216;read-person-profile&#8217; returns the profile for the specific user. The profile contains email addresses and can contain phone numbers.</li>
+<li>If the profile has a phone number, the function &#8216;send-text-message&#8217; is invoked, otherwise the application proceeds to the &#8216;send-mail&#8217; function.</li>
+<li>The other functions transfer the data in the format expected by the loosely coupled business logic functions.</li>
+</ul>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/03/flow-polyglot.png"><img class="alignnone size-full wp-image-2922" src="http://heidloff.net/wp-content/uploads/2018/03/flow-polyglot.png" alt="flow-polyglot" width="1593" height="1688" srcset="http://heidloff.net/wp-content/uploads/2018/03/flow-polyglot.png 1593w, http://heidloff.net/wp-content/uploads/2018/03/flow-polyglot-283x300.png 283w, http://heidloff.net/wp-content/uploads/2018/03/flow-polyglot-966x1024.png 966w" sizes="(max-width: 1593px) 100vw, 1593px" /></a></p>
+<p>The sample uses <a href="https://www.ibm.com/cloud/functions" target="_blank" rel="noopener">IBM Cloud Functions</a> which is based on <a href="http://openwhisk.org/" target="_blank" rel="noopener">Apache OpenWhisk</a>. While the functions are stateless, applications defined with <a href="https://github.com/ibm-functions/composer" target="_blank" rel="noopener">OpenWhisk Composer </a>manage the state and are responsible for how the data flows between functions. Read my previous <a href="http://heidloff.net/article/serverless-data-flows" target="_blank" rel="noopener">article</a> to learn more about the data flows and function schemas.</p>
+<p>OpenWhisk supports several different programming languages out of the box: JavaScript, Java, Python and <a href="https://console.bluemix.net/docs/openwhisk/openwhisk_actions.html#openwhisk_actions" target="_blank" rel="noopener">more</a>. You can also use Docker to implement functions, which is what I&#8217;m using in this sample.</p>
+<p>Docker provides some advantages that might be important for your requirements:</p>
+<ul>
+<li>You can develop and test the same Docker image locally, which is later deployed and run in the cloud. This minimizes the chance of running into issues due to different environments.</li>
+<li>You can choose the programming languages that your cloud functions provider does not support out of the box.</li>
+<li>You can use new run-time versions sooner than your cloud functions provider might support, for example use Java 9 today in OpenWhisk.</li>
+</ul>
+<p>Here are links to the code how to implement OpenWhisk functions with Docker and different languages.</p>
+<ul>
+<li><a href="https://github.com/nheidloff/openwhisk-debug-nodejs/blob/master/functions/docker/function.js" target="_blank" rel="noopener">JavaScript</a></li>
+<li><a href="https://github.com/nheidloff/openwhisk-polyglot/blob/master/functions/typescript/src/function.ts" target="_blank" rel="noopener">TypeScript</a></li>
+<li><a href="https://github.com/nheidloff/openwhisk-polyglot/blob/master/functions/java/spring/src/main/java/docker/Function.java" target="_blank" rel="noopener">Java</a></li>
+<li><a href="https://github.com/nheidloff/openwhisk-polyglot/blob/master/functions/kotlin/kotlin/src/main/kotlin/main.kt" target="_blank" rel="noopener">Kotlin</a></li>
+</ul>
+<p>This is the Kotlin function used in the sample. Essentially only one &#8216;/run&#8217; endpoint needs to be implemented.</p>
+<pre class="brush: java; title: ; notranslate">
+package openwhisk
+
+import io.javalin.Javalin
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+
+data class InputObject(val phone: String  = &quot;&quot;, val subject: String  = &quot;&quot;)
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class InputFunction(val input: InputObject = InputObject())
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class InputBody(val value: InputFunction = InputFunction())
+
+data class OutputObject(val phone: String = &quot;&quot;, val subject: String = &quot;&quot;, val ok: Boolean = true)
+data class OutputFunction(val outputsendtextmessage: OutputObject = OutputObject())
+
+fun main(args: Array&amp;lt;String&amp;gt;) {
+    val app = Javalin.create().apply {
+        port(8080)
+        exception(Exception::class.java) { e, ctx -&amp;gt; e.printStackTrace() }
+    }.start()
+
+    app.post(&quot;/init&quot;) { ctx -&amp;gt; ctx.status(200) }
+
+    app.post(&quot;/run&quot;) { ctx -&amp;gt;
+        val body = ctx.bodyAsClass(InputBody::class.java)
+        val inputFunction = body.value
+        val inputObject = inputFunction.input
+        val phone = inputObject.phone
+        val subject = inputObject.subject
+
+        // real implementation goes here
+
+        val outputObject = OutputObject(phone, subject)
+        val outputFunction = OutputFunction(outputObject)
+
+        ctx.json(outputFunction)
+        ctx.status(200)
+    }
+}
+</pre>
+<p>Want to run this sample? Try it out on the IBM Cloud; get an account <a href="https://ibm.biz/nheidloff" rel="noopener" target="_blank">here</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/polyglot-serverless-applications">Developing Polyglot Serverless Applications</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><wfw:commentRss>http://heidloff.net/article/polyglot-serverless-applications/feed/</wfw:commentRss><slash:comments>0</slash:comments><post-id xmlns="com-wordpress:feed-additions:1">2923</post-id></item></channel></rss>

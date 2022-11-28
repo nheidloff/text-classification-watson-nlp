@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 2 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=2" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Thu, 24 Nov 2022 10:47:53 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>Setting up the TechZone Accelerator Toolkit</title><link>http://heidloff.net/article/setting-up-the-techzone-accelerator-toolkit/</link><pubDate>Mon, 07 Nov 2022 07:36:18 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=5249</guid><description><![CDATA[<p>With the TechZone Accelerator Toolkit IBM software, open source projects and custom applications can easily be deployed to various clouds. This article explains how to set up environments to use the Toolkit CLI. Check out my earlier blog that introduces the toolkit: Introducing IBM’s Toolkit to handle Everything as Code. The toolkit leverages Terrafrom and [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/setting-up-the-techzone-accelerator-toolkit/">Setting up the TechZone Accelerator Toolkit</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p><em>With the TechZone Accelerator Toolkit IBM software, open source projects and custom applications can easily be deployed to various clouds. This article explains how to set up environments to use the Toolkit CLI.</em><span id="more-5249"></span></p>
+<p>Check out my earlier blog that introduces the toolkit: <a href="http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/" rel="noopener noreferrer" target="_blank">Introducing IBM’s Toolkit to handle Everything as Code</a>. The toolkit leverages Terrafrom and GitOps and is based on best practices from IBM projects with partners and clients.</p>
+<p>The Accelerator Toolkit comes with a CLI called <a href="https://github.com/cloud-native-toolkit/iascable" rel="noopener noreferrer" target="_blank">iascable</a> which converts BOMs (bill of materials/custom solution definitions) into Terraform assets. To run Terraform, additional CLIs are needed in specific versions, for example kubectl, oc, jq, git, helm, etc.</p>
+<p>To simplify the setup of these tools, a container image is provided which comes with everything you need. Here is an example flow of commands that show how to install the CLI, how to run the container and how to run Terraform.</p>
+<p>Setup the CLI, clone a sample repo and generate Terraform:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ curl -sL https://iascable.cloudnativetoolkit.dev/install.sh | sh
+$ git clone https://github.com/IBM/watson-automation
+$ cd watson-deployments/roks-new-nlp 
+$ iascable build -i bom.yaml
+$ cd output
+</pre>
+<p>Launch the container:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ ./launch.sh
+</pre>
+<p>Apply Terraform:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ cd cluster-with-watson-nlp
+$ ./apply.sh
+</pre>
+<p>Watch this <a href="https://youtu.be/8lbVRAvJgy4?t=173" rel="noopener noreferrer" target="_blank">short video starting at 2:53 min</a> for a demo:</p>
+<p><iframe width="853" height="480" src="//www.youtube.com/embed/8lbVRAvJgy4?t=173" frameborder="0" allowfullscreen></iframe></p>
+<p>The toolkit provides two alternatives to run the image:</p>
+<ol>
+<li>Docker</li>
+<li>Multipass</li>
+</ol>
+<p>There are some additional environments (Podman and Colima) that are used within the community, but these are not supported and cannot be guaranteed to work. </p>
+<p>While Docker is easier to use, Multipass is provided as alternative if you don&#8217;t want or cannot run Docker Desktop. Here is the definition from the <a href="https://multipass.run/" rel="noopener noreferrer" target="_blank">Multipass</a> home page.</p>
+<blockquote><p>Ubuntu VMs on demand for any workstation. Get an instant Ubuntu VM with a single command. Multipass can launch and run virtual machines and configure them with cloud-init like a public cloud.</p></blockquote>
+<p>The following options are currently supported for recent versions of Linux, MacOS and Windows:</p>
+<ul>
+<li>Linux: Docker Engine</li>
+<li>MacOS: 1. Docker Desktop, 2. Multipass</li>
+<li>Windows: Windows Subsystem for Linux running Ubuntu image with Docker Engine installed</li>
+</ul>
+<p>Follow the instructions in the Accelerator Toolkit documentation for details.</p>
+<ul>
+<li><a href="https://operate.cloudnativetoolkit.dev/getting-started/setup/#supported-runtime-environments" rel="noopener noreferrer" target="_blank">Supported runtime environments</a></li>
+<li><a href="https://operate.cloudnativetoolkit.dev/tutorials/1-setup/#installing-the-environment" rel="noopener noreferrer" target="_blank">Installing the environment</a></li>
+</ul>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/setting-up-the-techzone-accelerator-toolkit/">Setting up the TechZone Accelerator Toolkit</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><post-id xmlns="com-wordpress:feed-additions:1">5249</post-id></item></channel></rss>

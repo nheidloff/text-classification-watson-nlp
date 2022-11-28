@@ -1,0 +1,46 @@
+page5-elem8,Defining Dependencies in Kubernetes Operators.
+page5-elem8,Operators can automate the deployment and operations of custom Kubernetes resources.
+page5-elem8,These resources might dependent on other third party resources.
+page5-elem8,This article describes how to define these dependencies.
+page5-elem8,I’m working on a sample [https://github.com/nheidloff/operator-sample-go] that describes different patterns and best practices to build operators with Golang.
+page5-elem8,The repo demonstrates how a custom resource ‘Application’ uses internally a third party ‘Database’ resource which is managed by another controller.
+page5-elem8,This is a simplified version of the typical scenario to use a managed database in the cloud.
+page5-elem8,Read my previous blog [http://heidloff.net/article/accessing-third-party-custom-resources-go-operators/] that explains how to access third party resources in controllers’ Go code.
+page5-elem8,Additionally you need to ensure that the dependent operator (in my sample the database operator) exists when an operator (in my sample the application operator) is deployed.
+page5-elem8,This can be done in the cluster service version (CSV).
+page5-elem8,The CSV is the operator bundle/package which contains the definition of a specific operator version.
+page5-elem8,Here is the CSV [https://github.com/nheidloff/operator-sample-go/blob/1280fe242726a329642a6a3950d1a8b9990e14d0/operator-application/bundle/manifests/operator-application.clusterserviceversion.yaml#L26-L38] of the application operator.
+page5-elem8,The dependency is defined in the ‘required’ section of the spec.
+page5-elem8,apiVersion: operators.coreos.com/v1alpha1
+page5-elem8,kind: ClusterServiceVersion
+page5-elem8,spec:
+page5-elem8,apiservicedefinitions: {}
+page5-elem8,customresourcedefinitions:
+page5-elem8,owned:
+page5-elem8,- displayName: Application
+page5-elem8,kind: Application
+page5-elem8,name: applications.application.sample.ibm.com
+page5-elem8,version: v1alpha1
+page5-elem8,required:
+page5-elem8,- displayName: Database
+page5-elem8,kind: Database
+page5-elem8,name: databases.database.sample.third.party
+page5-elem8,version: v1alpha1
+page5-elem8,When you try to deploy the application operator but the database operator doesn’t exist you get an error.
+page5-elem8,$ operator-sdk run bundle "$REGISTRY/$ORG/$BUNDLEIMAGE" -n operators
+page5-elem8,INFO[0040] Successfully created registry pod: docker-io-nheidloff-application-controller-bundle-v15
+page5-elem8,INFO[0041] Created CatalogSource: operator-application-catalog
+page5-elem8,INFO[0041] Created Subscription: operator-application-v0-0-1-sub
+page5-elem8,FATA[0120] Failed to run bundle: install plan is not available for the subscription operator-application-v0-0-1-sub: timed out waiting for the condition
+page5-elem8,The logs in the catalog pod describe the error.
+page5-elem8,$ kubectl get pods -n olm
+page5-elem8,$ kubectl logs catalog-operator-b4dfcff47-55plr -n olm
+page5-elem8,Event(v1.ObjectReference{Kind:"Namespace" Namespace:"" Name:"operators" ...
+page5-elem8,type: 'Warning' reason: 'ResolutionFailed' constraints not satisfiable: bundle operator-application.v0.0.1 requires an operator providing an API with group: database.sample.third.party version: v1alpha1 kind: Database
+page5-elem8,The following resources describe more details.
+page5-elem8,* Operator Dependency and Requirement Resolution [https://operator-framework.github.io/olm-book/docs/operator-dependencies-and-requirements.html]
+page5-elem8,* Creating operator manifests [https://olm.operatorframework.io/docs/tasks/creating-operator-manifests/]
+page5-elem8,* Setup and Deployment via Operator Lifecycle Manager [https://github.com/nheidloff/operator-sample-go/blob/1280fe242726a329642a6a3950d1a8b9990e14d0/operator-application/SetupDeploymentViaOLM.md]
+page5-elem8,Check out the repo [https://github.com/nheidloff/operator-sample-go] and keep an eye on my blog.
+page5-elem8,I’ll write more about other operator patterns soon.
+page5-elem8,The post Defining Dependencies in Kubernetes Operators [http://heidloff.net/article/defining-dependencies-kubernetes-operators/] appeared first on Niklas Heidloff [http://heidloff.net].

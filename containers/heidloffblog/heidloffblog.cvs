@@ -1,0 +1,2 @@
+model_name,target_image_name,model_source,image_labels
+ensemble_model_heidloff,watson-nlp_ensemble_model_heidloff:latest,models/ensemble_model_heidloff,com.ibm.watson.embed.watson_library=watson_nlp;com.ibm.watson.embed.library_version=2.10.1;com.ibm.watson.embed.module_guid=8f9e9fb0-1d62-423a-b393-04a69cf9083a;com.ibm.watson.embed.module_class=watson_nlp.workflows.classification.ensemble.Ensemble;com.ibm.watson.embed.created=2022-11-25 11:28:09.517473

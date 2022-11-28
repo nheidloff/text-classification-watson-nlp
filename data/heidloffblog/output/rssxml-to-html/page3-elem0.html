@@ -1,0 +1,76 @@
+Interface Descriptions of TechZone Toolkit Modules. <p><em>With the TechZone Accelerator Toolkit IBM software, open source projects and custom applications can easily be deployed to various clouds. This article explains how input and output variables of modules are defined.</em><span id="more-5228"></span></p>
+<p>Check out my earlier blog that introduces the toolkit: <a href="http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/" rel="noopener noreferrer" target="_blank">Introducing IBM’s Toolkit to handle Everything as Code</a>. The toolkit leverages Terrafrom and GitOps and is based on best practices from IBM projects with partners and clients.</p>
+<p>Solutions are defined via bill of materials (BOMs) which contain lists of <a href="https://modules.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">modules</a>. In the following <a href="https://github.com/IBM/watson-automation/blob/main/roks-new-nlp/bom.yaml" rel="noopener noreferrer" target="_blank">example</a> an OpenShift cluster is created in the IBM Cloud which comes with Argo CD, a GitOps repo, Watson NLP and a sample application based on ubi.</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: cloudnativetoolkit.dev/v1alpha1
+kind: BillOfMaterial
+metadata:
+  name: cluster-with-watson-nlp
+spec:
+  modules:
+    - name: ibm-ocp-vpc
+    - name: argocd-bootstrap
+    - name: gitops-repo
+    - name: terraform-gitops-ubi
+    - name: terraform-gitops-watson-nlp
+</pre>
+<p>Modules have input and output variables. Read my blog <a href="http://heidloff.net/article/configuring-the-techzone-accelerator-toolkit/" rel="noopener noreferrer" target="_blank">Configuring the TechZone Accelerator Toolkit</a> how to use input variables to configure BOMs for different scenarios.</p>
+<p>The input variables are defined by convention in the <a href="https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp/blob/main/variables.tf" rel="noopener noreferrer" target="_blank">variables.tf</a> files of modules via Terraform and HCL.</p>
+<pre class="brush: plain; title: ; notranslate">
+variable &quot;registries&quot; {
+  type    = list(map(string))
+  default = [{
+    name = &quot;watson&quot;
+    url = &quot;cp.icr.io/cp/ai&quot;
+  }]
+}
+</pre>
+<p>The <a href="https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp#3-example-usage" rel="noopener noreferrer" target="_blank">readme</a> files of the modules also describe how to use modules and pass in variables if you would use Terraform directly and not the toolkit which is useful for module developers to test their modules.</p>
+<pre class="brush: plain; title: ; notranslate">
+module &quot;terraform_gitops_watson_nlp&quot; {
+  source = &quot;github.com/cloud-native-toolkit/terraform-gitops-watson-nlp?ref=v0.0.80&quot;
+  accept_license = var.terraform_gitops_watson_nlp_accept_license
+  ...
+}
+</pre>
+<p>The output variables are defined by convention in <a href="https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp/blob/main/outputs.tf" rel="noopener noreferrer" target="_blank">output.tf</a> files.</p>
+<pre class="brush: plain; title: ; notranslate">
+output &quot;namespace&quot; {
+  description = &quot;The namespace where the module will be deployed&quot;
+  value       = local.namespace
+  depends_on  = [resource.gitops_module.setup_gitops]
+}
+</pre>
+<p>Some variables are defined on a global level which is useful for <a href="https://github.com/IBM/watson-automation/blob/main/roks-new-nlp/output/cluster-with-watson-nlp/variables-template.yaml" rel="noopener noreferrer" target="_blank">common variables</a> like regions, resource group names and common tags.</p>
+<pre class="brush: plain; title: ; notranslate">
+variables:
+  - name: region
+    description: The IBM Cloud region where the instance should be provisioned
+    value: xxx
+  - name: resource_group_name
+    description: The name of the IBM Cloud resource group where the resources should be provisioned
+    value: xxx
+  - name: common_tags 
+    description: The list of tags that should be applied to all resources (does not work)
+    value: []
+</pre>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-03-at-09.36.24.png" alt="" width="2324" height="1256" class="alignnone size-full wp-image-5236" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-03-at-09.36.24.png 2324w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-03-at-09.36.24-300x162.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-03-at-09.36.24-768x415.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-03-at-09.36.24-1024x553.png 1024w" sizes="(max-width: 2324px) 100vw, 2324px" /></p>
+<p>To define the values of variables for certain modules, naming conventions are used. For example to define the value of &#8216;<a href="https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp/blob/main/variables.tf#L110-L113" rel="noopener noreferrer" target="_blank">runtime_image</a>&#8216; &#8230;</p>
+<pre class="brush: plain; title: ; notranslate">
+variable &quot;runtime_image&quot; {
+  description = &quot;runtime_image&quot;
+  default     = &quot;watson-nlp-runtime:1.0.15&quot;
+}
+</pre>
+<p>&#8230; the name of the <a href="https://github.com/IBM/watson-automation/blob/main/roks-new-nlp/output/cluster-with-watson-nlp/variables-template.yaml#L45" rel="noopener noreferrer" target="_blank">module</a> is used followed by &#8216;_&#8217; and the variable name.</p>
+<pre class="brush: plain; title: ; notranslate">
+- name: terraform_gitops_watson_nlp_runtime_image
+  value: watson-nlp-runtime:1.0.18
+</pre>
+<p>To find out more about these capabilities, check out the following resources:</p>
+<ul>
+<li><a href="https://github.com/IBM/watson-automation" rel="noopener noreferrer" target="_blank">Watson Automation Repo</a></li>
+<li><a href="https://operate.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">TechZone Accelerator Toolkit</a></li>
+<li><a href="https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home" rel="noopener noreferrer" target="_blank">Watson NLP</a></li>
+</ul>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/interface-descriptions-of-techzone-toolkit-modules/">Interface Descriptions of TechZone Toolkit Modules</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>

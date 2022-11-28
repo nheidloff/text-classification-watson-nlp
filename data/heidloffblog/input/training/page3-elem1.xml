@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 3 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=3" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Thu, 24 Nov 2022 10:47:53 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>Handling of Versions of TechZone Toolkit Modules</title><link>http://heidloff.net/article/versioning-of-techzone-accelerator-toolkit-modules/</link><pubDate>Wed, 02 Nov 2022 07:43:03 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=5216</guid><description><![CDATA[<p>With the TechZone Accelerator Toolkit IBM software, open source projects and custom applications can easily be deployed to various clouds. This article explains how to ensure that the right versions of modules are deployed. In an earlier blog I introduced the toolkit: Introducing IBM’s Toolkit to handle Everything as Code. The toolkit leverages Terrafrom and [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/versioning-of-techzone-accelerator-toolkit-modules/">Handling of Versions of TechZone Toolkit Modules</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p><em>With the TechZone Accelerator Toolkit IBM software, open source projects and custom applications can easily be deployed to various clouds. This article explains how to ensure that the right versions of modules are deployed.</em><span id="more-5216"></span></p>
+<p>In an earlier blog I introduced the toolkit: <a href="http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/" rel="noopener noreferrer" target="_blank">Introducing IBM’s Toolkit to handle Everything as Code</a>. The toolkit leverages Terrafrom and GitOps and is based on best practices based on IBM experiences in partner and clients projects.</p>
+<p>Solutions are defined via bill of materials (BOM) which contain lists of <a href="https://modules.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">modules</a>. In the following <a href="https://github.com/IBM/watson-automation/blob/main/roks-new-nlp/bom.yaml" rel="noopener noreferrer" target="_blank">example</a> an OpenShift cluster is created in the IBM Cloud which comes with Argo CD, a GitOps repo, Watson NLP and a sample application based on ubi.</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: cloudnativetoolkit.dev/v1alpha1
+kind: BillOfMaterial
+metadata:
+  name: cluster-with-watson-nlp
+spec:
+  modules:
+    - name: ibm-ocp-vpc
+    - name: argocd-bootstrap
+    - name: gitops-repo
+      alias: gitops_repo
+    - name: terraform-gitops-ubi
+      alias: terraform_gitops_ubi
+    - name: terraform-gitops-watson-nlp
+      alias: terraform_gitops_watson_nlp
+</pre>
+<p>If you don&#8217;t provide any version numbers in the BOMs, the toolkit installs the latest versions.</p>
+<p>Modules can have dependencies which are defined in the <a href="https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp/blob/4c22e5bba2023602bdd8e4a1a1634b4d024ee937/module.yaml#L15" rel="noopener noreferrer" target="_blank">module.yaml</a> files.</p>
+<pre class="brush: plain; title: ; notranslate">
+dependencies:
+  - id: gitops
+    refs:
+      - source: github.com/cloud-native-toolkit/terraform-tools-gitops.git
+        version: '&gt;= 1.1.0'
+  - id: namespace
+    refs:
+      - source: github.com/cloud-native-toolkit/terraform-gitops-namespace.git
+        version: '&gt;= 1.0.0'   
+  - id: setup_clis
+    refs:
+      - source: github.com/cloud-native-toolkit/terraform-util-clis.git
+        version: '&gt;= 1.0.0'   
+</pre>
+<p>As in other frameworks and programming languages like JavaScript, Java, Go, etc. the best practise is to require certain versions of dependencies. Automatic updates of modules can easily break production applications. Before updating dependencies, testing needs to be done. The only exception might be security fixes, but even those need to be tested.</p>
+<p>Let&#8217;s take a look how this can be done with the TechZone Accelerator Toolkit. After you have run &#8216;iascable build &#8230;&#8217; on BOM files which only include high level modules without version numbers like above, you will find a second BOM file (shadow BOM) in the subdirectory &#8216;output/bom-name/bom.yaml&#8217;. </p>
+<p>These shadow BOM files contain not only the high level modules, but a complete list of all modules including dependencies. They also include the latest version numbers. </p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: cloudnativetoolkit.dev/v1alpha1
+kind: BillOfMaterial
+metadata:
+  name: cluster-with-watson-nlp
+spec:
+  modules:
+    - name: gitops-repo
+      alias: gitops_repo
+      version: v1.22.2
+    - name: argocd-bootstrap
+      alias: argocd-bootstrap
+      version: v1.12.0
+    - name: ibm-ocp-vpc
+      alias: cluster
+      version: v1.16.3
+    - name: ibm-vpc
+      alias: ibm-vpc
+      version: v1.17.0
+    - name: ibm-vpc-gateways
+      alias: ibm-vpc-gateways
+      version: v1.10.0
+    - name: terraform-gitops-ubi
+      alias: terraform_gitops_ubi
+      version: v0.0.26
+    - name: terraform-gitops-watson-nlp
+      alias: terraform_gitops_watson_nlp
+      version: v1.0.0
+    - name: olm
+      version: v1.3.5
+    - name: sealed-secret-cert
+      version: v1.0.1
+    - name: ibm-resource-group
+      alias: resource_group
+      version: v3.3.5
+    - name: ibm-object-storage
+      alias: cos
+      version: v4.1.0
+    - name: ibm-vpc-subnets
+      version: v1.14.0
+    - name: gitops-namespace
+      alias: namespace
+      version: v1.14.0
+    - name: util-clis
+      version: v1.18.1
+</pre>
+<p><strong>To &#8216;pin&#8217; the version numbers</strong> of modules for subsequent Terraform runs, a best practise is to replace the original BOM file with the generated shadow BOM file. This approach is similar to JavaScript&#8217;s package-lock.json files and Golang&#8217;s go.sum files.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-03-at-08.41.07.png" alt="" width="2240" height="1582" class="alignnone size-full wp-image-5218" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-03-at-08.41.07.png 2240w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-03-at-08.41.07-300x212.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-03-at-08.41.07-768x542.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-03-at-08.41.07-1024x723.png 1024w" sizes="(max-width: 2240px) 100vw, 2240px" /></p>
+<p>To find out more about these capabilities, check out the following resources:</p>
+<ul>
+<li><a href="https://github.com/IBM/watson-automation" rel="noopener noreferrer" target="_blank">Watson Automation Repo</a></li>
+<li><a href="https://operate.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">TechZone Accelerator Toolkit</a></li>
+<li><a href="https://www.ibm.com/docs/en/watson-libraries?topic=watson-natural-language-processing-library-embed-home" rel="noopener noreferrer" target="_blank">Watson NLP</a></li>
+</ul>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/versioning-of-techzone-accelerator-toolkit-modules/">Handling of Versions of TechZone Toolkit Modules</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><post-id xmlns="com-wordpress:feed-additions:1">5216</post-id></item></channel></rss>

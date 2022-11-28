@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 4 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=4" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Thu, 24 Nov 2022 10:47:53 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>Automatically Archiving Data with Kubernetes Operators</title><link>http://heidloff.net/article/automatically-archiving-data-kubernetes-operators/</link><pubDate>Fri, 08 Apr 2022 05:07:19 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=5018</guid><description><![CDATA[<p>Kubernetes operators allow the automation of day 2 operational tasks. A good example is the automatic archiving of data. This article describes how data from a simple database can be archived automatically in S3 buckets using CronJobs, Jobs and custom resources. The complete source code from this article is available in the ibm/operator-sample-go repo. The [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/automatically-archiving-data-kubernetes-operators/">Automatically Archiving Data with Kubernetes Operators</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p><em>Kubernetes operators allow the automation of day 2 operational tasks. A good example is the automatic archiving of data. This article describes how data from a simple database can be archived automatically in S3 buckets using CronJobs, Jobs and custom resources.</em><span id="more-5018"></span></p>
+<p>The complete source code from this article is available in the <a href="https://github.com/IBM/operator-sample-go/tree/43ec9d7e16f97b11ce4aa5b64d2e9a9ce0a9fde9/database-service" rel="noopener noreferrer" target="_blank">ibm/operator-sample-go</a> repo. The repo comes with a simple implementation of a database system which can be deployed on Kubernetes. Data is persisted in JSON files as outlined in the previous article <a href="http://Building Databases on Kubernetes with Quarkus" rel="noopener noreferrer" target="_blank">Building Databases on Kubernetes with Quarkus</a>.</p>
+<p>To allow operators to backup data automatically, you need a custom resource definition first which defines when to do backups and where to store the data. We&#8217;ve created a custom resource &#8216;<a href="https://github.com/IBM/operator-sample-go/blob/8ce338d65d2cc9f8db437e3aa635f94a45156922/operator-database/config/samples/database.sample_v1alpha1_databasebackup.yaml" rel="noopener noreferrer" target="_blank">DatabaseBackup</a>&#8216; with this information. We use buckets from IBM Cloud Object Storage.</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: database.sample.third.party/v1alpha1
+kind: DatabaseBackup
+metadata:
+  name: databasebackup-manual
+  namespace: database
+spec:
+  repos:
+  - name: ibmcos-repo
+    type: ibmcos
+    secretName: ibmcos-repo
+    serviceEndpoint: &quot;https://s3.fra.eu.cloud-object-storage.appdomain.cloud&quot;
+    authEndpoint: &quot;https://iam.cloud.ibm.com/identity/token&quot;
+    bucketNamePrefix: &quot;database-backup-&quot;
+  manualTrigger:
+    enabled: true
+    time: &quot;2022-12-15T02:59:43.1Z&quot;
+    repo: ibmcos-repo
+  scheduledTrigger:
+    enabled: false
+    schedule: &quot;0 * * * *&quot;
+    repo: ibmcos-repo
+</pre>
+<p>In order to run the backups on a scheduled basis, we use Kubernetes CronJobs. This makes also sense since the backup tasks can take quite some time for large datasets. The <a href="https://github.com/IBM/operator-sample-go/blob/8ce338d65d2cc9f8db437e3aa635f94a45156922/operator-database-backup/kubernetes/cronjob.yaml" rel="noopener noreferrer" target="_blank">CronJob</a> could be applied manually, but a cleaner design is to let operators do this. Secrets like the HMAC secret should also be moved to Kubernetes secrets (or security tools).</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: database-backup
+  namespace: database
+spec:
+  schedule: &quot;0 * * * *&quot;
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: database-backup
+            image: docker.io/nheidloff/operator-database-backup:v1.0.7
+            imagePullPolicy: IfNotPresent
+            env:
+            - name: BACKUP_RESOURCE_NAME
+              value: &quot;databasebackup-manual&quot;
+            - name: NAMESPACE
+              value: &quot;database&quot;
+            - name: CLOUD_OBJECT_STORAGE_HMAC_ACCESS_KEY_ID
+              value: &quot;xxx&quot;
+            - name: CLOUD_OBJECT_STORAGE_HMAC_SECRET_ACCESS_KEY
+              value: &quot;xxx&quot;
+            - name: CLOUD_OBJECT_STORAGE_REGION
+              value: &quot;eu-geo&quot;
+            - name: CLOUD_OBJECT_STORAGE_SERVICE_ENDPOINT
+              value: &quot;s3.eu.cloud-object-storage.appdomain.cloud&quot;
+          restartPolicy: OnFailure
+</pre>
+<p>For testing purposes the following commands can be invoked to trigger a job manually to run immediately. In status.conditions of the database backup resource feedback is provided whether the backup has been successful.</p>
+<pre class="brush: plain; title: ; notranslate">
+$ kubectl apply -f ../operator-database/config/samples/database.sample_v1alpha1_databasebackup.yaml
+$ kubectl apply -f kubernetes/role.yaml
+$ kubectl apply -f kubernetes/cronjob.yaml
+$ kubectl create job --from=cronjob/database-backup manuallytriggered -n database
+$ kubectl get databasebackups databasebackup-manual -n database -oyaml
+...
+status:
+  conditions:
+  - lastTransitionTime: &quot;2022-04-07T05:16:30Z&quot;
+    message: Database has been archived
+    reason: BackupSucceeded
+    status: &quot;True&quot;
+    type: Succeeded
+$ kubectl logs -n database $(kubectl get pods -n database | awk '/manuallytriggered/ {print $1;exit}')
+</pre>
+<p>These screenshots show the deployed CronJob, Job and Pod.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/04/auto-archive1.png" alt="" width="2942" height="1436" class="alignnone size-full wp-image-5015" srcset="http://heidloff.net/wp-content/uploads/2022/04/auto-archive1.png 2942w, http://heidloff.net/wp-content/uploads/2022/04/auto-archive1-300x146.png 300w, http://heidloff.net/wp-content/uploads/2022/04/auto-archive1-768x375.png 768w, http://heidloff.net/wp-content/uploads/2022/04/auto-archive1-1024x500.png 1024w" sizes="(max-width: 2942px) 100vw, 2942px" /></p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/04/auto-archive2.png" alt="" width="2946" height="1608" class="alignnone size-full wp-image-5016" srcset="http://heidloff.net/wp-content/uploads/2022/04/auto-archive2.png 2946w, http://heidloff.net/wp-content/uploads/2022/04/auto-archive2-300x164.png 300w, http://heidloff.net/wp-content/uploads/2022/04/auto-archive2-768x419.png 768w, http://heidloff.net/wp-content/uploads/2022/04/auto-archive2-1024x559.png 1024w" sizes="(max-width: 2946px) 100vw, 2946px" /></p>
+<p>Data is archived in IBM Cloud Object Storage.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/04/auto-archive3.png" alt="" width="2718" height="1346" class="alignnone size-full wp-image-5017" srcset="http://heidloff.net/wp-content/uploads/2022/04/auto-archive3.png 2718w, http://heidloff.net/wp-content/uploads/2022/04/auto-archive3-300x149.png 300w, http://heidloff.net/wp-content/uploads/2022/04/auto-archive3-768x380.png 768w, http://heidloff.net/wp-content/uploads/2022/04/auto-archive3-1024x507.png 1024w" sizes="(max-width: 2718px) 100vw, 2718px" /></p>
+<p>The <a href="https://github.com/IBM/operator-sample-go/blob/0b46e5ee18b892293ce2ff2eb565ea9500de298b/operator-database-backup/backup/backup.go" rel="noopener noreferrer" target="_blank">code</a> of the backup job is pretty straight forward. I&#8217;ve implemented a Go image with the following functionality.</p>
+<ul>
+<li>Get the database backup resource from Kubernetes</li>
+<li>Validate input environment variables</li>
+<li>Read data from the database system</li>
+<li>Write data to object storage</li>
+<li>Write status as conditions in database backup resource</li>
+</ul>
+<p>To learn more about operator patterns and best practices, check out the repo <a href="https://github.com/IBM/operator-sample-go" rel="noopener noreferrer" target="_blank">operator-sample-go</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/automatically-archiving-data-kubernetes-operators/">Automatically Archiving Data with Kubernetes Operators</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><post-id xmlns="com-wordpress:feed-additions:1">5018</post-id></item></channel></rss>

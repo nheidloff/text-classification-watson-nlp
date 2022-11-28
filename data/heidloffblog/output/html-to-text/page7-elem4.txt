@@ -1,0 +1,5 @@
+Serverless and Kubernetes Demos.
+
+Over the next weeks I’ll repeat my session “When to use Serverless? When to use Kubernetes?” several times. As backup and for people who won’t attend the sessions I’ve recorded the demos. Read the summary of the session and get the slides. Demo 1 – 0:33 min Developing and debugging OpenWhisk Node.js functions in Visual […]
+
+The post Serverless and Kubernetes Demos [http://heidloff.net/article/serverless-kubernetes-demos] appeared first on Niklas Heidloff [http://heidloff.net].

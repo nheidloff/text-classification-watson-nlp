@@ -1,0 +1,8 @@
+Pictures from OOP in Munich.
+This week I attended OOP in Munich, Germany, which is a conference with 2300 attendees.
+My colleagues and I presented and demonstrated the IBM Cloud.
+Below are some pictures.
+The IBM team: Ansgar’s and my session: When to use Serverless?
+When to use Kubernetes?
+Demo at our booth: Visual Recognition for Anki Cozmo with TensorFlow […]
+The post Pictures from OOP in Munich [http://heidloff.net/article/pictures-oop-munich-ibm] appeared first on Niklas Heidloff [http://heidloff.net].

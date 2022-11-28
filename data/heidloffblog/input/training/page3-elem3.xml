@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 3 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=3" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Thu, 24 Nov 2022 10:47:53 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>Configuring the TechZone Toolkit</title><link>http://heidloff.net/article/configuring-the-techzone-accelerator-toolkit/</link><pubDate>Mon, 31 Oct 2022 08:08:58 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=5203</guid><description><![CDATA[<p>With the TechZone Toolkit software like OpenShift can be set up in the cloud including custom applications by using automation via Terraform and Argo CD. This article describes how to configure the toolkit or more precisely the solution definitions. In an earlier blog I explained the toolkit: Introducing IBM’s Toolkit to handle Everything as Code. [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/configuring-the-techzone-accelerator-toolkit/">Configuring the TechZone Toolkit</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p><em>With the TechZone Toolkit software like OpenShift can be set up in the cloud including custom applications by using automation via Terraform and Argo CD. This article describes how to configure the toolkit or more precisely the solution definitions.</em><span id="more-5203"></span></p>
+<p>In an earlier blog I explained the toolkit: <a href="http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/" rel="noopener noreferrer" target="_blank">Introducing IBM’s Toolkit to handle Everything as Code</a>. The toolkit leverages Terrafrom and GitOps and is based on best practices based on IBM experiences in partner and clients projects.</p>
+<p>The <a href="https://modules.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">toolkit module catalog</a> provides 200+ modules to install IBM Software and open source components which can be deployed on clouds like AWS, Azure and IBM Cloud. Solutions are defined in yaml files. The bill of materials contain lists of modules, in this <a href="https://github.com/IBM/watson-automation/blob/e92c9cef8acb1bd5c57177dad3d91c42ff9c8aee/roks-new-nlp/bom.yaml#L27" rel="noopener noreferrer" target="_blank">example</a> OpenShift in the IBM Cloud, Argo CD including a GitOps repo, the Watson NLP (natural language processing) container and a custom application.</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: cloudnativetoolkit.dev/v1alpha1
+kind: BillOfMaterial
+metadata:
+  name: cluster-with-watson-nlp
+spec:
+  modules:
+    - name: ibm-ocp-vpc
+      version: v1.16.0
+    - name: argocd-bootstrap
+      version: v1.12.0
+    - name: gitops-repo
+      alias: gitops_repo
+      version: v1.22.2
+    - name: terraform-gitops-ubi
+      alias: terraform_gitops_ubi
+      version: v0.0.8
+    - name: terraform-gitops-watson-nlp
+      alias: terraform_gitops_watson_nlp
+      version: v0.0.80
+</pre>
+<p>Bill of materials can be and should be shared for different scenarios. To customize them two files are used.</p>
+<ol>
+<li><a href="https://github.com/IBM/watson-automation/blob/e92c9cef8acb1bd5c57177dad3d91c42ff9c8aee/roks-new-nlp/output/credentials-template.properties" rel="noopener noreferrer" target="_blank">output/credentials.properties</a>: Contains credentials</li>
+<li><a href="https://github.com/IBM/watson-automation/blob/e92c9cef8acb1bd5c57177dad3d91c42ff9c8aee/roks-new-nlp/output/cluster-with-watson-nlp/variables-template.yaml" rel="noopener noreferrer" target="_blank">output/bom-name/variables.yaml</a>: Contains all other variables</li>
+</ol>
+<p>The following sample shows how to define variables like regions, resource group names, size of the cluster, etc.</p>
+<pre class="brush: plain; title: ; notranslate">
+variables:
+  # overall
+  - name: region
+    description: The IBM Cloud region where the instance should be provisioned
+    value: xxx
+  - name: resource_group_name
+    description: The name of the IBM Cloud resource group where the resources should be provisioned
+    value: xxx
+  # ocp
+  - name: worker_count
+    description: The number of workers that should be provisioned per subnet
+    value: 2
+  - name: cluster_flavor
+    description: The flavor of the worker nodes that will be provisioned
+    value: bx2.4x16
+</pre>
+<p>When ArgoCD is used, a Git token is needed to access the GitOps repo which is stored in credentials.properties. The same mechanism applies for tokens to pull container images from protected registries as well as other credentials.</p>
+<pre class="brush: plain; title: ; notranslate">
+export TF_VAR_gitops_repo_token=xxx
+export TF_VAR_ibmcloud_api_key=xxx
+export TF_VAR_terraform_gitops_watson_nlp_registry_credentials=xxx,xxx,xxx
+</pre>
+<p>With the toolkit&#8217;s CLI the bill of material, the variables and the credentials are converted to Terraform assets in the &#8216;output/bom-name/terraform&#8217; folder. Be careful when managing this folder with Git to prevent your credentials to be exposed. Note that the generated files are usually not touched.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-31-at-09.13.07.png" alt="" width="2512" height="1370" class="alignnone size-full wp-image-5208" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-31-at-09.13.07.png 2512w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-31-at-09.13.07-300x164.png 300w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-31-at-09.13.07-768x419.png 768w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-31-at-09.13.07-1024x558.png 1024w" sizes="(max-width: 2512px) 100vw, 2512px" /></p>
+<p>When the variables and credentials are not predefined, CLI users will get prompted to define them when invoking &#8216;iascable build&#8217;.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-31-at-09.04.40.png" alt="" width="1558" height="658" class="alignnone size-full wp-image-5205" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-31-at-09.04.40.png 1558w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-31-at-09.04.40-300x127.png 300w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-31-at-09.04.40-768x324.png 768w, http://heidloff.net/wp-content/uploads/2022/10/Screenshot-2022-10-31-at-09.04.40-1024x432.png 1024w" sizes="(max-width: 1558px) 100vw, 1558px" /></p>
+<p>To find out more about the toolkit, check out the <a href="https://operate.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">documentation</a> and the <a href="https://github.com/IBM/watson-automation" rel="noopener noreferrer" target="_blank">sample</a> which deploys OpenShift and Watson NLP.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/configuring-the-techzone-accelerator-toolkit/">Configuring the TechZone Toolkit</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><post-id xmlns="com-wordpress:feed-additions:1">5203</post-id></item></channel></rss>

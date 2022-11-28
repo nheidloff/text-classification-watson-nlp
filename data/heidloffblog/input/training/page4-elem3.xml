@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 4 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=4" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Thu, 24 Nov 2022 10:47:53 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>Scaling Applications automatically with Operators</title><link>http://heidloff.net/article/scaling-applications-automatically-operators/</link><pubDate>Thu, 14 Apr 2022 02:33:29 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=5056</guid><description><![CDATA[<p>The real power or Kubernetes operators are not day 1 tasks like the initial deployments, but the automation of day 2 operations. This article describes a sample operator that scales up an application automatically based on the number of API requests. The complete source code from this article is available in the ibm/operator-sample-go repo. The [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/scaling-applications-automatically-operators/">Scaling Applications automatically with Operators</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p><em>The real power or Kubernetes operators are not day 1 tasks like the initial deployments, but the automation of day 2 operations. This article describes a sample operator that scales up an application automatically based on the number of API requests.</em><span id="more-5056"></span></p>
+<p>The complete source code from this article is available in the <a href="https://github.com/IBM/operator-sample-go" rel="noopener noreferrer" target="_blank">ibm/operator-sample-go repo</a>. The repo includes operator samples that demonstrate patterns and best practises. It also includes another day 2 sample scenario: <a href="http://heidloff.net/article/automatically-archiving-data-kubernetes-operators/" rel="noopener noreferrer" target="_blank">Automatically Archiving Data with Kubernetes Operators</a>.</p>
+<p>The sample contains the following components:</p>
+<ul>
+<li>Prometheus: Stores metrics from various sources and provides query capabilities</li>
+<li>Sample microservice: Provides a /hello endpoint which exposes a counter to Prometheus</li>
+<li>Application operator (core): Deploys the microservice</li>
+<li>Application operator&#8217;s CronJob: Separate container which scales up the number of pod instances based on the amount of /hello invocations</li>
+</ul>
+<p>To set up and configure Prometheus, check our my previous article <a href="http://heidloff.net/article/exporting-metrics-kubernetes-applications-prometheus/" rel="noopener noreferrer" target="_blank">Exporting Metrics from Kubernetes Apps for Prometheus</a>. Below I focus on the implementation of the auto-scaler.</p>
+<p>The microservice has been implemented with Quarkus. It uses Eclipse MicroProfile to track the number of invocations (see <a href="https://github.com/IBM/operator-sample-go/blob/f130dc768df6d9178f6395690f508f0840e0b5ef/simple-microservice/src/main/java/net/heidloff/GreetingResource.java" rel="noopener noreferrer" target="_blank">code</a>).</p>
+<pre class="brush: plain; title: ; notranslate">
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.metrics.annotation.Counted;
+
+@Path(&quot;/hello&quot;)
+public class GreetingResource {
+  @ConfigProperty(name = &quot;greeting.message&quot;) 
+  String message;
+
+  @GET
+  @Produces(MediaType.TEXT_PLAIN)
+  @Counted(name = &quot;countHelloEndpointInvoked&quot;, description = &quot;How often /hello has been invoked&quot;)
+  public String hello() {
+    return String.format(&quot;Hello %s&quot;, message);        
+  }
+}
+</pre>
+<p>To allow Prometheus to scrape these metrics, a <a href="https://github.com/IBM/operator-sample-go/blob/f130dc768df6d9178f6395690f508f0840e0b5ef/simple-microservice/kubernetes/service-monitor.yaml" rel="noopener noreferrer" target="_blank">ServiceMonitor</a> is used.</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: myapplication
+  name: myapplication-metrics-monitor
+  namespace: application-beta
+spec:
+  endpoints:
+    - path: /q/metrics
+  selector:
+    matchLabels:
+      app: myapplication
+</pre>
+<p>With the Prometheus user interface queries to this data can be done.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/04/Screenshot-2022-04-12-at-17.52.20.png" alt="" width="1826" height="856" class="alignnone size-full wp-image-5050" srcset="http://heidloff.net/wp-content/uploads/2022/04/Screenshot-2022-04-12-at-17.52.20.png 1826w, http://heidloff.net/wp-content/uploads/2022/04/Screenshot-2022-04-12-at-17.52.20-300x141.png 300w, http://heidloff.net/wp-content/uploads/2022/04/Screenshot-2022-04-12-at-17.52.20-768x360.png 768w, http://heidloff.net/wp-content/uploads/2022/04/Screenshot-2022-04-12-at-17.52.20-1024x480.png 1024w" sizes="(max-width: 1826px) 100vw, 1826px" /></p>
+<p>To develop the auto-scaler, a separate image/container is used. This container is an extension to the application controller. The application controller sets up a CronJob for the auto-scaler container so that it is run on a scheduled basis. The <a href="https://github.com/IBM/operator-sample-go/blob/f130dc768df6d9178f6395690f508f0840e0b5ef/operator-application-scaler/kubernetes/cronjob.yaml" rel="noopener noreferrer" target="_blank">CronJob</a> that is created by the controller looks like this. Note that the application name and namespace are passed in as parameter.</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: application-scaler
+  namespace: operator-application-system
+spec:
+  schedule: &quot;0 * * * *&quot;
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: application-scale
+            image: docker.io/nheidloff/operator-application-scaler:v1.0.2
+            imagePullPolicy: IfNotPresent
+            env:
+            - name: APPLICATION_RESOURCE_NAME
+              value: &quot;application&quot;
+            - name: APPLICATION_RESOURCE_NAMESPACE
+              value: &quot;application-beta&quot;
+          restartPolicy: OnFailure
+</pre>
+<p>The <a href="https://github.com/IBM/operator-sample-go/blob/f130dc768df6d9178f6395690f508f0840e0b5ef/operator-application-scaler/scaler/scaler.go" rel="noopener noreferrer" target="_blank">implementation</a> of the actual auto-scaler is trivial. I&#8217;ve used the <a href="https://github.com/prometheus/client_golang/" rel="noopener noreferrer" target="_blank">Prometheus Go client library</a>. Note that this library is still considered experimental. Alternatively you can use the <a href="https://prometheus.io/docs/prometheus/latest/querying/api/" rel="noopener noreferrer" target="_blank">Prometheus HTTP API</a>.</p>
+<pre class="brush: plain; title: ; notranslate">
+prometheusAddress := &quot;http://prometheus-operated.monitoring:9090&quot;
+queryAmountHelloEndpointInvocations := &quot;application_net_heidloff_GreetingResource_countHelloEndpointInvoked_total&quot;
+client, err := api.NewClient(api.Config{
+  Address: prometheusAddress,
+})
+if err != nil {
+  os.Exit(1)
+}
+v1api := v1.NewAPI(client)
+ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+defer cancel()
+result, warnings, err := v1api.Query(ctx, queryAmountHelloEndpointInvocations, time.Now())
+if err != nil {
+  os.Exit(1)
+}
+resultVector, conversionSuccessful := (result).(model.Vector)
+if conversionSuccessful == true {
+  if resultVector.Len() &gt; 0 {
+    firstElement := resultVector[0]
+    if firstElement.Value &gt; 5 {
+      // Note: '5' is only used for demo purposes
+      scaleUp()
+    } 
+  }
+}
+</pre>
+<p>To learn more about operator patterns and best practices, check out the repo <a href="https://github.com/IBM/operator-sample-go" rel="noopener noreferrer" target="_blank">operator-sample-go</a>. The instructions how to run the auto-scaler demo are in the <a href="https://github.com/IBM/operator-sample-go/blob/f130dc768df6d9178f6395690f508f0840e0b5ef/operator-application-scaler/README.md" rel="noopener noreferrer" target="_blank">documentation</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/scaling-applications-automatically-operators/">Scaling Applications automatically with Operators</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><post-id xmlns="com-wordpress:feed-additions:1">5056</post-id></item></channel></rss>

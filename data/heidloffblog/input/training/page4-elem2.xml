@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 4 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=4" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Thu, 24 Nov 2022 10:47:53 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>40 Blogs in 40 Days</title><link>http://heidloff.net/article/40-blogs-in-40-days/</link><pubDate>Thu, 14 Apr 2022 05:18:11 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=5063</guid><description><![CDATA[<p>Many IBM partners want to understand how to scale their offerings to reach new markets. Technically this often translates to two technologies: Kubernetes Operators and SaaS (Software as a Service). As I&#8217;m working with IBM partners, my team has created several assets for our co-creation engagements. Below is the list of blogs about these topics. [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/40-blogs-in-40-days/">40 Blogs in 40 Days</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p><em>Many IBM partners want to understand how to scale their offerings to reach new markets. Technically this often translates to two technologies: Kubernetes Operators and SaaS (Software as a Service). As I&#8217;m working with IBM partners, my team has created several assets for our co-creation engagements.</em><span id="more-5063"></span></p>
+<p>Below is the list of blogs about these topics. Over the last 40 (business) days I&#8217;ve written 40 blogs. As always, thanks a lot for your feedback!</p>
+<p><strong>Operators &#8211; Overview and Scenarios</strong></p>
+<ul>
+<li><a href="http://heidloff.net/article/why-you-should-build-kubernetes-operators/" rel="noopener noreferrer" target="_blank">Why you should build Kubernetes Operators</a></li>
+<li><a href="http://heidloff.net/article/automatically-archiving-data-kubernetes-operators/" rel="noopener noreferrer" target="_blank">Day 2 Scenario: Automatically Archiving Data</a></li>
+<li><a href="http://heidloff.net/article/scaling-applications-automatically-operators/" rel="noopener noreferrer" target="_blank">Day 2 Scenario: Automatically Scaling of Applications</a></li>
+<li><a href="http://heidloff.net/article/the-kubernetes-operator-metamodel/" rel="noopener noreferrer" target="_blank">The Kubernetes Operator Metamodel</a></li>
+</ul>
+<p><strong>Go based Operators</strong></p>
+<ul>
+<li><a href="http://heidloff.net/article/updating-resources-kubernetes-operators/" rel="noopener noreferrer" target="_blank">Creating and updating Resources</a></li>
+<li><a href="http://heidloff.net/article/deleting-resources-kubernetes-operators/" rel="noopener noreferrer" target="_blank">Deleting Resources</a></li>
+<li><a href="http://heidloff.net/article/storing-state-status-kubernetes-resources-conditions-operators-go/" rel="noopener noreferrer" target="_blank">Storing State of Resources with Conditions</a></li>
+<li><a href="http://heidloff.net/article/finding-kubernetes-version-capabilities-operators/" rel="noopener noreferrer" target="_blank">Finding out the Kubernetes Versions and Capabilities</a></li>
+<li><a href="http://heidloff.net/article/configuring-webhooks-kubernetes-operators/" rel="noopener noreferrer" target="_blank">Configuring Webhooks</a></li>
+<li><a href="http://heidloff.net/article/developing-initialization-validation-webhooks-kubernetes-operators/" rel="noopener noreferrer" target="_blank">Initialization and Validation Webhooks</a></li>
+<li><a href="http://heidloff.net/article/converting-custom-resource-versions-kubernetes-operators/" rel="noopener noreferrer" target="_blank">Converting Custom Resource Versions</a></li>
+<li><a href="http://heidloff.net/article/defining-dependencies-kubernetes-operators/" rel="noopener noreferrer" target="_blank">Defining Dependencies</a></li>
+<li><a href="http://heidloff.net/article/exporting-metrics-kubernetes-applications-prometheus/" rel="noopener noreferrer" target="_blank">Exporting Metrics from Kubernetes Apps for Prometheus</a></li>
+<li><a href="http://heidloff.net/article/accessing-kubernetes-from-go-applications/" rel="noopener noreferrer" target="_blank">Accessing Kubernetes from Go Applications</a></li>
+<li><a href="http://heidloff.net/article/how-to-build-your-own-database-on-kubernetes/" rel="noopener noreferrer" target="_blank">How to build your own Database on Kubernetes</a></li>
+<li><a href="http://heidloff.net/quarkus/building-databases-kubernetes-quarkus/" rel="noopener noreferrer" target="_blank">Building Databases on Kubernetes with Quarkus</a></li>
+<li><a href="http://heidloff.net/article/manually-deploying-operators-to-kubernetes/" rel="noopener noreferrer" target="_blank">Manually deploying Operators to Kubernetes</a></li>
+<li><a href="http://heidloff.net/article/deploying-operators-operator-lifecycle-manager-olm/" rel="noopener noreferrer" target="_blank">Deploying Operators with the Operator Lifecycle Manager</a></li>
+<li><a href="http://heidloff.net/article/importing-go-modules-kubernetes-operators/" rel="noopener noreferrer" target="_blank">Importing Go Modules in Operators</a></li>
+<li><a href="http://heidloff.net/article/accessing-third-party-custom-resources-go-operators/" rel="noopener noreferrer" target="_blank">Accessing third Party Custom Resources in Go Operators</a></li>
+<li><a href="http://heidloff.net/article/object-oriented-concepts-golang/" rel="noopener noreferrer" target="_blank">Using object-oriented Concepts in Golang based Operators</a></li>
+</ul>
+<p><strong>Quarkus based Operators</strong></p>
+<ul>
+<li><a href="http://heidloff.net/article/developing-quarkus-and-web-application-locally/" rel="noopener noreferrer" target="_blank">Developing Quarkus and Web Applications locally</a></li>
+<li><a href="http://heidloff.net/article/developing-debugging-kubernetes-operators-java/" rel="noopener noreferrer" target="_blank">Developing and Debugging Kubernetes Operators in Java</a></li>
+<li><a href="http://heidloff.net/article/accessing-kubernetes-resources-from-java-operators" rel="noopener noreferrer" target="_blank">Accessing Kubernetes Resources from Java Operators</a></li>
+<li><a href="http://heidloff.net/article/leveraging-third-party-operators-in-kubernetes-operators/" rel="noopener noreferrer" target="_blank">Leveraging third party Operators in Kubernetes Operators</a></li>
+<li><a href="http://heidloff.net/article/creating-database-schemas-kubernetes-operators/" rel="noopener noreferrer" target="_blank">Creating Database Schemas in Kubernetes Operators</a></li>
+<li><a href="http://heidloff.net/articles/resources-to-build-kubernetes-operators/" rel="noopener noreferrer" target="_blank">Resources to build Kubernetes Operators</a></li>
+</ul>
+<p><strong>SaaS Reference Architecture and DevSecOps</strong></p>
+<ul>
+<li><a href="http://heidloff.net/article/open-source-multi-cloud-assets-saas" rel="noopener noreferrer" target="_blank">New Open-Source Multi-Cloud Asset to build SaaS</a></li>
+<li><a href="http://heidloff.net/article/how-to-build-saas-for-multiple-tenants/" rel="noopener noreferrer" target="_blank">How to build SaaS for multiple Tenants</a></li>
+<li><a href="http://heidloff.net/article/accessing-postgres-from-quarkus-containers-via-tls/" rel="noopener noreferrer" target="_blank">Accessing Postgres from Quarkus Containers via TLS</a></li>
+<li><a href="http://heidloff.net/article/typical-authentication-flow-kubernetes-applications/" rel="noopener noreferrer" target="_blank">Typical Authentication Flow for Kubernetes Applications</a></li>
+<li><a href="http://heidloff.net/article/containerizing-web-applications/" rel="noopener noreferrer" target="_blank">Containerizing Web Applications</a></li>
+<li><a href="http://heidloff.net/article/containerizing-quarkus-applications/" rel="noopener noreferrer" target="_blank">Containerizing Quarkus Applications</a></li>
+<li><a href="http://heidloff.net/article/devsecops-saas-reference-architecture-openshift/" rel="noopener noreferrer" target="_blank">DevSecOps for SaaS Reference Architecture on OpenShift</a></li>
+<li><a href="http://heidloff.net/article/tekton-without-tekton-devsecops-pipelines/" rel="noopener noreferrer" target="_blank">Tekton without Tekton in DevSecOps Pipelines</a></li>
+<li><a href="http://heidloff.net/article/developing-serverless-toolchains/" rel="noopener noreferrer" target="_blank">Developing Serverless Toolchains</a></li>
+<li><a href="http://heidloff.net/article/deploying-serverless-saas-with-serverless-toolchains/" rel="noopener noreferrer" target="_blank">Deploying Serverless SaaS with Serverless Toolchains</a></li>
+<li><a href="http://heidloff.net/article/shift-left-continuous-integration-devsecops-pipelines/" rel="noopener noreferrer" target="_blank">Shift-Left Continuous Integration with DevSecOps Pipelines</a></li>
+<li><a href="http://heidloff.net/article/change-evidence-issue-management-devsecops/" rel="noopener noreferrer" target="_blank">Change, Evidence and Issue Management with DevSecOps</a></li>
+<li><a href="http://heidloff.net/article/continuous-delivery-ibm-devsecops-reference-architecture/" rel="noopener noreferrer" target="_blank">Continuous Delivery with DevSecOps Reference Architecture</a></li>
+</ul>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/40-blogs-in-40-days/">40 Blogs in 40 Days</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><post-id xmlns="com-wordpress:feed-additions:1">5063</post-id></item></channel></rss>

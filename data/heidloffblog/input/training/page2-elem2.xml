@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 2 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=2" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Thu, 24 Nov 2022 10:47:53 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>Understanding TechZone Toolkit GitOps Modules</title><link>http://heidloff.net/article/understanding-techzone-toolkit-gitops-modules/</link><pubDate>Tue, 15 Nov 2022 00:38:51 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=5306</guid><description><![CDATA[<p>With the TechZone Accelerator Toolkit IBM software, open source projects and custom applications can easily be deployed to various clouds. This article explains how to deploy resources in Kubernetes clusters via GitOps. Check out my earlier blog that introduces the toolkit: Introducing IBM’s Toolkit to handle Everything as Code. The toolkit leverages Terrafrom and GitOps [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/understanding-techzone-toolkit-gitops-modules/">Understanding TechZone Toolkit GitOps Modules</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p><em>With the TechZone Accelerator Toolkit IBM software, open source projects and custom applications can easily be deployed to various clouds. This article explains how to deploy resources in Kubernetes clusters via GitOps.<br />
+</em><span id="more-5306"></span></p>
+<p>Check out my earlier blog that introduces the toolkit: <a href="http://heidloff.net/article/introducing-ibms-toolkit-to-handle-everything-as-code/" rel="noopener noreferrer" target="_blank">Introducing IBM’s Toolkit to handle Everything as Code</a>. The toolkit leverages Terrafrom and GitOps and is based on best practices from IBM projects with partners and clients. With the toolkit both infrastructure like Kubernetes clusters as well as Kubernetes resources within clusters can be deployed. Infrastructure resources are deployed via Terraform, resources within clusters via Argo CD. </p>
+<p>To deploy resources in Kubernetes clusters, DevOps modules are used which can be found in the <a href="https://modules.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">TechZone Module Catalog</a>. The TechZone Toolkit uses Argo CD for GitOps which is deployed automatically. Argo CD requires a Git repo to store the desired state which it continuously synchronizes with the actual state in the cluster. Read my blog <a href="http://heidloff.net/article/deploying-kubernetes-resources-via-gitops/" rel="noopener noreferrer" target="_blank">Deploying Kubernetes Resources via GitOps</a> for an introduction to GitOps.</p>
+<p>Let&#8217;s look how the toolkit works for a concrete <a href="https://github.com/ibm/watson-automation" rel="noopener noreferrer" target="_blank">sample</a> where Watson NLP is deployed to OpenShift via GitOps.</p>
+<p>First you define the modules argocd-bootstrap and gitops-repo in the BOM (bill of material).</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: cloudnativetoolkit.dev/v1alpha1
+kind: BillOfMaterial
+metadata:
+  name: cluster-with-watson-nlp
+spec:
+  modules:
+    - name: ibm-ocp-vpc
+    - name: argocd-bootstrap
+    - name: gitops-repo
+    - name: terraform-gitops-ubi
+    - name: terraform-gitops-watson-nlp
+</pre>
+<p>To configure the GitOps module, change the configuration in <a href="https://github.com/IBM/watson-automation/blob/main/roks-new-nlp/output/cluster-with-watson-nlp/variables-template.yaml#L31-L42" rel="noopener noreferrer" target="_blank">variables.yaml</a>.</p>
+<pre class="brush: plain; title: ; notranslate">
+# gitops
+- name: gitops_repo_repo
+  description: The name of the gitops repository that will be created
+  value: xxx
+- name: gitops_repo_host
+  value: github.com
+- name: gitops_repo_org
+  value: xxx
+- name: gitops_repo_username
+  value: xxx
+</pre>
+<p>After applying the Terraform modules a GitOps repo will be created with a specific <a href="https://github.com/cloud-native-toolkit/terraform-tools-gitops/tree/main/template" rel="noopener noreferrer" target="_blank">structure</a> that the toolkit expects. There are two major types of resources in these repos:</p>
+<ol>
+<li>ArgoCD configuration</li>
+<li>Application &#8216;payloads&#8217;</li>
+</ol>
+<p><em>ArgoCD configuration</em><br />
+In Argo CD, collections of kubernetes resources that are deployed together are called &#8220;applications&#8221;. Applications in ArgoCD are configured using a custom resource definition (CRD) in the cluster which means ArgoCD applications can deploy other ArgoCD applications (called the &#8216;<a href="https://argoproj.github.io/argo-cd/operator-manual/cluster-bootstrapping/#app-of-apps-pattern" rel="noopener noreferrer" target="_blank">App of Apps pattern</a>&#8216;). With this pattern, the Argo CD environment can be bootstrapped with an initial application. That initial bootstrap application can then be updated in the GitOps repository to configure other applications.</p>
+<p><em>Application &#8216;payloads&#8217;</em><br />
+The ArgoCD configuration points to other paths within the GitOps repository that contain the actual &#8220;payload&#8221; yaml to provision the applications (the deployments, config maps, etc that make up the applications).</p>
+<p>In addition to separating the Argo CD configuration from the application &#8216;payloads&#8217;, the configuration has also been divided into three different layers of the cluster configuration:</p>
+<ol>
+<li>Infrastructure: Foundational elements within the cluster, like namespaces, service accounts, role-based access control, etc. These resources are often managed by the infrastructure team and are required by the other resources.</li>
+<li>Shared services: Shared services are application components that are used across multiple applications or across the cluster. Often these are operator-based services and managed independently from the applications.</li>
+<li>Applications: The application layer contains the applications deployed to the cluster, using the infrastructure and shared service components.</li>
+</ol>
+<p>Let&#8217;s look at the Watson NLP GitOps module example. In the directory &#8216;argocd/2-services&#8217; the source of the Argo CD application is defined which resides in the same repo in the &#8216;payload/2-services&#8217; directory. Helm is used for the actual deployment of the Watson NLP resources. Helm is the preferred solution of the toolkit since it allows easy configurations for different environments based on its built-in templating mechanism.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.32.17.png" alt="" width="2420" height="1516" class="alignnone size-full wp-image-5307" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.32.17.png 2420w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.32.17-300x188.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.32.17-768x481.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.32.17-1024x641.png 1024w" sizes="(max-width: 2420px) 100vw, 2420px" /></p>
+<p>The Argo CD dashboard shows the registered applications and their synchronization states.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.55.58.png" alt="" width="3664" height="1628" class="alignnone size-full wp-image-5308" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.55.58.png 3664w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.55.58-300x133.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.55.58-768x341.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.55.58-1024x455.png 1024w" sizes="(max-width: 3664px) 100vw, 3664px" /></p>
+<p>Additionally the dashboard shows for each application which Kubernetes resources have been deployed.</p>
+<p><img src="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.56.55.png" alt="" width="3416" height="962" class="alignnone size-full wp-image-5309" style="border: 1px solid #ddd;" srcset="http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.56.55.png 3416w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.56.55-300x84.png 300w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.56.55-768x216.png 768w, http://heidloff.net/wp-content/uploads/2022/11/Screenshot-2022-11-14-at-09.56.55-1024x288.png 1024w" sizes="(max-width: 3416px) 100vw, 3416px" /></p>
+<p>To change deployments you can simply change the configuration in the GitOps repo, for example to update to a later version of Watson NLP. Argo CD will be triggered automatically to synchronize the desired state with the actual state.</p>
+<p>To find out more about these capabilities, check out the following resources:</p>
+<ul>
+<li><a href="https://operate.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">TechZone Accelerator Toolkit Documentation</a></li>
+<li><a href="https://operate.cloudnativetoolkit.dev/" rel="noopener noreferrer" target="_blank">TechZone Accelerator Toolkit Modules</a></li>
+<li><a href="https://github.com/cloud-native-toolkit/iascable" rel="noopener noreferrer" target="_blank">TechZone Accelerator Toolkit CLI (iascable)</a></li>
+<li><a href="https://github.com/cloud-native-toolkit/terraform-gitops-ubi" rel="noopener noreferrer" target="_blank">Sample GitOps Module: UBI</a></li>
+<li><a href="https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp" rel="noopener noreferrer" target="_blank">Sample GitOps Module: Watson NLP</a></li>
+<li><a href="https://github.com/IBM/watson-automation" rel="noopener noreferrer" target="_blank">Sample BOMs to deploy Watson NLP</a></li>
+</ul>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/understanding-techzone-toolkit-gitops-modules/">Understanding TechZone Toolkit GitOps Modules</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><post-id xmlns="com-wordpress:feed-additions:1">5306</post-id></item></channel></rss>

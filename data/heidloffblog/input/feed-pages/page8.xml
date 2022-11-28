@@ -1,0 +1,610 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	
+xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+>
+
+<channel>
+	<title>Page 22 &#8211; Niklas Heidloff</title>
+	<atom:link href="http://heidloff.net/feed/?paged=22" rel="self" type="application/rss+xml" />
+	<link>http://heidloff.net</link>
+	<description></description>
+	<lastBuildDate>
+	Fri, 25 Nov 2022 07:22:15 +0000	</lastBuildDate>
+	<language>en-US</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=5.1.15</generator>
+<site xmlns="com-wordpress:feed-additions:1">102773794</site>	<item>
+		<title>Developing OpenWhisk Functions with Spring Boot</title>
+		<link>http://heidloff.net/article/openwhisk-spring-boot-eclipse</link>
+				<comments>http://heidloff.net/article/openwhisk-spring-boot-eclipse#respond</comments>
+				<pubDate>Fri, 02 Mar 2018 13:55:13 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=2863</guid>
+				<description><![CDATA[<p>I&#8217;ve open sourced some code that shows how Apache OpenWhisk functions can be developed with Spring Boot and how the functions, which run in Docker, can be debugged in Eclipse IDEs. Get the code from GitHub. Apache OpenWhisk is an open source serverless platform. One of the great OpenWhisk features is the capability to build [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/openwhisk-spring-boot-eclipse">Developing OpenWhisk Functions with Spring Boot</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>I&#8217;ve open sourced some code that shows how <a href="http://openwhisk.org/" rel="noopener" target="_blank">Apache OpenWhisk</a> functions can be developed with <a href="https://projects.spring.io/spring-boot/" rel="noopener" target="_blank">Spring Boot</a> and how the functions, which run in Docker, can be debugged in Eclipse IDEs.<span id="more-2863"></span></p>
+<p><a href="https://github.com/nheidloff/openwhisk-debug-java" rel="noopener" target="_blank">Get the code from GitHub.</a></p>
+<p>Apache OpenWhisk is an open source serverless platform. One of the great OpenWhisk features is the capability to build functions with <a href="https://github.com/apache/incubator-openwhisk/blob/master/docs/actions.md#creating-docker-actions" rel="noopener" target="_blank">Docker</a> by basically only implementing one URL endpoint in a programming language of your choice.</p>
+<p>The sample describes how Spring Boot code can be developed in local Eclipse IDEs. The code, which runs in a local Docker container, can be debugged directly from the IDE. Via the <a href="https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-devtools.html" rel="noopener" target="_blank">Spring Boot Developer Tools</a> the code can be changed in the IDE and the changes can be run immediately without having to restart the container.</p>
+<p>The advantage of this approach is that the development is done in (almost) the same container that runs in the cloud which minimizes the chances to run into issues because of different environments.</p>
+<p>Here is a screenshot that shows how Spring Boot code running in Docker can be debugged in the Eclipse IDE:</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/03/debugger.png"><img src="http://heidloff.net/wp-content/uploads/2018/03/debugger.png" alt="debugger" width="1808" height="1564" class="alignnone size-full wp-image-2862" srcset="http://heidloff.net/wp-content/uploads/2018/03/debugger.png 1808w, http://heidloff.net/wp-content/uploads/2018/03/debugger-300x260.png 300w, http://heidloff.net/wp-content/uploads/2018/03/debugger-1024x886.png 1024w" sizes="(max-width: 1808px) 100vw, 1808px" /></a></p>
+<p>If you want to try out OpenWhisk in the cloud, you can get an account on the <a href="http://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/openwhisk-spring-boot-eclipse">Developing OpenWhisk Functions with Spring Boot</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/openwhisk-spring-boot-eclipse/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">2863</post-id>	</item>
+		<item>
+		<title>Transforming JSON Data in Serverless Applications</title>
+		<link>http://heidloff.net/article/transforming-json-serverless</link>
+				<comments>http://heidloff.net/article/transforming-json-serverless#respond</comments>
+				<pubDate>Mon, 26 Feb 2018 08:25:08 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=2854</guid>
+				<description><![CDATA[<p>Serverless platforms like Apache OpenWhisk are gaining more and more traction. Rather than building only single functions, developers are starting to develop cloud-native applications with many serverless functions/microservices. The challenge when building serverless applications is how to manage the data flows between the functions, especially if you want loosely coupled functions without dependencies between each [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/transforming-json-serverless">Transforming JSON Data in Serverless Applications</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>Serverless platforms like <a href="https://openwhisk.apache.org/" rel="noopener" target="_blank">Apache OpenWhisk</a> are gaining more and more traction. Rather than building only single functions, developers are starting to develop cloud-native applications with many serverless functions/microservices.<span id="more-2854"></span></p>
+<p>The challenge when building serverless applications is how to manage the data flows between the functions, especially if you want loosely coupled functions without dependencies between each other.</p>
+<p>In my previous article <a href="http://heidloff.net/article/serverless-data-flows" rel="noopener" target="_blank">Data Flows in Serverless Cloud-Native Applications</a> I explained a pattern how to manage the data flows between functions. In this article I will go one step further and describe how functions can define their input and output schemas and how transformations of JSON data can be done.</p>
+<p><a href="https://github.com/nheidloff/openwhisk-data-flows" rel="noopener" target="_blank">The complete code of this sample is on GitHub.</a></p>
+<p>I picked a simple scenario application which sends a mail. The serverless application is invoked with two input parameters: person id and subject. For the specific person the full profile is received which contains the email address. The last function sends a mail to this email address with the defined subject. </p>
+<p>There are only two &#8216;real&#8217; functions that are executed sequentially: 1. read person profile, 2. send mail. Before they are executed however, additional &#8216;transformation&#8217; functions are invoked which transform the data into the exact format that is expected. Here is the code of the <a href="https://github.com/nheidloff/openwhisk-data-flows/blob/master/apps/send-mail-app.js" rel="noopener" target="_blank">application</a>:</p>
+<pre class="brush: jscript; title: ; notranslate">
+composer.try(
+    composer.sequence(
+        composer.task('composer-demo-nh/transform-read-person-profile', { merge: true }),
+        composer.task('composer-demo-nh/read-person-profile', { merge: true }),
+        composer.task('composer-demo-nh/transform-send-mail', { merge: true }),
+        composer.task('composer-demo-nh/send-mail', { merge: true })
+    ),
+    params =&gt; {
+        return { 
+            ok: false,
+            'message': 'An error has occured in the app send-mail-app',
+            'error-from-function': params.error
+         } 
+    }
+)
+</pre>
+<p>Let&#8217;s take a look at the function that reads the <a href="https://github.com/nheidloff/openwhisk-data-flows/blob/master/functions/read-person-profile.js" rel="noopener" target="_blank">user profile</a>. The function expects a person id and returns a person profile including an email address. The inputs and outputs are defined via <a href="http://json-schema.org" rel="noopener" target="_blank">JSON Schema</a>.</p>
+<p>Check out the schema of the person profile which is the <a href="https://github.com/nheidloff/openwhisk-data-flows/blob/master/functions/read-person-profile.js#L76-L108" rel="noopener" target="_blank">output</a>. The <a href="https://github.com/nheidloff/openwhisk-data-flows/blob/master/functions/read-person-profile.js#L38-L47" rel="noopener" target="_blank">input</a> schema is simple since it only contains one id:</p>
+<pre class="brush: plain; title: ; notranslate">
+{
+  &quot;$schema&quot;: &quot;http://json-schema.org/draft-04/schema#&quot;,
+  &quot;type&quot;: &quot;object&quot;,
+  &quot;properties&quot;: {
+    &quot;id&quot;: {
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;title&quot;: &quot;Schema Input of read-person-profile&quot;
+}
+</pre>
+<p>Since the &#8216;send mail&#8217; function doesn&#8217;t expect the full person profile, but only an email address and a subject (see <a href="https://github.com/nheidloff/openwhisk-data-flows/blob/master/functions/send-mail.js#L22-L34" rel="noopener" target="_blank">schema</a>), the data needs to be converted. </p>
+<p>For this purpose I use <a href="http://jsonata.org/" rel="noopener" target="_blank">JSONata</a> which is a lightweight query and transformation language for JSON data inspired by semantics of XPath. For Node.js developers there is an <a href="https://github.com/jsonata-js/jsonata" rel="noopener" target="_blank">npm module</a> which is a JavaScript implementation of JSONata.</p>
+<p>This is the &#8216;<a href="https://github.com/nheidloff/openwhisk-data-flows/blob/master/functions/transform-send-mail.js" rel="noopener" target="_blank">transform function</a>&#8216; which creates the expected input for the &#8216;send mail&#8217; function. tbd</p>
+<pre class="brush: jscript; title: ; notranslate">
+const jsonata = require('jsonata');
+
+let main = params =&gt; {    
+    try {
+        let inputApplication = params['input-application'];       
+        let subject = inputApplication.subject;
+
+        let outputReadPersonProfile = params['output-read-person-profile'];  
+             
+        let expression = jsonata(&quot;Email[type='office'].address[0]&quot;);        
+        let email = expression.evaluate(outputReadPersonProfile);  
+        
+        let outputParameters = {
+            'input': {
+                'email': email,
+                'subject': subject
+            }
+        }
+        return outputParameters;
+    }
+    catch (error) {
+        return {
+            error: 'Error in transform-send-mail'
+        }
+    }
+}
+</pre>
+<p>With jsonata(&#8220;Email[type=&#8217;office&#8217;].address[0]&#8221;) the first business email address is returned from the profile.</p>
+<p>To summarize I think functions should define their input and output schemas so that, for example, they can be built by different developers and assembled easily in serverless applications. Functions with schemas can also easier be re-used in different applications. The transformations of the data that flows in serverless applications can be done in separate &#8216;transformation&#8217; functions.</p>
+<p>A similar concept is used by <a href="https://console.bluemix.net/catalog/services/app-connect" rel="noopener" target="_blank">IBM App Connect</a> which can be used to integrate different applications without having to code anything. App Connect provides a JSON Parser node where you can enter a schema or sample JSON. Subsequent nodes can then access data from previous nodes declaratively. See my previous article <a href="http://heidloff.net/article/integrating-applications-without-code" rel="noopener" target="_blank">Integrating Applications without writing Code</a> for an example.</p>
+<p>I really like the App Connect user experience to select data in JSON. Recently App Connect won the <a href="https://medium.com/design-ibm/ibm-cloud-continues-to-demonstrate-design-excellence-7a5150124136" rel="noopener" target="_blank">iF Design Award 2018</a>. I think it would be great to see that user experience added to OpenWhisk Composer. Here is a screenshot how the scenario from above could be done via App Connect.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/02/app-connect-openwhisk3.png"><img src="http://heidloff.net/wp-content/uploads/2018/02/app-connect-openwhisk3.png" alt="app-connect-openwhisk3" width="2018" height="1950" class="alignnone size-full wp-image-2858" srcset="http://heidloff.net/wp-content/uploads/2018/02/app-connect-openwhisk3.png 2018w, http://heidloff.net/wp-content/uploads/2018/02/app-connect-openwhisk3-300x290.png 300w, http://heidloff.net/wp-content/uploads/2018/02/app-connect-openwhisk3-1024x989.png 1024w" sizes="(max-width: 2018px) 100vw, 2018px" /></a></p>
+<p>If you want to try out OpenWhisk in the cloud, you can get an account on the <a href="http://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/transforming-json-serverless">Transforming JSON Data in Serverless Applications</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/transforming-json-serverless/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">2854</post-id>	</item>
+		<item>
+		<title>Data Flows in Serverless Cloud-Native Applications</title>
+		<link>http://heidloff.net/article/serverless-data-flows</link>
+				<comments>http://heidloff.net/article/serverless-data-flows#respond</comments>
+				<pubDate>Thu, 22 Feb 2018 15:15:15 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=2834</guid>
+				<description><![CDATA[<p>Serverless platforms like Apache OpenWhisk are gaining more and more traction. Rather than building only single functions, developers are starting to develop cloud-native applications with many serverless functions/microservices. The challenge when building serverless cloud-native applications is how to orchestrate the different functions and how to manage the data flows between the functions. Especially if you [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/serverless-data-flows">Data Flows in Serverless Cloud-Native Applications</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>Serverless platforms like <a href="https://openwhisk.apache.org/" rel="noopener" target="_blank">Apache OpenWhisk</a> are gaining more and more traction. Rather than building only single functions, developers are starting to develop cloud-native applications with many serverless functions/microservices.<span id="more-2834"></span></p>
+<p>The challenge when building serverless cloud-native applications is how to orchestrate the different functions and how to manage the data flows between the functions. Especially if you want loosely-coupled functions without dependencies between each other, you need a good strategy how to handle the data flows.</p>
+<p>IBM open sourced <a href="https://github.com/ibm-functions/composer" rel="noopener" target="_blank">Composer</a> which is an extension to Apache OpenWhisk. With Composer applications can be defined which contain multiple functions. While the functions are stateless, the applications manage the state between the different function invocations. Read my previous <a href="http://heidloff.net/article/serverless-apps-cloud-functions-composition-flows" rel="noopener" target="_blank">article</a> for a short Composer introduction.</p>
+<p>With Composer applications can be defined either declaratively via JSON or programmatically via JavaScript. Below I describe a pattern how to handle the data flows in applications programmatically.</p>
+<p>Before I explain the pattern, let me summarize my requirements:</p>
+<ul>
+<li>Input parameters of applications need to be accessible in all functions</li>
+<li>Output parameters of previous functions need to be accessible in all later functions</li>
+<li>Functions should have well defined inputs and outputs (schemas)</li>
+<li>Functions get their inputs in the expected format and don&#8217;t have to parse anything first</li>
+<li>Not handled in this article: Applications shouldn&#8217;t break when functions have new schema versions</li>
+</ul>
+<p>For my simple sample application I use two simple functions. This is the first function &#8216;<a href="https://github.com/nheidloff/openwhisk-data-flows/blob/master/functions/simple1.js" rel="noopener" target="_blank">simple1.js</a>&#8216;:</p>
+<pre class="brush: jscript; title: ; notranslate">
+let main = params =&gt; {
+    let inputParameters = params.input;
+    let outputParameters = {
+        'output-simple1': {
+            'some-parameter': 'value of some-parameter in simple1'
+        }
+    }
+    return outputParameters;
+}
+</pre>
+<p>This is the second function &#8216;<a href="https://github.com/nheidloff/openwhisk-data-flows/blob/master/functions/simple2.js" rel="noopener" target="_blank">simple2.js</a>&#8216;:</p>
+<pre class="brush: jscript; title: ; notranslate">
+let main = params =&gt; {
+    let inputParameters = params.input;
+    let outputParameters = {
+        'output-simple2': {
+            'some-parameter': 'value of some-parameter in simple2',
+            'echo-input-parameters': inputParameters
+        }
+    }
+    return outputParameters;
+}
+</pre>
+<p>This is the sample application &#8216;<a href="https://github.com/nheidloff/openwhisk-data-flows/blob/master/apps/in-app-conversions.js" rel="noopener" target="_blank">in-app-conversions.js</a>&#8216;. The application has only two functions which are executed sequentially.</p>
+<pre class="brush: jscript; title: ; notranslate">
+composer.sequence(
+    params =&gt; {
+        params['input'] = {
+            'input-param1': params['input-param1']
+            // add more transformations here 
+        }
+        return params;
+    },
+    composer.task('composer-demo-nh/simple1', { merge: true }),
+    params =&gt; {
+        params['input'] = {
+            'input-param1': params['input-param1'],
+            'some-more-input-for': 'simple2 function'
+            // add more transformations here 
+        }
+        return params;
+    },
+    composer.task('composer-demo-nh/simple2', { merge: true })
+)
+</pre>
+<p>Before I explain the application, here is the output of the &#8216;fsh app invoke&#8217; command:</p>
+<pre class="brush: plain; title: ; notranslate">
+$ fsh app invoke composer-demo-nh/in-app-conversions -p input-param1 input-param1-value
+</pre>
+<pre class="brush: plain; title: ; notranslate">
+{
+  input-param1: &quot;input-param1-value&quot;,
+  output-simple1: {
+    some-parameter: &quot;value of some-parameter in simple1&quot;
+  },
+  input: {
+    input-param1: &quot;input-param1-value&quot;,
+    some-more-input-for: &quot;simple2 function&quot;
+  },
+  output-simple2: {
+    some-parameter: &quot;value of some-parameter in simple2&quot;,
+    echo-input-parameters: {
+      input-param1: &quot;input-param1-value&quot;,
+      some-more-input-for: &quot;simple2 function&quot;
+    }
+  }
+}
+</pre>
+<p>Let me now describe how the application works:</p>
+<ul>
+<li>In order to access all input parameters of the application (in this case &#8216;input-param1&#8217;) &#8216;<a href="https://github.com/ibm-functions/composer/blob/master/docs/COMPOSER.md#composertasktask-options" rel="noopener" target="_blank">merge: true</a>&#8216; is used which merges the inputs and outputs of functions together.</li>
+<li>In order to avoid naming collisions when merging, a simple naming convention is used. Each function puts it&#8217;s output in an unique &#8216;namespace&#8217;, for example &#8216;output-simple1&#8217;.</li>
+<li>The &#8216;params&#8217; object contains the inputs of the applications and the outputs of all functions. In order to access the input of a function within a specific function, the function reads the subset of data from &#8216;params.input&#8217;.</li>
+<li>The conversions are done via JavaScript in the application directly by inserting a JavaScript <a href="https://github.com/ibm-functions/composer/blob/master/docs/COMPOSER.md#composertasktask-options" rel="noopener" target="_blank">task</a> between the functions.</li>
+</ul>
+<p>This is the visualization of the sample application in the fsh shell:</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/02/data-flow-sample2.png"><img src="http://heidloff.net/wp-content/uploads/2018/02/data-flow-sample2.png" alt="data-flow-sample2" width="1786" height="1818" class="alignnone size-full wp-image-2837" srcset="http://heidloff.net/wp-content/uploads/2018/02/data-flow-sample2.png 1786w, http://heidloff.net/wp-content/uploads/2018/02/data-flow-sample2-295x300.png 295w, http://heidloff.net/wp-content/uploads/2018/02/data-flow-sample2-1006x1024.png 1006w" sizes="(max-width: 1786px) 100vw, 1786px" /></a></p>
+<p><a href="https://github.com/nheidloff/openwhisk-data-flows" rel="noopener" target="_blank">Get the code from GitHub.</a></p>
+<p>In a future article <a href="http://heidloff.net/article/transforming-json-serverless" rel="noopener" target="_blank">Transforming JSON Data in Serverless Applications</a> I will extend this sample to demonstrate how to handle more complex scenarios and and how to do  conversions between JSON via a nice open source project that supports &#8216;JSON schemas&#8217;.</p>
+<p>If you want to try out OpenWhisk in the cloud, you can get an account on the <a href="http://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/serverless-data-flows">Data Flows in Serverless Cloud-Native Applications</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/serverless-data-flows/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">2834</post-id>	</item>
+		<item>
+		<title>Deploying Angular, React and Vue Apps on Kubernetes</title>
+		<link>http://heidloff.net/article/angular-react-vue-kubernetes</link>
+				<comments>http://heidloff.net/article/angular-react-vue-kubernetes#comments</comments>
+				<pubDate>Tue, 20 Feb 2018 09:23:34 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=2832</guid>
+				<description><![CDATA[<p>I&#8217;ve open sourced some sample code that shows how to deploy Angular, React and Vue web applications to Kubernetes on the IBM Cloud. Get the code from GitHub. In order to serve the web applications, nginx is used. Check out nginx.conf for a simple sample configuration. The file also shows how to access other domains [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/angular-react-vue-kubernetes">Deploying Angular, React and Vue Apps on Kubernetes</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>I&#8217;ve open sourced some sample code that shows how to deploy <a href="https://angular.io/" rel="noopener" target="_blank">Angular</a>, <a href="https://reactjs.org/" rel="noopener" target="_blank">React</a> and <a href="https://vuejs.org/" rel="noopener" target="_blank">Vue</a> web applications to <a href="https://kubernetes.io/" rel="noopener" target="_blank">Kubernetes</a> on the <a href="https://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a>.<span id="more-2832"></span></p>
+<p><a href="https://github.com/nheidloff/web-apps-kubernetes" rel="noopener" target="_blank">Get the code from GitHub.</a></p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/02/webapps-kube.png"><img src="http://heidloff.net/wp-content/uploads/2018/02/webapps-kube.png" alt="webapps-kube" width="900" height="560" class="alignnone size-full wp-image-2831" srcset="http://heidloff.net/wp-content/uploads/2018/02/webapps-kube.png 900w, http://heidloff.net/wp-content/uploads/2018/02/webapps-kube-300x187.png 300w" sizes="(max-width: 900px) 100vw, 900px" /></a></p>
+<p>In order to serve the web applications, nginx is used. Check out <a href="https://github.com/nheidloff/web-apps-kubernetes/blob/master/angular-app/nginx.conf" rel="noopener" target="_blank">nginx.conf</a> for a simple sample configuration. The file also shows how to access other domains via HTTP.</p>
+<pre class="brush: plain; title: ; notranslate">
+server {
+  listen 80;
+  charset utf-8;
+  sendfile on;
+  root /usr/share/nginx/html;
+  
+  location / {
+    expires -1;
+    add_header Pragma &quot;no-cache&quot;;
+    add_header Cache-Control &quot;no-store, no-cache, must-revalidate, post-check=0, pre-check=0&quot;;
+ 
+    try_files $uri $uri/ /index.html = 404;
+  }
+ 
+  location /api/v1/namespaces/ {
+    proxy_pass https://openwhisk.ng.bluemix.net; 
+  }    
+}
+</pre>
+<p>The built web applications in the dist/build folders are copied on a Docker image. The image extends the standard nginx image from DockerHub. Here is the <a href="https://github.com/nheidloff/web-apps-kubernetes/blob/master/angular-app/Dockerfile" rel="noopener" target="_blank">Dockerfile</a>.</p>
+<pre class="brush: plain; title: ; notranslate">
+FROM nginx:latest
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY dist /usr/share/nginx/html
+</pre>
+<p>In order to deploy the applications to Kubernetes, the Docker images are pushed to Docker registries and the Kubernetes <a href="https://github.com/nheidloff/web-apps-kubernetes/blob/master/angular-app/kube-angular.yaml" rel="noopener" target="_blank">configurations</a> are deployed via the kubectl CLI.</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: v1
+kind: Service
+metadata:
+  name: angular-app
+  labels:
+    run: angular-app
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: http
+  - port: 443
+    protocol: TCP
+    name: https
+  selector:
+    run: angular-app
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: angular-app
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: angular-app
+    spec:
+      containers:
+      - name: angular-app
+        image: nheidloff/angular-app
+        ports:
+        - containerPort: 80
+        - containerPort: 443      
+</pre>
+<p>If you want to try out deploying web applications on Kubernetes, you can register an account on the <a href="https://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/angular-react-vue-kubernetes">Deploying Angular, React and Vue Apps on Kubernetes</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/angular-react-vue-kubernetes/feed/</wfw:commentRss>
+		<slash:comments>1</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">2832</post-id>	</item>
+		<item>
+		<title>Slides: When to use Serverless? When to use Kubernetes?</title>
+		<link>http://heidloff.net/article/serverless-or-kubernetes</link>
+				<comments>http://heidloff.net/article/serverless-or-kubernetes#respond</comments>
+				<pubDate>Mon, 19 Feb 2018 08:56:24 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=2813</guid>
+				<description><![CDATA[<p>Many developers want to know whether they should use Serverless or Kubernetes to build cloud-native applications. Both computing options have pros and cons and it depends on your needs which option you should choose. I blogged about when to use Serverless and when to use Kubernetes. Use Serverless if you have the following needs: Variable [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/serverless-or-kubernetes">Slides: When to use Serverless? When to use Kubernetes?</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>Many developers want to know whether they should use <a href="https://en.wikipedia.org/wiki/Serverless_computing" rel="noopener" target="_blank">Serverless</a> or <a href="https://kubernetes.io/" rel="noopener" target="_blank">Kubernetes</a> to build cloud-native applications. Both computing options have pros and cons and it depends on your needs which option you should choose.<span id="more-2813"></span></p>
+<p>I blogged about <a href="http://heidloff.net/article/when-to-use-serverless-kubernetes" rel="noopener" target="_blank">when to use Serverless and when to use Kubernetes</a>. </p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/02/kube-vs-serverless.png"><img src="http://heidloff.net/wp-content/uploads/2018/02/kube-vs-serverless.png" alt="kube-vs-serverless" width="2450" height="1370" class="alignnone size-full wp-image-2812" srcset="http://heidloff.net/wp-content/uploads/2018/02/kube-vs-serverless.png 2450w, http://heidloff.net/wp-content/uploads/2018/02/kube-vs-serverless-300x168.png 300w, http://heidloff.net/wp-content/uploads/2018/02/kube-vs-serverless-1024x573.png 1024w" sizes="(max-width: 2450px) 100vw, 2450px" /></a></p>
+<p>Use <strong>Serverless</strong> if you have the following needs:</p>
+<ul>
+<li>Variable and irregular Workloads</li>
+<li>Developer Productivity for first Time Experience</li>
+<li>Inherent Auto-Scalability</li>
+</ul>
+<p>Use <strong>Kubernetes</strong> if you have the following needs:</p>
+<ul>
+<li>Mature Deployment Options</li>
+<li>Minimal Response Latency</li>
+<li>High Performance Computing without Resource Restrictions</li>
+</ul>
+<p>Here are the slides of a session about this topic.</p>
+<p><iframe src="//www.slideshare.net/slideshow/embed_code/key/GKuMr930MPScj8" width="853" height="520" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe></p>
+<p>If you want to try out Serverless and Kubernetes, you can get a free lite account (no credit card required) on the <a href="http://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/serverless-or-kubernetes">Slides: When to use Serverless? When to use Kubernetes?</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/serverless-or-kubernetes/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">2813</post-id>	</item>
+		<item>
+		<title>Accessing Machine Learning Models via REST APIs</title>
+		<link>http://heidloff.net/article/machine-learning-models-rest-apis</link>
+				<comments>http://heidloff.net/article/machine-learning-models-rest-apis#respond</comments>
+				<pubDate>Thu, 15 Feb 2018 14:10:55 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=2802</guid>
+				<description><![CDATA[<p>Watson Machine Learning can be used by data scientists to create models which can be managed and deployed on the IBM Cloud. Developers can access these models from applications, for example to run predictions. I blogged about a sample scenario to predict whether people would have survived the Titanic accident based on their age, ticket [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/machine-learning-models-rest-apis">Accessing Machine Learning Models via REST APIs</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p><a href="https://console.bluemix.net/catalog/services/machine-learning" rel="noopener" target="_blank">Watson Machine Learning</a> can be used by data scientists to create models which can be managed and deployed on the IBM Cloud. Developers can access these models from applications, for example to run predictions.<span id="more-2802"></span></p>
+<p>I blogged about a <a href="http://heidloff.net/article/watson-machine-learning-sample" rel="noopener" target="_blank">sample scenario</a> to predict whether people would have survived the Titanic accident based on their age, ticket class, sex and number of siblings and spouses on board the Titanic. </p>
+<p>The screenshot shows the endpoint developers can use to access the deployed model via HTTP. In order to protect the endpoint, the credentials of the machine learning service are needed. With these credentials a bearer token is read that is needed for the actual <a href="https://watson-ml-api.mybluemix.net/#!/Deployments/post_v3_wml_instances_instance_id_published_models_published_model_id_deployments_deployment_id_online" rel="noopener" target="_blank">prediction endpoint invocation</a>.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/02/ml-api-0.png"><img src="http://heidloff.net/wp-content/uploads/2018/02/ml-api-0.png" alt="ml-api-0" width="2270" height="1648" class="alignnone size-full wp-image-2803" srcset="http://heidloff.net/wp-content/uploads/2018/02/ml-api-0.png 2270w, http://heidloff.net/wp-content/uploads/2018/02/ml-api-0-300x218.png 300w, http://heidloff.net/wp-content/uploads/2018/02/ml-api-0-1024x743.png 1024w" sizes="(max-width: 2270px) 100vw, 2270px" /></a></p>
+<p>While this mechanism works for smaller teams and projects I&#8217;d guess that at some point you&#8217;d want API management capabilities so that developers don&#8217;t have to have the credentials of the machine learning service and so that you can better track the REST API invocations.</p>
+<p>That&#8217;s why I have built a little demo that shows how to use <a href="https://console.bluemix.net/catalog/services/api-connect" rel="noopener" target="_blank">API Connect</a> on top of the Watson Machine Learning endpoint.</p>
+<p>First I created a new API with only one POST REST API. In the assembly of this API there are four steps. First the token is read from Watson Machine Learning. This requires the machine learning credentials. In the second step the received token as well as the original content in the body field are put in a message JSON object. This message object can be accessed in the third step where the headers for the second invocation are set. In the last step the actual prediction endpoint is invoked.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/02/ml-api-1.png"><img src="http://heidloff.net/wp-content/uploads/2018/02/ml-api-1.png" alt="ml-api-1" width="2278" height="1486" class="alignnone size-full wp-image-2804" srcset="http://heidloff.net/wp-content/uploads/2018/02/ml-api-1.png 2278w, http://heidloff.net/wp-content/uploads/2018/02/ml-api-1-300x196.png 300w, http://heidloff.net/wp-content/uploads/2018/02/ml-api-1-1024x668.png 1024w" sizes="(max-width: 2278px) 100vw, 2278px" /></a></p>
+<p>For the demo I secured the API with a client id only which developers can request via a portal. You could also use additionally secrets, OAuth and other security mechanisms.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/02/ml-api-2.png"><img src="http://heidloff.net/wp-content/uploads/2018/02/ml-api-2.png" alt="ml-api-2" width="2276" height="1486" class="alignnone size-full wp-image-2805" srcset="http://heidloff.net/wp-content/uploads/2018/02/ml-api-2.png 2276w, http://heidloff.net/wp-content/uploads/2018/02/ml-api-2-300x196.png 300w, http://heidloff.net/wp-content/uploads/2018/02/ml-api-2-1024x669.png 1024w" sizes="(max-width: 2276px) 100vw, 2276px" /></a></p>
+<p>From the portal developers invoke the APIs.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/02/ml-api-3.png"><img src="http://heidloff.net/wp-content/uploads/2018/02/ml-api-3.png" alt="ml-api-3" width="2272" height="1960" class="alignnone size-full wp-image-2806" srcset="http://heidloff.net/wp-content/uploads/2018/02/ml-api-3.png 2272w, http://heidloff.net/wp-content/uploads/2018/02/ml-api-3-300x259.png 300w, http://heidloff.net/wp-content/uploads/2018/02/ml-api-3-1024x883.png 1024w" sizes="(max-width: 2272px) 100vw, 2272px" /></a></p>
+<p>Since not everything fits on the screenshot above, here is another screenshot from a curl command.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/02/ml-api-4.png"><img src="http://heidloff.net/wp-content/uploads/2018/02/ml-api-4.png" alt="ml-api-4" width="1480" height="400" class="alignnone size-full wp-image-2807" srcset="http://heidloff.net/wp-content/uploads/2018/02/ml-api-4.png 1480w, http://heidloff.net/wp-content/uploads/2018/02/ml-api-4-300x81.png 300w, http://heidloff.net/wp-content/uploads/2018/02/ml-api-4-1024x277.png 1024w" sizes="(max-width: 1480px) 100vw, 1480px" /></a></p>
+<p>To find out more about Watson Machine Learning check out the <a href="https://datascience.ibm.com/" rel="noopener" target="_blank">IBM Data Science Experience</a>. More information about API Connect can be found in the <a href="https://www.ibm.com/support/knowledgecenter/SSFS6T/com.ibm.apic.toolkit.doc/rapim_context_var.html" rel="noopener" target="_blank">documentation</a> and the available <a href="https://developer.ibm.com/apiconnect/2016/11/21/api-connect-tutorial-mastering-the-api-assembly/" rel="noopener" target="_blank">tutorials</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/machine-learning-models-rest-apis">Accessing Machine Learning Models via REST APIs</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/machine-learning-models-rest-apis/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">2802</post-id>	</item>
+		<item>
+		<title>A/B Testing with Kubernetes and Istio</title>
+		<link>http://heidloff.net/article/ab-testing-kubernetes-istio</link>
+				<comments>http://heidloff.net/article/ab-testing-kubernetes-istio#respond</comments>
+				<pubDate>Tue, 13 Feb 2018 13:37:16 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=2796</guid>
+				<description><![CDATA[<p>Last week I gave a presentation &#8220;When to use Serverless? When to use Kubernetes?&#8221; One of the weaknesses of Serverless platforms is that you currently cannot do things like A/B testing well since there is no notion of versions. A/B testing allows running multiple variants of functionality in parallel, so that through analytics of user [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/ab-testing-kubernetes-istio">A/B Testing with Kubernetes and Istio</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>Last week I gave a presentation &#8220;<a href="http://heidloff.net/article/when-to-use-serverless-kubernetes" rel="noopener" target="_blank">When to use Serverless? When to use Kubernetes?</a>&#8221; One of the weaknesses of Serverless platforms is that you currently cannot do things like A/B testing well since there is no notion of versions.<span id="more-2796"></span></p>
+<p><a href="https://en.wikipedia.org/wiki/A/B_testing" rel="noopener" target="_blank">A/B testing</a> allows running multiple variants of functionality in parallel, so that through analytics of user behavior the better variant can be determined. Similarly with &#8216;dark launches&#8217; new features can be made available to only certain users to test features in production environments before these features will be released to the masses.</p>
+<p>These traffic flow management capabilities are one of the advantages of <a href="https://kubernetes.io" rel="noopener" target="_blank">Kubernetes</a> and <a href="https://istio.io/" rel="noopener" target="_blank">Istio</a>. Istio is an open platform to manage microservices. </p>
+<p>Some of my colleagues have <a href="https://github.com/IBM/microservices-traffic-management-using-istio" rel="noopener" target="_blank">documented</a> how to do traffic flow management with Istio for the <a href="https://istio.io/docs/guides/bookinfo.html" rel="noopener" target="_blank">Book Info</a> sample that is part of the <a href="https://istio.io/docs/concepts/what-is-istio/overview.html" rel="noopener" target="_blank">Istio documentation</a>. The current documentation is for Istio 0.1.6 and doesn&#8217;t work for the later version 0.5.0 which I use. I&#8217;ve sent a <a href="https://github.com/IBM/microservices-traffic-management-using-istio/pull/60" rel="noopener" target="_blank">pull request</a>, since some URLs have changed.</p>
+<p>The diagram shows the architecture of the book info sample app. Books have reviews and can have ratings. The application has three versions of the review service. The gray components on the left hand side are the Istio components. When the sample application is deployed, further Istio components, the Envoy containers, are automatically added to each pod. These Envoy components are proxies (also called side cars) through which containers communicate with each other which is the basis for Istio&#8217;s traffic management capabilities.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/02/istio-sample-architecture.png"><img src="http://heidloff.net/wp-content/uploads/2018/02/istio-sample-architecture.png" alt="istio-sample-architecture" width="1924" height="1056" class="alignnone size-full wp-image-2795" srcset="http://heidloff.net/wp-content/uploads/2018/02/istio-sample-architecture.png 1924w, http://heidloff.net/wp-content/uploads/2018/02/istio-sample-architecture-300x165.png 300w, http://heidloff.net/wp-content/uploads/2018/02/istio-sample-architecture-1024x562.png 1024w" sizes="(max-width: 1924px) 100vw, 1924px" /></a></p>
+<p>Check out the <a href="https://github.com/istio/istio/blob/9f670724fb6c5f7de818204c63e155c6d6c0706a/samples/bookinfo/kube/bookinfo.yaml#L88-L156" rel="noopener" target="_blank">bookinfo.yaml</a> file how to define and deploy the three versions of the review service.</p>
+<p>In order to route traffic to version 1 for 50% of the invocations and to version 3 for the other half, this <a href="https://github.com/istio/istio/blob/9f670724fb6c5f7de818204c63e155c6d6c0706a/samples/bookinfo/kube/route-rule-reviews-50-v3.yaml" rel="noopener" target="_blank">route rule</a> can be used.</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: config.istio.io/v1alpha2
+kind: RouteRule
+metadata:
+  name: reviews-default
+spec:
+  destination:
+    name: reviews
+  precedence: 1
+  route:
+  - labels:
+      version: v1
+    weight: 50
+  - labels:
+      version: v3
+    weight: 50
+</pre>
+<p>In order to expose version 2 to only users with the name &#8216;Jason&#8217;, a <a href="https://github.com/istio/istio/blob/9f670724fb6c5f7de818204c63e155c6d6c0706a/samples/bookinfo/kube/route-rule-reviews-test-v2.yaml" rel="noopener" target="_blank">regular expression</a> can be used.</p>
+<pre class="brush: plain; title: ; notranslate">
+apiVersion: config.istio.io/v1alpha2
+kind: RouteRule
+metadata:
+  name: reviews-test-v2
+spec:
+  destination:
+    name: reviews
+  precedence: 2
+  match:
+    request:
+      headers:
+        cookie:
+          regex: &quot;^(.*?;)?(user=jason)(;.*)?$&quot;
+  route:
+  - labels:
+      version: v2
+</pre>
+<p>To learn more about traffic management in Istio, check out the <a href="https://istio.io/docs/tasks/traffic-management/" rel="noopener" target="_blank">documentation</a>. If you want to try out Kubernetes, you can get an account on the <a href="http://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/ab-testing-kubernetes-istio">A/B Testing with Kubernetes and Istio</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/ab-testing-kubernetes-istio/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">2796</post-id>	</item>
+		<item>
+		<title>Developing Serverless Functions with TypeScript</title>
+		<link>http://heidloff.net/article/serverless-functions-typescript-openwhisk</link>
+				<comments>http://heidloff.net/article/serverless-functions-typescript-openwhisk#respond</comments>
+				<pubDate>Fri, 09 Feb 2018 10:19:19 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=2788</guid>
+				<description><![CDATA[<p>One of the coolest capabilities of Apache OpenWhisk is the ability to develop functions with Docker. This allows you to develop functions in languages which are not supported out of the box by the platform. I&#8217;ve open sourced a sample that shows how to develop and debug functions with TypeScript. I&#8217;m a big fan of [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/serverless-functions-typescript-openwhisk">Developing Serverless Functions with TypeScript</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>One of the coolest capabilities of <a href="https://openwhisk.apache.org" rel="noopener" target="_blank">Apache OpenWhisk</a> is the ability to develop functions with Docker. This allows you to develop functions in languages which are not supported out of the box by the platform.<span id="more-2788"></span></p>
+<p>I&#8217;ve open sourced a sample that shows how to develop and debug functions with TypeScript. I&#8217;m a big fan of <a href="https://www.typescriptlang.org/" rel="noopener" target="_blank">TypeScript</a> since it adds a type system to JavaScript which makes me more productive.</p>
+<p><a href="https://github.com/nheidloff/openwhisk-debug-nodejs" rel="noopener" target="_blank">Get the code from GitHub.</a></p>
+<p>Here is a very simple TypeScript function. The /run endpoint is where the actual implementation of the function goes.</p>
+<pre class="brush: jscript; title: ; notranslate">
+import * as express from 'express';
+import * as bodyParser from 'body-parser';
+
+const app = express()
+app.use(bodyParser.json());
+
+app.post('/run', (req, res) =&gt; {
+    var payload = (req.body || {}).value;
+
+    var result = { 
+        &quot;result&quot;: {
+            &quot;echo&quot;: payload
+        }
+    }
+    res.status(200).json(result);
+});
+
+app.post('/init', function (req, res) {
+    try {
+        res.status(200).send();
+    }
+    catch (e) {
+        res.status(500).send();
+    }
+});
+
+app.listen(8080, () =&gt; console.log('Listening on port 8080'))
+</pre>
+<p>Based on <a href="https://github.com/Microsoft/vscode-recipes/tree/master/Docker-TypeScript" rel="noopener" target="_blank">this recipe</a> I&#8217;ve also documented how you can debug TypeScript code running in a Docker container from Visual Studio Code. In order to debug TypeScript code, the same mechanism is used which I explain in this <a href="https://www.youtube.com/watch?v=P9hpcOqQ3hw" rel="noopener" target="_blank">video</a>. A volume is used to share the files between the IDE and the container and VS Code attaches a remote debugger to the Docker container. The functions can be changed in the IDE without having to restart the container. nodemon restarts the Node application in the container automatically when files change.</p>
+<p>This is a screenshot of the debugger in VS Code.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/02/debugging-typescript.png"><img src="http://heidloff.net/wp-content/uploads/2018/02/debugging-typescript.png" alt="debugging-typescript" width="2734" height="1754" class="alignnone size-full wp-image-2789" srcset="http://heidloff.net/wp-content/uploads/2018/02/debugging-typescript.png 2734w, http://heidloff.net/wp-content/uploads/2018/02/debugging-typescript-300x192.png 300w, http://heidloff.net/wp-content/uploads/2018/02/debugging-typescript-1024x657.png 1024w" sizes="(max-width: 2734px) 100vw, 2734px" /></a></p>
+<p>If you want to try out OpenWhisk in the cloud, you can get an account on the <a href="http://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a>.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/serverless-functions-typescript-openwhisk">Developing Serverless Functions with TypeScript</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/serverless-functions-typescript-openwhisk/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">2788</post-id>	</item>
+		<item>
+		<title>Pictures from OOP in Munich</title>
+		<link>http://heidloff.net/article/pictures-oop-munich-ibm</link>
+				<comments>http://heidloff.net/article/pictures-oop-munich-ibm#respond</comments>
+				<pubDate>Fri, 09 Feb 2018 08:38:32 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=2779</guid>
+				<description><![CDATA[<p>This week I attended OOP in Munich, Germany, which is a conference with 2300 attendees. My colleagues and I presented and demonstrated the IBM Cloud. Below are some pictures. The IBM team: Ansgar&#8217;s and my session: When to use Serverless? When to use Kubernetes? Demo at our booth: Visual Recognition for Anki Cozmo with TensorFlow [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/pictures-oop-munich-ibm">Pictures from OOP in Munich</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>This week I attended <a href="http://www.oop-konferenz.de/oop2018.html" rel="noopener" target="_blank">OOP</a> in Munich, Germany, which is a conference with 2300 attendees. My colleagues and I presented and demonstrated the <a href="https://www.ibm.com/cloud/" rel="noopener" target="_blank">IBM Cloud</a>. Below are some pictures.<span id="more-2779"></span></p>
+<p>The IBM team:</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/02/oop1.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/02/oop1.jpg" alt="oop1" width="1000" height="750" class="alignnone size-full wp-image-2780" srcset="http://heidloff.net/wp-content/uploads/2018/02/oop1.jpg 1000w, http://heidloff.net/wp-content/uploads/2018/02/oop1-300x225.jpg 300w, http://heidloff.net/wp-content/uploads/2018/02/oop1-135x100.jpg 135w" sizes="(max-width: 1000px) 100vw, 1000px" /></a></p>
+<p>Ansgar&#8217;s and my session:  <a href="http://www.code-days.de/programm/programm-details/83/when-to-use-serverless-when-to-use-kubernetes/" rel="noopener" target="_blank">When to use Serverless? When to use Kubernetes?</a></p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/02/oop2.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/02/oop2.jpg" alt="oop2" width="1000" height="750" class="alignnone size-full wp-image-2781" srcset="http://heidloff.net/wp-content/uploads/2018/02/oop2.jpg 1000w, http://heidloff.net/wp-content/uploads/2018/02/oop2-300x225.jpg 300w, http://heidloff.net/wp-content/uploads/2018/02/oop2-135x100.jpg 135w" sizes="(max-width: 1000px) 100vw, 1000px" /></a></p>
+<p>Demo at our booth: <a href="http://heidloff.net/article/visual-recognition-for-cozmo-with-tensorflow" rel="noopener" target="_blank">Visual Recognition for Anki Cozmo with TensorFlow</a></p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/02/oop3.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/02/oop3.jpg" alt="oop3" width="1000" height="750" class="alignnone size-full wp-image-2782" srcset="http://heidloff.net/wp-content/uploads/2018/02/oop3.jpg 1000w, http://heidloff.net/wp-content/uploads/2018/02/oop3-300x225.jpg 300w, http://heidloff.net/wp-content/uploads/2018/02/oop3-135x100.jpg 135w" sizes="(max-width: 1000px) 100vw, 1000px" /></a></p>
+<p>Fernando&#8217;s session: <a href="http://www.oop-konferenz.de/oop2018/programm/freies-programm/sessiondetails.html?tx_dmconferences_sessionpaid%5Bsession%5D=169&#038;tx_dmconferences_sessionpaid%5Btalk%5D=847&#038;tx_dmconferences_sessionpaid%5Baction%5D=detail&#038;tx_dmconferences_sessionpaid%5Bcontroller%5D=SessionPaid&#038;cHash=da428d1976e9d76beebe42536c861a81" rel="noopener" target="_blank">Bringing Cognitive Capabilities to Android</a></p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/02/oop4.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/02/oop4.jpg" alt="oop4" width="1000" height="750" class="alignnone size-full wp-image-2783" srcset="http://heidloff.net/wp-content/uploads/2018/02/oop4.jpg 1000w, http://heidloff.net/wp-content/uploads/2018/02/oop4-300x225.jpg 300w, http://heidloff.net/wp-content/uploads/2018/02/oop4-135x100.jpg 135w" sizes="(max-width: 1000px) 100vw, 1000px" /></a></p>
+<p>The booth:</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/02/oop5.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/02/oop5.jpg" alt="oop5" width="1000" height="750" class="alignnone size-full wp-image-2784" srcset="http://heidloff.net/wp-content/uploads/2018/02/oop5.jpg 1000w, http://heidloff.net/wp-content/uploads/2018/02/oop5-300x225.jpg 300w, http://heidloff.net/wp-content/uploads/2018/02/oop5-135x100.jpg 135w" sizes="(max-width: 1000px) 100vw, 1000px" /></a></p>
+<p>Fernando talking with a developer.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/02/oop6.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/02/oop6.jpg" alt="oop6" width="1000" height="750" class="alignnone size-full wp-image-2785" srcset="http://heidloff.net/wp-content/uploads/2018/02/oop6.jpg 1000w, http://heidloff.net/wp-content/uploads/2018/02/oop6-300x225.jpg 300w, http://heidloff.net/wp-content/uploads/2018/02/oop6-135x100.jpg 135w" sizes="(max-width: 1000px) 100vw, 1000px" /></a></p>
+<p>One thing I really liked was a demo another company gave at their booth. They connected Anki Overdrive cars to an IoT platform to demonstrate how to prevent collisions. As it turned out they actually used my code which I <a href="http://heidloff.net/article/ibm-bluemix-anki-overdrive-cars" rel="noopener" target="_blank">open sourced</a> two years ago.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/02/oop7.jpg"><img src="http://heidloff.net/wp-content/uploads/2018/02/oop7.jpg" alt="oop7" width="1000" height="750" class="alignnone size-full wp-image-2786" srcset="http://heidloff.net/wp-content/uploads/2018/02/oop7.jpg 1000w, http://heidloff.net/wp-content/uploads/2018/02/oop7-300x225.jpg 300w, http://heidloff.net/wp-content/uploads/2018/02/oop7-135x100.jpg 135w" sizes="(max-width: 1000px) 100vw, 1000px" /></a></p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/pictures-oop-munich-ibm">Pictures from OOP in Munich</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/pictures-oop-munich-ibm/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">2779</post-id>	</item>
+		<item>
+		<title>Presentation how to create Alexa Skills with IBM Watson</title>
+		<link>http://heidloff.net/article/presentation-alexa-skills-watson</link>
+				<comments>http://heidloff.net/article/presentation-alexa-skills-watson#respond</comments>
+				<pubDate>Fri, 02 Feb 2018 09:41:34 +0000</pubDate>
+		<dc:creator><![CDATA[Niklas Heidloff]]></dc:creator>
+				<category><![CDATA[Articles]]></category>
+
+		<guid isPermaLink="false">http://heidloff.net/?p=2771</guid>
+				<description><![CDATA[<p>Last week there was a webinar Create Alexa skills with Watson Conversation where I was supposed to present. However since I couldn&#8217;t make it, my colleague Mark Sturdevant jumped in on a short notice and did a great job. You can watch the recording, read the pattern documentation and read the slides. Here are some [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/presentation-alexa-skills-watson">Presentation how to create Alexa Skills with IBM Watson</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description>
+								<content:encoded><![CDATA[<p>Last week there was a webinar <a href="https://www.youtube.com/watch?v=SJK-7srI1FU" rel="noopener" target="_blank">Create Alexa skills with Watson Conversation</a> where I was supposed to present. However since I couldn&#8217;t make it, my colleague <a href="https://github.com/markstur" rel="noopener" target="_blank">Mark Sturdevant</a> jumped in on a short notice and did a great job.<span id="more-2771"></span></p>
+<p>You can watch the <a href="https://www.youtube.com/watch?v=SJK-7srI1FU" rel="noopener" target="_blank">recording</a>, read the <a href="https://developer.ibm.com/code/patterns/create-an-alexa-skill-with-serverless-and-a-conversation/" rel="noopener" target="_blank">pattern</a> documentation and read the <a href="https://www.slideshare.net/niklasheidloff/create-alexa-skills-using-ibm-watson-conversation-and-apache-openwhisk" rel="noopener" target="_blank">slides</a>.</p>
+<p><iframe width="853" height="480" src="//www.youtube.com/embed/SJK-7srI1FU" frameborder="0" allowfullscreen></iframe></p>
+<p>Here are some speaker notes for the slides and the demos.</p>
+<p><a href="https://www.slideshare.net/niklasheidloff/create-alexa-skills-using-ibm-watson-conversation-and-apache-openwhisk/1" rel="noopener" target="_blank">Slide 1</a><br />
+The pattern shows how to use Amazon Alexa to test conversations defined with the Watson Conversation service. Watson Conversation is a great service that developers can use to build bots, skills or personal assistants. You can use the service to define how to recognize intents and entities and you can use the service to define flows of conversations. The pattern also explains how to use the open source serverless platform OpenWhisk to implement business logic of skills and bots. </p>
+<p><a href="https://www.slideshare.net/niklasheidloff/create-alexa-skills-using-ibm-watson-conversation-and-apache-openwhisk/2" rel="noopener" target="_blank">Slide 2</a><br />
+Let&#8217;s get started with a short demo of a sample weather skill. Watch the <a href="https://www.youtube.com/watch?v=OqNgvqholjk" rel="noopener" target="_blank">demo</a> on YouTube. </p>
+<p><a href="https://www.slideshare.net/niklasheidloff/create-alexa-skills-using-ibm-watson-conversation-and-apache-openwhisk/7" rel="noopener" target="_blank">Slide 7</a><br />
+Let me explain how you can implement this yourselves. Here is an architecture diagram with the main components. On the left side is a user who talks to an Alexa device. Alexa invokes an OpenWhisk function which runs the business logic of the skill. The OpenWhisk function uses Redis to store session state and it uses REST APIs to access the Watson Conversation service. Additionally this particular weather skill uses the Weather Company API.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2017/11/alexa-architecture-final.png"><img src="http://heidloff.net/wp-content/uploads/2017/11/alexa-architecture-final.png" alt="alexa-architecture-final" width="3335" height="1460" class="alignnone size-full wp-image-2669" srcset="http://heidloff.net/wp-content/uploads/2017/11/alexa-architecture-final.png 3335w, http://heidloff.net/wp-content/uploads/2017/11/alexa-architecture-final-300x131.png 300w, http://heidloff.net/wp-content/uploads/2017/11/alexa-architecture-final-1024x448.png 1024w" sizes="(max-width: 3335px) 100vw, 3335px" /></a></p>
+<p><a href="https://www.slideshare.net/niklasheidloff/create-alexa-skills-using-ibm-watson-conversation-and-apache-openwhisk/8" rel="noopener" target="_blank">Slide 8</a><br />
+This is the Amazon developer console. You need to provide some mandatory information, for example the name of the skill as it will show up in the skill store. You also need to define the invocation name to activate the skills, e.g. via &#8216;Alexa, start Watson&#8217;.</p>
+<p><a href="https://www.slideshare.net/niklasheidloff/create-alexa-skills-using-ibm-watson-conversation-and-apache-openwhisk/9" rel="noopener" target="_blank">Slide 9</a><br />
+You need to define the interaction model. Usually this is the place where you define intents and entities that Alexa should recognize. This functionality it typically called natural language processing or natural language understanding. However Watson provides very similar functionality that we want to use instead. Since we want to use Alexa only as pass through component, I&#8217;ve defined here one generic &#8216;everything&#8217; intent and one generic &#8216;bag of words&#8217; entity. This is basically an easy way to get the unmodified user input as string and then it is forwarded to Watson.</p>
+<p><a href="https://www.slideshare.net/niklasheidloff/create-alexa-skills-using-ibm-watson-conversation-and-apache-openwhisk/10" rel="noopener" target="_blank">Slide 10</a><br />
+The last thing you need to do, is to define the link to the OpenWhisk function on the configuration page. Rather than using Lambda, I&#8217;ve picked https and defined the URL which points to my OpenWhisk function.  Once you&#8217;ve completed the configuration, you can see the skill in the Alexa app and enable it. In order to share Alexa skills with other people in the Alexa skill store, you&#8217;d have to follow the Amazon publication process.</p>
+<p><a href="https://www.slideshare.net/niklasheidloff/create-alexa-skills-using-ibm-watson-conversation-and-apache-openwhisk/15" rel="noopener" target="_blank">Slide 15</a><br />
+Now let me move over to the Watson Conversation tool. With this tool you can define intents, entities and dialogs. Let&#8217;s start with the intents. I have here five intents, e.g. greetings and weather. </p>
+<p><a href="https://www.slideshare.net/niklasheidloff/create-alexa-skills-using-ibm-watson-conversation-and-apache-openwhisk/16" rel="noopener" target="_blank">Slide 16</a><br />
+When I open the weather intent, the possible user utterances are displayed, in this case 144. You can find here example input like &#8220;check the weather&#8221; and &#8220;do I need a jacket&#8221;. The nice thing is that these 144 utterances and not the only ones that Watson can understand. In other words, it&#8217;s not a hardcoded list of strings. Instead machine learning is used to find intents with the highest probability. </p>
+<p><a href="https://www.slideshare.net/niklasheidloff/create-alexa-skills-using-ibm-watson-conversation-and-apache-openwhisk/17" rel="noopener" target="_blank">Slide 17</a><br />
+Let&#8217;s now move over to the entities. There are two types of entities, system entities and custom entities. For example we have system entities like number and person that can be used without having to define these entities yourselves. </p>
+<p><a href="https://www.slideshare.net/niklasheidloff/create-alexa-skills-using-ibm-watson-conversation-and-apache-openwhisk/18" rel="noopener" target="_blank">Slide 18</a><br />
+For this simple sample skill I only use one entity &#8220;location&#8221; with these five possible values. For more advanced skills you could also define synonyms or regular expressions.</p>
+<p><a href="https://www.slideshare.net/niklasheidloff/create-alexa-skills-using-ibm-watson-conversation-and-apache-openwhisk/19" rel="noopener" target="_blank">Slide 19</a><br />
+The last thing we have to do in the Watson Conversation tool is to define the dialog, in other words the possible flows of conversations. The nice thing is that this can be done declaratively. You see here the different nodes which Watson evaluates top to bottom. Each node has a condition and if it&#8217;s met the node is executed. For example the node Greetings is executed when Watson recognize welcome or the greetings intent.</p>
+<p><a href="https://www.slideshare.net/niklasheidloff/create-alexa-skills-using-ibm-watson-conversation-and-apache-openwhisk/20" rel="noopener" target="_blank">Slide 20</a><br />
+The most important node for the sample skill is the weather node. This node is executed when the weather intent is recognized. The node supports what is called &#8216;slots filling functionality&#8217;. You can define here a list of mandatory input entities, like in this case the location. If it isn&#8217;t present yet, the user is asked, in this case &#8220;in which location&#8221; or &#8216;please tell me your location&#8217;. Only after all mandatory slots have been filled, the output message of this node is returned to the user, in this case &#8216;looking up weather information for location&#8217;.</p>
+<p><a href="https://github.com/IBM/alexa-skill-watson-conversation" rel="noopener" target="_blank">GitHub project</a><br />
+I&#8217;ve talked about the Alexa configuration and the Watson Conversation service. The last thing you need to do, is to connect the dots by implementing an OpenWhisk function. Let&#8217;s take a look at the code.</p>
+<p>I won&#8217;t go through all the details but want to highlight the most important parts. First of all I&#8217;m using an npm module called <a href="https://github.com/IBM/alexa-skill-watson-conversation/blob/master/main.js#L19" rel="noopener" target="_blank">alexa-verifier</a>. Part of Amazon&#8217;s certification process is that skills need to validate that requests are actually coming from Amazon. I&#8217;ve picked this module since at the time I wrote the code it was the easiest one.</p>
+<p>The next thing to do is the run some <a href="https://github.com/IBM/alexa-skill-watson-conversation/blob/master/main.js#L57" rel="noopener" target="_blank">initialization code</a> to configure the Watson Conversation service and Redis. When you create a Watson Conversation service, you get user credentials which are needed here. Rather than hardcoding them, I&#8217;ve put them in environment variables. Redis is needed to store the session state, because OpenWhisk functions are stateless. I&#8217;ve deployed my own Redis on IBM&#8217;s Kubernetes implementation. You could also use managed Redis services like the one IBM provides called &#8216;Redis on Compose&#8217;.</p>
+<p>At the bottom of <a href="https://github.com/IBM/alexa-skill-watson-conversation/blob/master/main.js" rel="noopener" target="_blank">main.js</a> you can see the <a href="https://github.com/IBM/alexa-skill-watson-conversation/blob/master/main.js#L256" rel="noopener" target="_blank">main functionality</a> of the skill. After the clients have been initialized, the session state information is read from Redis via getSessionContext. Then the Watson Conversation API is invoked in conversationMessage to get the response from Watson. The function actionHandler is invoked when the dialog has reached a node where business logic needs to be invoked, in our case the weather API is used to read weather information. After this the response of the action is returned to Alexa and the session state is stored again in Redis.</p>
+<p>Let&#8217;s take a quick look at the implementation of <a href="https://github.com/IBM/alexa-skill-watson-conversation/blob/master/main.js#L95" rel="noopener" target="_blank">conversationMessage</a>. In this function the Conversation API is used. The code is very simple. I&#8217;m using the npm module watson-developer-cloud which comes with a function &#8220;message&#8221; where you can pass in the text input and the session state/context. If the response is successful, the resolve callback in invoked.</p>
+<p><a href="https://www.slideshare.net/niklasheidloff/create-alexa-skills-using-ibm-watson-conversation-and-apache-openwhisk/29" rel="noopener" target="_blank">Slide 29</a><br />
+This slide lists useful resources to build your own Alexa skills with Watson Conversation.</p>
+<p>If you want to try out Watson Conversation, you can get an account on the <a href="http://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a> and try the service.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/presentation-alexa-skills-watson">Presentation how to create Alexa Skills with IBM Watson</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded>
+							<wfw:commentRss>http://heidloff.net/article/presentation-alexa-skills-watson/feed/</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+						<post-id xmlns="com-wordpress:feed-additions:1">2771</post-id>	</item>
+	</channel>
+</rss>

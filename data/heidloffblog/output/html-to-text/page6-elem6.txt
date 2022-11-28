@@ -1,0 +1,5 @@
+Deploying Models from IBM’s Model Exchange to Kubernetes.
+
+In March IBM launched the Model Asset Exchange which is a place for developers to find and use open source deep learning models. In this article I describe how developers can use these models in applications and how the applications can be deployed to Kubernetes. The Model Asset Exchange contains currently 11 models for visual […]
+
+The post Deploying Models from IBM’s Model Exchange to Kubernetes [http://heidloff.net/article/model-asset-exchange-dl-kubernetes-tensorflow] appeared first on Niklas Heidloff [http://heidloff.net].

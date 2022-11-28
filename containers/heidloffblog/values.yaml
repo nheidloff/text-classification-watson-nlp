@@ -1,0 +1,14 @@
+componentName: watson-nlp
+acceptLicense: true
+serviceType: ClusterIP
+imagePullSecrets:
+  - ibm-entitlement-key
+registries:
+  - name: watson
+    url: cp.icr.io/cp/ai
+runtime:
+  registry: watson
+  image: watson-nlp-runtime:1.0.18
+models:
+  - registry: watson
+    image: watson-nlp_ensemble_model_heidloff:0.0.1

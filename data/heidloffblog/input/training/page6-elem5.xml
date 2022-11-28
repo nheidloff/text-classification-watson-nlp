@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"><channel><title>Page 20 – Niklas Heidloff</title><atom:link href="http://heidloff.net/feed/?paged=20" rel="self" type="application/rss+xml"/><link>http://heidloff.net</link><description/><lastBuildDate>
+	Fri, 25 Nov 2022 07:22:15 +0000	</lastBuildDate><language>en-US</language><sy:updatePeriod>
+	hourly	</sy:updatePeriod><sy:updateFrequency>
+	1	</sy:updateFrequency><generator>https://wordpress.org/?v=5.1.15</generator><site xmlns="com-wordpress:feed-additions:1">102773794</site><item><title>Deploying TensorFlow Models on Edge Devices</title><link>http://heidloff.net/article/tensorflow-lite-ibm-watson-ios</link><comments>http://heidloff.net/article/tensorflow-lite-ibm-watson-ios#respond</comments><pubDate>Mon, 09 Jul 2018 10:15:05 +0000</pubDate><dc:creator><![CDATA[Niklas Heidloff]]></dc:creator><category><![CDATA[Articles]]></category><guid isPermaLink="false">http://heidloff.net/?p=3032</guid><description><![CDATA[<p>While it has been possible to deploy TensorFlow models to mobile and embedded devices via TensorFlow for Mobile for some time, Google released an experimental version of TensorFlow Lite as an evolution of TensorFlow for Mobile at the end of last year. This new functionality allows building exciting AI scenarios on edge devices and the [&#8230;]</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/tensorflow-lite-ibm-watson-ios">Deploying TensorFlow Models on Edge Devices</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></description><content:encoded><![CDATA[<p>While it has been possible to deploy TensorFlow models to mobile and embedded devices via <a href="https://www.tensorflow.org/mobile/" rel="noopener" target="_blank">TensorFlow for Mobile</a> for some time, Google released an experimental version of <a href="https://www.tensorflow.org/mobile/tflite/index" rel="noopener" target="_blank">TensorFlow Lite</a> as an evolution of TensorFlow for Mobile at the end of last year. This new functionality allows building exciting AI scenarios on edge devices and the performance of the models is amazing.<span id="more-3032"></span></p>
+<p>This article and my code on <a href="https://github.com/nheidloff/watson-deep-learning-tensorflow-lite" rel="noopener" target="_blank">GitHub</a> describes how to train models via <a href="https://www.ibm.com/cloud/watson-studio" rel="noopener" target="_blank">IBM Watson Studio</a> in the cloud or locally. After the training the models are optimized so that they can be deployed to various devices, for example iOS and Android based systems.</p>
+<p>As example I picked a Visual Recognition scenario similar to my earlier blog entry where I described how to use <a href="http://heidloff.net/article/tensorflowjs-ibm-watson-web-browsers-dl" rel="noopener" target="_blank">TensorFlow.js</a> in browsers. In order to train the model I’ve taken pictures from seven items: plug, soccer ball, mouse, hat, truck, banana and headphones. </p>
+<p>Check out the <a href="https://youtu.be/avMQ5VSFb3A" rel="noopener" target="_blank">video</a> for a quick demo how these items can be recognized in iOS and Android apps. This is an iPhone screenshot where a banana is recognized.</p>
+<p><a href="http://heidloff.net/wp-content/uploads/2018/07/ios-app.png"><img src="http://heidloff.net/wp-content/uploads/2018/07/ios-app-576x1024.png" alt="ios-app" width="576" height="1024" class="alignnone size-large wp-image-3031" srcset="http://heidloff.net/wp-content/uploads/2018/07/ios-app-576x1024.png 576w, http://heidloff.net/wp-content/uploads/2018/07/ios-app-169x300.png 169w, http://heidloff.net/wp-content/uploads/2018/07/ios-app.png 750w" sizes="(max-width: 576px) 100vw, 576px" /></a></p>
+<p>Google provides a nice and easy to follow <a href="https://codelabs.developers.google.com/codelabs/tensorflow-for-poets-2/#0" rel="noopener" target="_blank">tutorial</a> how to train, optimize and deploy a visual recognition model to Android devices. I&#8217;ve tried to deploy the model to an iPhone and have run into some issues. Check out my project on <a href="https://github.com/nheidloff/watson-deep-learning-tensorflow-lite" rel="noopener" target="_blank">GitHub</a> how I&#8217;ve fixed those.</p>
+<ul>
+<li>Since TensorFlow Lite is only experimental, interfaces have changed. To follow the Google tutorial, you need to use the exact TensorFlow version 1.7 and not the later ones.</li>
+<li>For me it wasn&#8217;t easy to install and run the optimization tool. I ended up using a Docker image which comes with TensorFlow and the pre-compiled tools.</li>
+<li>The tutorial describes how to generate an optimized model without quantization, the iOS sample app however expects a quantized model.</li>
+</ul>
+<p>In order to run models on edge devices efficiently, they need to be optimized in terms of model size, memory usage, battery usage, etc. To achieve this, one method is to remove dropouts from the graph. Dropouts are used during training to prevent overfitting models. At runtime, when running predictions, they are not needed.</p>
+<p>Another method to optimize models is <a href="https://www.tensorflow.org/performance/quantization" rel="noopener" target="_blank">quantization</a>. Weights in graphs are often defined via floats. When using integers instead however, the sizes of the models are reduced significantly while the accuracy is only affected minimally or not at all. </p>
+<p>In order to get the <a href="https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/lite/examples/ios/camera" rel="noopener" target="_blank">iOS camera sample</a> working with the model that is generated in the tutorial, I had to do some changes. The <a href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/contrib/lite/examples/ios/camera/CameraExampleViewController.mm#L251-L267" rel="noopener" target="_blank">integers</a> had to be changed to floats when passing in an image to the graph:</p>
+<pre class="brush: plain; title: ; notranslate">
+const float input_mean = 0.0f;
+const float input_std = 255.0f;
+
+float* out = interpreter-&gt;typed_input_tensor&lt;float&gt;(0);
+for (int y = 0; y &lt; wanted_input_height; ++y) {
+  float* out_row = out + (y * wanted_input_width * wanted_input_channels);
+  for (int x = 0; x &lt; wanted_input_width; ++x) {
+    const int in_x = (y * image_width) / wanted_input_width;
+    const int in_y = (x * image_height) / wanted_input_height;
+    uint8_t* in_pixel = in + (in_y * image_width * image_channels) + (in_x * image_channels);
+    float* out_pixel = out_row + (x * wanted_input_channels);
+    for (int c = 0; c &lt; wanted_input_channels; ++c) {
+      out_pixel = (in_pixel - input_mean) / input_std;
+    }
+  }
+}
+</pre>
+<p>After this predictions can be invoked in the Objective-C++ code like this:</p>
+<pre class="brush: plain; title: ; notranslate">
+if (interpreter-&gt;Invoke() != kTfLiteOk) {
+  LOG(FATAL) &lt;&lt; &quot;Failed to invoke!&quot;;
+}
+...
+float* output = interpreter-&gt;typed_output_tensor&lt;float&gt;(0); 
+GetTopN(output, output_size, kNumResults, kThreshold, &amp;top_results);
+NSMutableDictionary* newValues = [NSMutableDictionary dictionary];
+for (const auto&amp; result : top_results) {
+  const float confidence = result.first;
+  const int index = result.second;
+  NSString* labelObject = [NSString stringWithUTF8String:labels[index].c_str()];
+  NSNumber* valueObject = [NSNumber numberWithFloat:confidence];
+  [newValues setObject:valueObject forKey:labelObject];
+}
+</pre>
+<p>If you want to run this example yourself, get the code from <a href="https://github.com/nheidloff/watson-deep-learning-tensorflow-lite" rel="noopener" target="_blank">GitHub</a> and get a free <a href="https://ibm.biz/nheidloff" rel="noopener" target="_blank">IBM Cloud</a> account.</p>
+<p>The post <a rel="nofollow" href="http://heidloff.net/article/tensorflow-lite-ibm-watson-ios">Deploying TensorFlow Models on Edge Devices</a> appeared first on <a rel="nofollow" href="http://heidloff.net">Niklas Heidloff</a>.</p>
+]]></content:encoded><wfw:commentRss>http://heidloff.net/article/tensorflow-lite-ibm-watson-ios/feed/</wfw:commentRss><slash:comments>0</slash:comments><post-id xmlns="com-wordpress:feed-additions:1">3032</post-id></item></channel></rss>

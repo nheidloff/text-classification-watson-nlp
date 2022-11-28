@@ -1,0 +1,72 @@
+page4-elem9,How to build your own Database on Kubernetes.
+page4-elem9,Kubernetes supports running stateless and stateful workloads.
+page4-elem9,This article describes the core concepts how to build and run a simple database on Kubernetes using an open source sample.
+page4-elem9,The snippets below are part of the ibm/operator-sample-go [https://github.com/IBM/operator-sample-go/tree/main/database-service] repo which describes patterns and best practices how to build operators.
+page4-elem9,A key benefit of operators is the automation of day 2 tasks like the management of stateful applications.
+page4-elem9,For example operators can act as an auto-pilot to automatically run backups for databases.
+page4-elem9,In order to demonstrate this I’ve built a simple database sample.
+page4-elem9,The key concept to build stateful applications are StatefulSets.
+page4-elem9,Check out the videos below especially the first one that describe this Kubernetes capability.
+page4-elem9,* Kubernetes StatefulSet simply explained | Deployment vs StatefulSet [https://youtu.be/pPQKAR1pA9U]
+page4-elem9,* A Kubernetes Operator for etcd [https://youtu.be/nyUe-3zmHRc]
+page4-elem9,Here is a summary of the first video:
+page4-elem9,* Pods have identities for example database-cluster-0
+page4-elem9,* Pods are created and deleted after each other
+page4-elem9,* Each pod has it’s own PVC and PV or StorageClass
+page4-elem9,* Data will survive when all pods die
+page4-elem9,* Pod state is stored on volumes to allow pod recreations
+page4-elem9,* One leader and multiple followers
+page4-elem9,* Only the leader can write
+page4-elem9,* Followers need to synchronize data from leader
+page4-elem9,* Pods have fixed individual DNS names
+page4-elem9,This diagram shows the involved components in my sample database.
+page4-elem9,Here are screenshots of the deployed database application.
+page4-elem9,The database is very simple.
+page4-elem9,It stores all data in one JSON file.
+page4-elem9,The file [https://github.com/IBM/operator-sample-go/blob/433655ed56fe4408b83b8ec033ba1176a3b7b72b/database-service/data.json] contains a list of persons with first and last names.
+page4-elem9,"firstName": "Niklas"
+page4-elem9,"lastName": "Heidloff"
+page4-elem9,"id": "e0a08c5b-62d5-4b20-a024-e1c270d901c2"
+page4-elem9,}
+page4-elem9,"firstName": "Adam"
+page4-elem9,"lastName": "Deleeuw"
+page4-elem9,"id": "93115462-543c-4149-9b75-2b1a84bd326c"
+page4-elem9,}
+page4-elem9,"firstName": "Thomas"
+page4-elem9,"lastName": "Suedbroecker"
+page4-elem9,"id": "dd35e011-093b-4c63-9d54-040a5dc3d28f"
+page4-elem9,}
+page4-elem9,"firstName": "Alain"
+page4-elem9,"lastName": "Airom"
+page4-elem9,"id": "918b0da0-afda-4cbf-a370-0347a6ede98e"
+page4-elem9,Let’s take a look at the behaviour [https://github.com/IBM/operator-sample-go/blob/433655ed56fe4408b83b8ec033ba1176a3b7b72b/database-service/README.md#testing-apis-on-kubernetes] of the database.
+page4-elem9,After the stateful set has been deployed there will be three pods.
+page4-elem9,database-cluster-0 is the leader database-cluster-1 and database-cluster-2 are the followers.
+page4-elem9,It takes some time for the pods to come up since they are started after each other and since they need to bind and potentially create volumes.
+page4-elem9,$ kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/persons
+page4-elem9,$ kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/api/leader
+page4-elem9,$ kubectl logs -n database database-cluster-1
+page4-elem9,$ kubectl exec -n database database-cluster-1 -- curl -s -X 'POST' 'http://localhost:8089/persons' -H 'accept: application/json' -H 'Content-Type: application/json' -d '{"firstName": "Johanna""lastName": "Koester""id": "e956b5d0-fa0c-40e8-9da9-333c214dcaf7"}'
+page4-elem9,$ kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/persons
+page4-elem9,The /persons endpoint for ‘1’ returns all four initial persons.
+page4-elem9,The follower ‘1’ received the data from the leader when it started.
+page4-elem9,The attempt to create a new person fails since only the leader can write.
+page4-elem9,The same write operation works if executed on the leader ‘0’.
+page4-elem9,After this the data will be synchronized to all followers again.
+page4-elem9,$ kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/persons
+page4-elem9,$ kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/api/leader
+page4-elem9,$ kubectl logs -n database database-cluster-0
+page4-elem9,$ kubectl exec -n database database-cluster-0 -- curl -s -X 'POST' 'http://localhost:8089/persons' -H 'accept: application/json' -H 'Content-Type: application/json' -d '{"firstName": "Johanna""lastName": "Koester""id": "e956b5d0-fa0c-40e8-9da9-333c214dcaf7"}'
+page4-elem9,$ kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/persons
+page4-elem9,$ kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/persons
+page4-elem9,When the leader ‘0’ goes down the data remains on the volume.
+page4-elem9,The stateless set will automatically start a new pod with the same name ‘0’ which marks the pod as leader.
+page4-elem9,The new pod ‘0’ will bind the existing volume.
+page4-elem9,$ kubectl delete pod database-cluster-0 -n database
+page4-elem9,$ kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/persons
+page4-elem9,When adding more pods the new pods read the data from other pods when they are started.
+page4-elem9,$ kubectl scale statefulsets database-cluster --replicas=3 -n database
+page4-elem9,$ kubectl exec -n database database-cluster-2 -- curl -s http://localhost:8089/persons
+page4-elem9,I’ll blog in more detail how I’ve implemented this.
+page4-elem9,For now check out the repo [https://github.com/IBM/operator-sample-go].
+page4-elem9,The post How to build your own Database on Kubernetes [http://heidloff.net/article/how-to-build-your-own-database-on-kubernetes/] appeared first on Niklas Heidloff [http://heidloff.net].

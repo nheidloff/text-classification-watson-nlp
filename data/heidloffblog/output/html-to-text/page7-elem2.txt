@@ -1,0 +1,5 @@
+Pictures from JAX 2018.
+
+Last week my colleagues and I attended JAX, which is a developer conference with 2000 attendees with a focus on Java and enterprise technologies. My colleagues and I presented and demonstrated the IBM Cloud and the IBM Code developer site. Below are some pictures. The team: Denis Ley, Miriam Oglesby, Fernando Cejas, Niklas Heidloff and […]
+
+The post Pictures from JAX 2018 [http://heidloff.net/article/pictures-jax-2018] appeared first on Niklas Heidloff [http://heidloff.net].
