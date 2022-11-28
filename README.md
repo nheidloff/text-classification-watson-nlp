@@ -86,13 +86,13 @@ Architecture:
 
 <kbd><img src="documentation/step2.jpeg" /></kbd>
 
-The labeling of the data needs to be done by domain experts. You need 200-300 positive sentences and the same amount of negative sentences.
+The labelling of the data needs to be done by domain experts. You need 200-300 positive sentences and the same amount of negative sentences.
 
-The labeling is done via the open source project from IBM, called [Label Sleuth](https://www.label-sleuth.org/). The tool provides an easy to use user interface which provides suggestions what and how to label next entries. Note that not all sentences need to be labeled, but only the important ones. De-facto this removes noise from the original news documents, for example headers, footers, generic code lines etc.
+The labelling is done via the open source project from IBM, called [Label Sleuth](https://www.label-sleuth.org/). The tool provides an easy to use user interface which provides suggestions what and how to label next entries. Note that not all sentences need to be labeled, but only the important ones. De-facto this removes noise from the original news documents, for example headers, footers, generic code lines etc.
 
-<kbd><img src="documentation/step2/labeling08.png" /></kbd>
+<kbd><img src="documentation/step2/labelling08.png" /></kbd>
 
-The labeling is not done on a complete document, but on single sentences of a document. If at least one sentence is positive , the whole document counts as positive. 
+The labelling is not done on a complete document, but on single sentences of a document. If at least one sentence is positive , the whole document counts as positive. 
 
 The output of Label Sleuth are two CSV files:
 
