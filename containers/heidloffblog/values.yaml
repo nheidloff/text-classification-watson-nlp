@@ -6,9 +6,13 @@ imagePullSecrets:
 registries:
   - name: watson
     url: cp.icr.io/cp/ai
+  - name: virtual
+    url: virtual
 runtime:
   registry: watson
   image: watson-nlp-runtime:1.0.18
 models:
-  - registry: watson
+  - registry: virtual
     image: watson-nlp_ensemble_model_heidloff:0.0.1
+  - registry: watson
+    image: watson-nlp_syntax_izumo_lang_en_stock:1.0.7

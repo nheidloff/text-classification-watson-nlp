@@ -22,6 +22,15 @@ The goal is to classify blog posts from the website [heidloff.net](http://heidlo
 4. [Build Image and run Predictions](#step-4-build-image-and-run-predictions)
 5. [Deploy to Minikube](#step-5-deploy-to-minikube)
 
+In addition to the documentation below there is a blog series about this repo.
+
+* [Introduction: Text Classification Sample for IBM Watson NLP](http://heidloff.net/article/text-classification-sample-for-ibm-watson-nlp/)
+* [Step 1: Converting XML Feeds into CSVs with Sentences](http://heidloff.net/article/converting-xml-feeds-into-csvs-with-sentences/)
+* [Step 2: Labelling Sentences for Text Classifications](http://heidloff.net/article/labelling-sentences-for-text-classifications/)
+* [Step 3: Training Text Classification Models with Watson NLP](http://heidloff.net/article/training-text-classification-models-with-watson-nlp/)
+* [Step 4: Running Predictions against custom Watson NLP Models](http://heidloff.net/article/running-predictions-against-custom-watson-nlp-models/)
+* [Step 5: Deploying custom Watson NLP Text Classification Models](http://heidloff.net/article/deploying-custom-watson-nlp-text-classification-models)
+
 
 ### Step 1: Prepare Data
 
@@ -226,11 +235,13 @@ $ minikube start --cpus 12 --memory 16000 --disk-size 50g
 $ eval $(minikube -p minikube docker-env)
 $ docker login cp.icr.io --username cp --password <entitlement_key> 
 $ docker pull cp.icr.io/cp/ai/watson-nlp-runtime:1.0.18
+$ docker pull cp.icr.io/cp/ai/watson-nlp_syntax_izumo_lang_en_stock:1.0.7
 $ python3 -m watson_embed_model_packager build --config ./containers/heidloffblog/heidloffblog.csv
-$ docker tag watson-nlp_ensemble_model_heidloff cp.icr.io/cp/ai/watson-nlp_ensemble_model_heidloff:0.0.1
+$ docker tag watson-nlp_ensemble_model_heidloff virtual/watson-nlp_ensemble_model_heidloff:0.0.1
 $ docker images | grep watson-nlp
-cp.icr.io/cp/ai/watson-nlp_ensemble_model_heidloff      0.0.1     0caf02a1af52   4 minutes ago   1.3GB
-cp.icr.io/cp/ai/watson-nlp-runtime                      1.0.18    d26d41463b0d   5 weeks ago     6.86GB
+virtual/watson-nlp_ensemble_model_heidloff              0.0.1     
+cp.icr.io/cp/ai/watson-nlp-runtime                      1.0.18    
+cp.icr.io/cp/ai/watson-nlp_syntax_izumo_lang_en_stock   1.0.7   
 $ kubectl create namespace watson-demo
 $ kubectl config set-context --current --namespace=watson-demo
 $ kubectl create secret docker-registry \
