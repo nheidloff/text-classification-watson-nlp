@@ -218,9 +218,6 @@ The following commands show how to deploy to Minikube, but can easily be adopted
 In contrast to above, the custom model is stored in its own image (init container). Make sure only your one model is in your 'models' directory.
 
 ```
-$ python3 -m venv client-env
-$ source client-env/bin/activate
-$ pip install watson-embed-model-packager
 $ tree models
 models
 └── ensemble_model_heidloff
@@ -229,19 +226,57 @@ models
     ├── ...
     ├── ensemble_model
     └── use_svm_model
-$ python3 -m watson_embed_model_packager setup --library-version watson_nlp:3.2.0 --local-model-dir models --output-csv ./containers/heidloffblog/heidloffblog.csv
+```
+
+There are two ways to create the image.
+
+1. Via watson-embed-model-packager tool
+2. Via Dockerfile
+
+In the snippets below the Minikube image registry is used directly since 1. I ran into issues pulling the large images and 2. it's faster for development. Make sure you give Minikube enough resources.
+
+```
 $ brew install minikube 
 $ minikube start --cpus 12 --memory 16000 --disk-size 50g
 $ eval $(minikube -p minikube docker-env)
+```
+
+*watson-embed-model-packager tool*
+
+```
+$ python3 -m venv client-env
+$ source client-env/bin/activate
+$ pip install watson-embed-model-packager
+$ python3 -m watson_embed_model_packager setup --library-version watson_nlp:3.2.0 --local-model-dir models --output-csv ./containers/heidloffblog/heidloffblog.csv
+$ python3 -m watson_embed_model_packager build --config ./containers/heidloffblog/heidloffblog.csv
+$ docker tag watson-nlp_ensemble_model_heidloff virtual/watson-nlp_ensemble_model_heidloff:0.0.1
+```
+
+*Dockerfile*
+
+```
+$ WATSON_EMBED_DEMOS=./containers/build-model-image
+$ chmod 777 ${WATSON_EMBED_DEMOS}/copy_bin_with_libs.sh     
+$ chmod 777 ${WATSON_EMBED_DEMOS}/unpack_model.sh 
+$ docker build -f ${WATSON_EMBED_DEMOS}/Dockerfile --build-arg MODEL_PATH=./models --build-arg MODEL_DEST=/tmp/models -t watson-nlp_ensemble_model_heidloff .
+$ docker tag watson-nlp_ensemble_model_heidloff virtual/watson-nlp_ensemble_model_heidloff:0.0.1
+```
+
+Pull Watson NLP images:
+
+```
 $ docker login cp.icr.io --username cp --password <entitlement_key> 
 $ docker pull cp.icr.io/cp/ai/watson-nlp-runtime:1.0.18
 $ docker pull cp.icr.io/cp/ai/watson-nlp_syntax_izumo_lang_en_stock:1.0.7
-$ python3 -m watson_embed_model_packager build --config ./containers/heidloffblog/heidloffblog.csv
-$ docker tag watson-nlp_ensemble_model_heidloff virtual/watson-nlp_ensemble_model_heidloff:0.0.1
 $ docker images | grep watson-nlp
 virtual/watson-nlp_ensemble_model_heidloff              0.0.1     
 cp.icr.io/cp/ai/watson-nlp-runtime                      1.0.18    
 cp.icr.io/cp/ai/watson-nlp_syntax_izumo_lang_en_stock   1.0.7   
+```
+
+Deploy Watson NLP pod via Helm chart:
+
+```
 $ kubectl create namespace watson-demo
 $ kubectl config set-context --current --namespace=watson-demo
 $ kubectl create secret docker-registry \
@@ -252,7 +287,7 @@ $ kubectl create secret docker-registry \
 ibm-entitlement-key
 $ git clone https://github.com/cloud-native-toolkit/terraform-gitops-watson-nlp
 $ cp ./containers/heidloffblog/values.yaml ../terraform-gitops-watson-nlp/chart/watson-nlp/values.yaml
-$ cd terraform-gitops-watson-nlp/chart/watson-nlp
+$ cd ../terraform-gitops-watson-nlp/chart/watson-nlp
 $ helm install -f values.yaml watson-embedded .
 $ kubectl get pods -n watson-demo --watch
 $ kubectl get deployment/watson-embedded-watson-nlp -n watson-demo
